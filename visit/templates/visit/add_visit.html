@@ -17,7 +17,7 @@
     			    <a class="nav-link" data-toggle="tab" href="#div_id_medicine" role="tab">Medicines</a>
     			  </li>
     			  <li class="nav-item">
-    			    <a class="nav-link" data-toggle="tab" href="#" role="tab">Diagnosis</a>
+    			    <a class="nav-link" data-toggle="tab" href="#div_id_disease" role="tab">Diagnosis</a>
     			  </li>
     			  <li class="nav-item">
     			    <a class="nav-link disabled" data-toggle="tab" href="#" role="tab">Disabled</a>
@@ -28,22 +28,15 @@
         <div class="row col-sm-12 centered mL-32 mT-32" id="added_complaint">
         </div>
 
-        <div class="row col-sm-12 centered mL-32 mT-32" id="added_medicine">
-            <table class="table">
-                <tbody>
-                  <tr>
-                    <td>
-                      TAB - macrocin : 500 mg
-                    </td>
-                    <td>
-                      din me ek bar after food
-                    </td>
-                    <td>
-                      for 5 days
-                    </td>
-                  </tr>
+        <div class="row col-sm-12 centered mL-32 mT-32" >
+            <table class="table row col-sm-12">
+                <tbody id="added_medicine" class="col-sm-12 fS14">
+
                 </tbody>
             </table>
+        </div>
+
+        <div class="row col-sm-12 centered mL-32 mT-32" id="added_disease">
         </div>
 
 
@@ -76,14 +69,14 @@
                             <label for="id_input_dosage">
                                 <strong>Dosage</strong>
                                 <input id="id_input_dosage" class="translit form-input search-term" name="dosage" type="text"
-                                 spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_dosage_values"}' data-type="medicine-dosage" />
+                                 spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_dosage_values" %}' data-type="medicine-dosage" />
                             </label>
                         </td>
                         <td class="form-element pLR-8 ">
                             <label for="id_input_frequency">
                             <strong>Frequency</strong>
                             <input id="id_input_frequency" class="translit form-input search-term" name="frequency" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_frequency_values"}' data-type="medicine-frequency" />
+                             spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_frequency_values" %}' data-type="medicine-frequency" />
                             </label>
                         </td>
                         <td class="form-element pLR-8 w80px">
@@ -97,19 +90,30 @@
                             <label for="id_input_type">
                                 <strong>Type</strong>
                                 <input id="id_input_type" class="translit form-input search-term" name="type" type="text"
-                                 spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_type_values"}' data-type="medicine-type"/>
+                                 spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_type_values" %}' data-type="medicine-type"/>
                             </label>
                         </td>
                      </tr>
                      <tr>
                        <td>
                            <div class="pull-left">
-                              <input class="button" type="button" name="add" value="Add" id="id-medicine-add"/>
+                              <input class="button" type="button" name="add" value="Add" id="id-medicine-add" onclick="add_medicine(this)"/>
                             </div>
                        </td>
                      </tr>
                     </table>
                 </fieldset>
+            </div>
+
+            <div id="div_id_disease" class="tab-pane row col-sm-12 centered" role="tabpanel">
+                <div class="form-element pLR-8">
+                {% csrf_token %}
+                    <label for="id_disease">
+                        <strong>Diagnosis</strong>
+                        <input id="id_disease" class="translit form-input search-term add-term" name="disease" type="text"
+                        spellcheck="false" autocomplete="off" maxlength="300" data-url="{% url "complaints:api_get_disease" %}" data-type="disease" />
+                    </label>
+                </div>
             </div>
 
 

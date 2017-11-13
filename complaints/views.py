@@ -88,8 +88,8 @@ def add_disease(request):
                 r = json.dumps(data)
                 return HttpResponse(r, content_type="application/json")
             
-            disease = Disease.objects.get(name=disease_name)
-            if disease is not None:
+            disease = Disease.objects.filter(name=disease_name)
+            if len(disease) > 0:
                 data = {}
                 data['ret'] = 'False'
                 data['result'] = 'Failure: Already exist'
@@ -104,7 +104,7 @@ def add_disease(request):
             data['ret'] = 'True'
             data['id'] = disease.disease_id
             data['name'] = disease.name
-            data['symptoms'] = [ x.description for x in disease.symptoms]
+            data['symptoms'] = [ x.description for x in disease.symptoms.all()]
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
     

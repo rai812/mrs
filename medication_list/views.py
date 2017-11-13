@@ -30,6 +30,7 @@ def get_medicine(request):
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
         entry_query = get_query(query_string, ['medicine'])
+        print(entry_query)
         obj_list = MedicationList.objects.filter(entry_query).order_by('medicine')[:5]
     else:
         obj_list = []
@@ -136,7 +137,7 @@ def add_medicine(request):
             
             recv_data = json.loads(request.body)
             
-            medicine_name = recv_data.get('medicine_name', None)
+            medicine_name = recv_data.get('medicine', None)
             if medicine_name is  None:
                 data = {}
                 data['ret'] = 'False'
@@ -153,10 +154,11 @@ def add_medicine(request):
                 return HttpResponse(r, content_type="application/json")
             
             medicine = MedicationList()
-            medicine.medicine = recv_data.get('medicine_name', None)
+            medicine.medicine = recv_data.get('medicine', None)
             medicine.dosage = recv_data.get('dosage', None)
             medicine.frequency = recv_data.get('frequency', None)
             medicine.duration = recv_data.get('duration', None)
+            medicine.type = recv_data.get('type', None)
             medicine.save()
             data = {}
             data['result'] = 'Successfully added'
@@ -166,6 +168,7 @@ def add_medicine(request):
             data['dosage'] = medicine.dosage
             data['frequency'] = medicine.frequency
             data['duration'] = medicine.duration
+            data['type'] = medicine.type
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
     raise Http404
