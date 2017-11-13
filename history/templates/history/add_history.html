@@ -1,0 +1,101 @@
+{% extends "core/base.html" %}
+{% load staticfiles  %}
+
+{% block title %}
+<span class="fS24">{{ patient.full_name }} </span> <span class="fS16 c-31 mL-32"> Medical History </span> <a href="{% url "visits:add_visit" %}"> <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+{% endblock %}
+
+
+{% block content %}
+
+<section class="pT-8 pB-16 wFull">
+    <div class="row centered col-sm-12">
+    <table class="table">
+  <thead class="bC-grey c-31">
+    <tr>
+      <th >#</th>
+      <th >Disease</th>
+      <th >Dignose at</th>
+      <th >active</th>
+      <th >allergic</th>
+      <th >infectious</th>
+      <th >Status</th>
+    </tr>
+  </thead>
+  <tbody>
+  
+  {% if medical_history|length == 0 %}
+      <tr>
+      <th scope="row"  >1</th>
+      <td >N/A</td>
+      <td >N/A</td>
+      <td >N/A</td>
+      <td >N/A</td>
+      <td >N/A</td>
+      <td >N/A</td>
+    </tr>  
+  {% else %}
+
+    {% for el in medical_history %}
+    <tr>
+      <th scope="row" >{{ forloop.counter }}</th>
+      <td >{{ el.disease.name }}</td>
+      <td >{{ el.date_of_diagnosis }}</td>
+      <td >
+        {% if el.active %} <i class="fa fa-check c-red" aria-hidden="true"></i> {% else %} <i class="fa fa-times" aria-hidden="true"></i>{% endif %} 
+      </td>
+      <td >{% if el.infectious_disease %} <i class="fa fa-check c-red" aria-hidden="true"></i> {% else %} <i class="fa fa-times " aria-hidden="true"></i>{% endif %} </td>
+      <td >{% if el.allergic_disease %} <i class="fa fa-check c-red" aria-hidden="true"></i> {% else %} <i class="fa fa-times " aria-hidden="true"></i>{% endif %} </td>
+      <td >{{ el.status }}</td>
+    </tr>
+    {% endfor %} 
+  {% endif %}
+  
+  </tbody>
+</table>
+    </div>
+
+    <div class="row centered col-sm-12">
+    <table class="table">
+  <thead class="bC-grey c-31">
+    <tr>
+      <th >#</th>
+      <th >description</th>
+      <th >uploaded at</th>
+      <th >document</th>
+    </tr>
+  </thead>
+  <tbody>
+  
+  {% if medical_files|length == 0 %}
+      <tr>
+      <th scope="row"  >1</th>
+      <td >N/A</td>
+      <td >N/A</td>
+      <td >N/A</td>
+    </tr>  
+  {% else %}
+
+    {% for el in medical_files %}
+    <tr>
+      <th scope="row" >{{ forloop.counter }}</th>
+      <td >{{ el.description }}</td>
+      <td >{{ el.uploaded_at }}</td>
+      <td ><a href="{{ el.document.url }}" target="_blank">{{ el.document.name }}</a></td>
+    </tr>
+    {% endfor %} 
+  {% endif %}
+  
+  </tbody>
+</table>
+    </div>
+
+
+    <div class="row centered">
+        <div class="col-sm-12 row centered">
+        {% include "common/forms/history-form.html" %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

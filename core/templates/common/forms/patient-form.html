@@ -1,0 +1,65 @@
+{% comment %}
+    Info:       Patient form (full)
+    Requires:   css and js of static/mdl/*
+    Note:       Don't forget to load staticfiles #}
+{% endcomment %}
+
+<form id="id-add-item-form" method="post" enctype="multipart/form-data" class="a-mdl-form">
+    {% csrf_token %}
+    {% include "common/forms/common-form-errors.html" %}
+    <fieldset class="scheduler-border">
+        <legend class="scheduler-border">Patient Details</legend>
+        {% include "common/fields/id-field.html" with item=form.patient_id  %}
+        
+        {% comment %}  
+        <div class="card-xl feedback bCw bS-3">
+		    <div class="p-16">
+		        <div class="fS16 title-text c-31">
+		            <span>Abhishek Rai</span>
+		        </div>
+		    </div>
+		    <div class="pLR-16">
+		        <div class="mT4 row-flex fill">
+		            <div class="light-txt">
+		                <span class="b">Gender:</span>
+		                
+		                <span>Male</span>
+		                
+		            </div>
+		            <div class="light-txt">
+		                <span class="b">Mob:</span>
+		                <span >+91-9953193378</span>
+		            </div>
+		        </div>
+		    </div>
+		    <div class="p-16 mT-8 bT-1">
+		        <div class="">
+		            
+		        </div>
+		        <div class="row-flex r2l">
+		            
+		        </div>
+		    </div>
+        </div>
+        {% endcomment %}
+        
+        {% url 'api_get_patient' as search_url %}
+        
+        {% include "common/fields/char-field.html" with item=form.first_name search=True url=search_url data_type="patient"%}
+        {% include "common/fields/char-field.html" with item=form.middle_name %}
+        {% include "common/fields/char-field.html" with item=form.last_name %}
+        {% include "common/fields/char-choice-field.html" with item=form.sex item_fields=form.fields.sex %}
+        {% include "common/fields/date-field.html" with item=form.dob %}
+        {% include "common/fields/char-field.html" with item=form.age %}
+        
+    </fieldset>
+    {% if cancel_url %}
+    <input type="hidden" name="cancel" value="{{ cancel_url }}"/>
+    {% endif %} 
+    <div class="tAr">
+        <input class="mdl-button" type="button" name="cancel" value="Cancel" id="id-form-cancel" onclick="location.href=&#39;{{ cancel_url }}&#39;"/>   
+        <input class="mdl-button mdl-button--colored" type="submit" name="submit" value="Save changes" id="id-form-submit"/> 
+    </div>
+</form>
+{% comment %} Common add-item-form script {% endcomment %}
+{% include "common/forms/common-form-scripts.html" %}

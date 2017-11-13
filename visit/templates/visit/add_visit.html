@@ -1,0 +1,120 @@
+{% extends "core/base.html" %}
+{% load staticfiles  %}
+
+{% block title %}
+<span class="fS24">{{ patient_detail.full_name }} </span> <span class="fS16 c-31 mL-32"> Prescription </span>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="row col-sm-12 centered mL-32">
+	        <ul class="nav nav-tabs">
+    			  <li class="nav-item">
+    			    <a class="nav-link active" data-toggle="tab" href="#div_id_complaints" role="tab">Complaints</a>
+    			  </li>
+    			  <li class="nav-item">
+    			    <a class="nav-link" data-toggle="tab" href="#div_id_medicine" role="tab">Medicines</a>
+    			  </li>
+    			  <li class="nav-item">
+    			    <a class="nav-link" data-toggle="tab" href="#" role="tab">Diagnosis</a>
+    			  </li>
+    			  <li class="nav-item">
+    			    <a class="nav-link disabled" data-toggle="tab" href="#" role="tab">Disabled</a>
+    			  </li>
+			    </ul>
+        </div>
+
+        <div class="row col-sm-12 centered mL-32 mT-32" id="added_complaint">
+        </div>
+
+        <div class="row col-sm-12 centered mL-32 mT-32" id="added_medicine">
+            <table class="table">
+                <tbody>
+                  <tr>
+                    <td>
+                      TAB - macrocin : 500 mg
+                    </td>
+                    <td>
+                      din me ek bar after food
+                    </td>
+                    <td>
+                      for 5 days
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="row col-sm-12 centered mL-32 mT-32 tab-content">
+            <div id="div_id_complaints" class="tab-pane active row col-sm-12 centered" role="tabpanel">
+                <div class="form-element pLR-8">
+                {% csrf_token %}
+                    <label for="id_complaints">
+                        <strong>Complaints</strong>
+                        <input id="id_complaints" class="translit form-input search-term add-term" name="complaints" type="text"
+                        spellcheck="false" autocomplete="off" maxlength="300" data-url="{% url "complaints:api_get_complaints" %}" data-type="complaints" />
+                    </label>
+                </div>
+            </div>
+
+            <div id="div_id_medicine" class="tab-pane row" role="tabpanel">
+                <fieldset class="scheduler-border col-sm-12 centered">
+                    <legend class="scheduler-border">Medicine</legend>
+                    {% url 'medicines:api_get_medicine' as url %}
+                    <table >
+                    <tr>
+                        <td class="form-element pLR-8">
+                            <label for="id_input_medicine">
+                            <strong>Medicine</strong>
+                            <input id="id_input_medicine" class="translit form-input search-term" name="medicine" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" data-url="{{ url }}" data-type="medicine" />
+                            </label>
+                        </td>
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_dosage">
+                                <strong>Dosage</strong>
+                                <input id="id_input_dosage" class="translit form-input search-term" name="dosage" type="text"
+                                 spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_dosage_values"}' data-type="medicine-dosage" />
+                            </label>
+                        </td>
+                        <td class="form-element pLR-8 ">
+                            <label for="id_input_frequency">
+                            <strong>Frequency</strong>
+                            <input id="id_input_frequency" class="translit form-input search-term" name="frequency" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_frequency_values"}' data-type="medicine-frequency" />
+                            </label>
+                        </td>
+                        <td class="form-element pLR-8 w80px">
+                            <label for="id_input_duration">
+                                <strong>Duration</strong>
+                                <input id="id_input_duration" class="translit form-input" name="duration" type="text"
+                                 spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td>
+                        <td class="form-element pLR-8 w80px">
+                            <label for="id_input_type">
+                                <strong>Type</strong>
+                                <input id="id_input_type" class="translit form-input search-term" name="type" type="text"
+                                 spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_type_values"}' data-type="medicine-type"/>
+                            </label>
+                        </td>
+                     </tr>
+                     <tr>
+                       <td>
+                           <div class="pull-left">
+                              <input class="button" type="button" name="add" value="Add" id="id-medicine-add"/>
+                            </div>
+                       </td>
+                     </tr>
+                    </table>
+                </fieldset>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

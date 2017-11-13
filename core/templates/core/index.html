@@ -1,0 +1,63 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+Patient's Records
+{% endblock %}
+
+{% block content %}
+
+<section class="pT-8 pB-16 wFull">
+    <div class="row centered">
+        <div class="col-sm-12 row centered">
+            <div class="col-sm-4">
+                <div class="links-card">
+                    <a href="{% url "add_patient" %}" class="member">
+                        <div class="action-button c-61 svg48">
+                        {% include "common/svg/person.html" %}
+                        </div>
+                        <div class="caption">
+                            Add Person
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="links-card">
+                    <a href="" class="member">
+                        <div class="action-button c-61 svg48">
+                        {% include "common/svg/person.html" %}
+                        </div>
+                        <div class="caption">
+                            Add Poetry
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="links-card">
+                    <a href="" class="member">
+                        <div class="action-button c-61 svg48">
+                        {% include "common/svg/person.html" %}
+                        </div>
+                        <div class="caption">
+                            Add Book
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% include "common/include/search-bar.html" %}
+
+<div class="row centered">
+{% include "common/include/empty-results-graphics.html" %}
+</div>
+
+
+
+{% endblock %}

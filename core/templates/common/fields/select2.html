@@ -1,0 +1,20 @@
+{% comment %}
+    Info: Field Foregnkey.
+    Requires: 1) Can be included in the Form of an item having a ForeignKey
+            2) creator-select2-js.html needs to be included after this file.
+{% endcomment %}
+<link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
+        <div id="div_id_{{item.label}}" class="form-element">
+            <label for="id_{{item.label}}">
+                <strong>{{item.label}}</strong>
+            </label>
+            <select id="id_{{item.label}}" class="js-example-responsive" name="{{item.name}}" required>
+            {% if item_fields.choices %}{% for x,y in item_fields.choices %}
+                <option value="{{ x }}"{% if item.value == x %} selected=selected{% endif %}>{{ y }}</option>
+            {% endfor %}{% endif %}
+            </select>
+        {% if item.errors %}
+            {% for error in item.errors %}<span class="error-text">{{ error|escape }}</span>{% endfor %}
+        {% endif %}
+        {% if item.help_text %}<span class="help-text">{{ item.help_text|safe }}</span>{% endif %}
+        </div>

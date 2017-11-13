@@ -1,0 +1,19 @@
+{% comment %} Common add-item-form script {% endcomment %}
+<script>
+{% comment %} jquery independent script {% endcomment %}
+document.addEventListener('DOMContentLoaded', function () {
+    var showExtraFields = function(){
+        $('#id-extra-fields').removeClass('hidden');
+        $('#id-extra-btn').addClass('hidden');
+    };
+    var formError = function(){
+        $('#id-add-item-form').addClass('error');
+    };
+    {% if form.errors %}
+    formError();
+    showExtraFields();
+    {% else %}
+    $('#id-extra-btn').on('click', showExtraFields);
+    {% endif %}
+});
+</script>

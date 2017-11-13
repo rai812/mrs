@@ -1,0 +1,25 @@
+{% comment %}
+    Info:       Char type Field.
+    Requires:   Can be included in the Form of an item having CharField 
+    Note:       xxx
+{% endcomment %}
+
+        <div id="div_id_{{item.label}}" class="form-element">
+            <label for="id_first_name">
+                <strong>{{item.label}}</strong>
+                <input id="id_{{item.label| slugify}}" class="translit form-input {% if search %}search-term{% endif %}" name="{{item.name}}" type="text"
+                 spellcheck="false" autocomplete="off" maxlength="300" {% if search %}data-url="{{ url }}" data-type="{{ data_type }}"{% endif %} value="{{ item.value|default_if_none:'' }}" {% if item.field.required %} required {% endif %}/>
+                 {% comment %}                 {% if search %}
+                 <div id="search-results" class="bS-5 position-abs">
+                 
+                 </div>
+                 
+                 {% endif %}
+                 {% endcomment %}
+                 
+            </label>            
+        {% if item.errors %}
+            {% for error in item.errors %}<span class="errormsg">{{ error|escape }}</span>{% endfor %}
+        {% endif %}
+            {% if item.help_text %}<span class="help-text">{{ item.help_text|safe }}</span>{% endif %}
+        </div>

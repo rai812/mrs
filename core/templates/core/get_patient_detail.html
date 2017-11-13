@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+{{ obj.full_name }}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="pT-8 pB-16 wFull">
+    <div class="row centered">
+        <div class="col-lg-12 row centered">
+        <p> {{ obj.first_name }}</p>
+        <p> {{ obj.middle_name }}</p>
+        <p> {{ obj.last_name }}</p>
+        <p> {{ obj.sex }}</p>
+        <p> {{ obj.get_age }}</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

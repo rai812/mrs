@@ -1,0 +1,16 @@
+{% comment %}
+    Info:       Field type text.
+    Requires:   Can be included in the Form of an item having 'body' as TextField 
+    Note:       xxx
+{% endcomment %}
+
+        <div id="div_id_{{item.label}}" class="form-element"> 
+            <label for="id_{{item.label}}">
+                <strong>{{item.label}}</strong>
+                <textarea id="id_{{item.label}}" class="translit form-input" name="{{item.name}}" rows="12" required>{{ item.value|default_if_none:'' }}</textarea>
+            </label>
+        {% if item.errors %}
+            {% for error in item.errors %}<span class="errormsg">{{ error|escape }}</span>{% endfor %}
+        {% endif %}
+        {% if item.help_text %}<span class="help-text">{{ item.help_text|safe }}</span>{% endif %}
+        </div>

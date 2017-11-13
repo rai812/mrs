@@ -1,0 +1,151 @@
+{% comment %}
+    Info:       Patient form (full)
+    Requires:   css and js of static/mdl/*
+    Note:       Don't forget to load staticfiles #}
+{% endcomment %}
+
+{% load static %}
+
+<form id="id-add-item-form" method="post" enctype="multipart/form-data" class="a-mdl-form ">
+    {% csrf_token %}
+    {% include "common/forms/common-form-errors.html" %}
+    <fieldset class="scheduler-border">
+        <legend class="scheduler-border">Patient Medical History</legend>
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">History</legend>
+            {% url 'complaints:api_get_disease' as url %}
+            {% include "common/fields/id-field.html" with item=form.disease_id  %}
+            <table>
+            <tr>
+                <td class="form-element pLR-8"> 
+                    <label for="id_{{form.disease.label| slugify}}">
+	                <strong>{{form.disease.label}}</strong>
+	                <input id="id_{{form.disease.label| slugify}}" class="translit form-input search-term" name="{{form.disease.name}}" type="text"
+	                 spellcheck="false" autocomplete="off" maxlength="300" data-url="{{ url }}" data-type="disease" value="{{ form.disease.value|default_if_none:'' }}"/>
+	            </label>
+		        {% if form.disease.errors %}
+		            {% for error in form.disease.errors %}<span class="errormsg">{{ error|escape }}</span>{% endfor %}
+		        {% endif %}
+		            {% if form.disease.help_text %}<span class="help-text">{{ form.disease.help_text|safe }}</span>{% endif %}
+                </td>
+                <td class="form-element pLR-8">
+                    <label for="id_{{form.date_of_diagnosis.label| slugify}}">
+                        <strong>{{form.date_of_diagnosis.label}}</strong>
+                        <input type='text' class="translit form-input" name="{{ form.date_of_diagnosis.name }}" id="{{ form.date_of_diagnosis.label | slugify }}"
+                        spellcheck="false" autocomplete="off" maxlength="300" value="{{ form.date_of_diagnosis.value|default_if_none:'' }}" />
+                    </label>
+                    {% if form.date_of_diagnosis.errors %}
+                    {% for error in form.date_of_diagnosis.errors %}<span class="errormsg">{{ error|escape }}</span>{% endfor %}
+                {% endif %}
+                    {% if form.date_of_diagnosis.help_text %}<span class="help-text">{{ form.date_of_diagnosis.help_text|safe }}</span>{% endif %}
+                </td>
+                <td class="pLR-8">
+                <table>
+                    <tr>
+                       <td class="form-element pLR-8 row-flex">
+                          <span class="mR-8">
+                            <strong>{{form.active.label}}</strong>
+                            </span>
+                        </td>
+                        <td>
+                              <span class = "material-switch pull-right mL-8" >
+                                <input type='checkbox' name="{{ form.active.name }}" id="id_{{ form.active.label | slugify }}"/>
+                                <label for="id_{{form.active.label| slugify}}" class="label-danger" ></label>
+                             </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-element pLR-8 row-flex">
+                          <span class="mR-8">
+                            <strong>infectious?</strong>
+                          </span>
+                        </td>
+                        <td>
+                              <span class = "material-switch pull-right mL-8" >
+                                <input type='checkbox' name="{{ form.infectious_disease.name }}" id="id_{{ form.infectious_disease.label | slugify }}"/>
+                                <label for="id_{{form.infectious_disease.label| slugify}}" class="label-danger" ></label>
+                             </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-element pLR-8 row-flex">
+                          <span class="mR-8">
+                            <strong>allergic?</strong>
+                          </span>
+                        </td>
+                        <td>
+                          <span class = "material-switch pull-right mL-8" >
+                             <input type='checkbox' name="{{ form.allergic_disease.name }}" id="id_{{ form.allergic_disease.label | slugify }}"/>
+                            <label for="id_{{form.allergic_disease.label| slugify}}" class="badge-danger" ></label>
+                          </span>
+                        </td>
+                    </tr>
+                    </table>
+                </td>
+                
+                <td class="form-element pLR-8">
+                    <label for="id_{{form.status.label| slugify}}">
+                        <strong>{{form.status.label}}</strong>
+                        <textarea class="translit form-input" name="{{ form.status.name }}" id="{{ form.status.label | slugify }}"
+                        rows="5" cols="50" value="{{ form.status.value|default_if_none:'' }}"> </textarea>
+                    </label>
+                </td>
+            </tr>
+            </table>
+        </tr>    
+    </fieldset>
+    <fieldset class="scheduler-border">
+        
+        <legend class="scheduler-border">Medical files</legend>
+         <table>
+            <tr>
+                <td class="form-element pLR-8"> 
+                    <label for="id_{{form1.description.label| slugify}}">
+                    <strong>{{form1.description.label}}</strong>
+                    <input id="id_{{form1.description.label| slugify}}" class="translit form-input" name="{{form1.description.name}}" type="text"
+                     spellcheck="false" autocomplete="off" maxlength="300"  value="{{ form1.description.value|default_if_none:'' }}" />
+                </label>
+                {% if form1.description.errors %}
+                    {% for error in form.description.errors %}<span class="errormsg">{{ error|escape }}</span>{% endfor %}
+                {% endif %}
+                    {% if form1.description.help_text %}<span class="help-text">{{ form1.description.help_text|safe }}</span>{% endif %}
+                </td>
+                <td class="form-element pLR-8"> 
+                    <label for="id_{{form1.document.label| slugify}}">
+                    <strong>{{form1.document.label}}</strong>
+                    <input id="id_{{form1.document.label| slugify}}" class="translit form-input " name="{{form1.document.name}}" type="file" multiple/>
+                </label>
+                {% if form1.document.errors %}
+                    {% for error in form1.document.errors %}<span class="errormsg">{{ error|escape }}</span>{% endfor %}
+                {% endif %}
+                    {% if form1.document.help_text %}<span class="help-text">{{ form1.document.help_text|safe }}</span>{% endif %}
+                </td>
+            </tr>
+         </table>
+        
+    
+    </fieldset>
+    
+    {% if cancel_url %}
+    <input type="hidden" name="cancel" value="{{ cancel_url }}"/>
+    {% endif %} 
+    <div class="tAr">
+        <input class="mdl-button" type="button" name="cancel" value="Cancel" id="id-form-cancel" onclick="location.href=&#39;{{ cancel_url }}&#39;"/>   
+        <input class="mdl-button mdl-button--colored" type="submit" name="submit" value="Save changes" id="id-form-submit"/> 
+    </div>
+</form>
+
+<script type="text/javascript" src="{% static "js/add_form.js" %}"></script>
+<script type="text/javascript">
+    $(function (){
+        $('.add-row').click(function(){
+            return addForm(this, 'form');
+        });
+        $('.delete-row').click(function(){
+        return deleteForm(this, 'form');
+        })
+    })
+</script>
+
+{% comment %} Common add-item-form script {% endcomment %}
+{% include "common/forms/common-form-scripts.html" %}

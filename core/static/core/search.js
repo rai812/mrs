@@ -1,0 +1,539 @@
+	var getCookie = function(name){
+	    var cookieValue = null;
+	    if (document.cookie && document.cookie != '') {
+	        var cookies = document.cookie.split(';');
+	        for (var i = 0; i < cookies.length; i++) {
+	            var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	};
+	
+	var csrfSafeMethod = function(method) {
+	    // these HTTP methods do not require CSRF protection
+	    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	};
+
+	
+var add_medicine = function () {
+	
+    $.ajax({
+        cache: false,
+        url : window.location.origin+"/medicines/api/add_medicine/",
+        type: "POST",
+        dataType : "json",
+        contentType: "application/json;",
+        data : JSON.stringify({'medicine':medicine, 'duration':duration, 'dosage':dosage, 'frequency':frequency, 'type':type}),
+        context : this,
+        success : function (data) {
+        	
+        	if(data.ret == 'False')
+        	{
+        		/*
+        		 * TODO add some visual indication for the user
+        		 */
+        		console.log(data.result);
+        		return;
+        	}
+        	
+		    var str = complaintDispalyString(data.id,data.description);
+	    	$('#added_complaint').append(str);
+	    	
+	    	$(document).off("click",".del-complaint");
+	    	
+	    	$(document).on("click", ".del-complaint" , function( event ) {
+	    		$(this).parent().remove();
+	    	});
+	    	
+	    	$('#id_complaints').val("")
+	    	
+	    	event.stopImmediatePropagation();
+	    	
+	        $('#search-close').remove();
+	        $('#search-results').remove();
+        	
+        },
+        error : function (xhRequest, ErrorText, thrownError) {
+            //alert("Failed to process annotation correctly, please try again");
+            console.log('xhRequest: ' + xhRequest + "\n");
+            console.log('ErrorText: ' + ErrorText + "\n");
+            console.log('thrownError: ' + thrownError + "\n");
+        }
+    });	
+}
+
+
+$(document).ready(function() {
+var thread = null;
+
+var createPatientString = function(i,item) {
+    var str = '\
+        <div class="card-xl patient-card bCw curP bS-5" data-id="' + item.id +'"  data-fname="' + item.first_name + '" data-mname="' + item.middle_name + 
+        '" data-lname="' + item.last_name + '" data-sex="' + item.sex + '" data-age="' + item.age + '" data-dob="'+ item.dob + 
+        '" data-mob="' + item.mob + '" > \
+            <div class="pLR-16 pTB-8"> \
+                <div class="fS16 title-text c-31"> \
+                    <span>' + item.full_name + '</span> \
+                </div> \
+                <div class="mT-8"> \
+                    <div class="mT4 row-flex fill"> \
+                        <div class="light-txt"> \
+                            <span class="b">' + item.age + '</span> \
+                            <span class="b">' + item.sex + '</span> \
+                        </div> \
+                        <div class="light-txt"> \
+                            <span class="b">Mob:</span> \
+                            <span>' + item.mob + '</span> \
+                        </div> \
+                    </div> \
+                </div> \
+            </div> \
+        </div>';
+    return str;
+}
+
+var createDiseaseString = function(i,item) {
+    var str = '\
+        <div class="card-xl disease-card bCw curP bS-5" data-id="' + item.id +'"  data-name="' + item.name + '" > \
+            <div class="pLR-16 pTB-8"> \
+                <div class="fS16 title-text c-31"> \
+                    <span>' + item.name + '</span> \
+                </div> \
+            </div> \
+        </div>';
+    return str;
+}
+
+var createMedicineFieldString = function(i,item) {
+    var str = '\
+        <div class="card-xl medicine--field-card bCw curP bS-5" data-name="' + item.value + '" > \
+            <div class="pLR-16 pTB-8"> \
+                <div class="fS16 title-text c-31"> \
+                    <span>' + item.value + '</span> \
+                </div> \
+            </div> \
+        </div>';
+    return str;
+}
+
+
+
+var createMedicineString = function(i,item) {
+    var str = '\
+        <div class="card-xl medicine-card bCw curP bS-5" data-id="' + item.id +'"  data-type="' + item.type + '" data-name="' + item.medicine + 
+        '" data-dosage="' + item.dosage + '" data-frequency="' + item.frequency + '" data-duration="' + item.duration + '" > \
+            <div class="pLR-16 pTB-8"> \
+                <div class="fS16 title-text c-31"> \
+                    <span>' + item.type + ' - ' + item.medicine +  '</span> \
+                </div> \
+                <div class="mT-8"> \
+                    <div class="mT4 row-flex fill"> \
+                        <div class="light-txt"> \
+                            <span class="b">' + item.dosage + '</span> \
+                            <span class="b">' + item.frequency + '</span> \
+                        </div> \
+                        <div class="light-txt"> \
+                            <span class="b">Duration:</span> \
+                            <span>' + item.duration + '</span> \
+                        </div> \
+                    </div> \
+                </div> \
+            </div> \
+        </div>';
+    return str;
+}
+
+
+var createComplaintString = function(i,item) {
+    var str = '\
+        <div class="card-xl complaint-card bCw curP bS-5" data-id="' + item.id +'"  data-description="' + item.name +
+        	'"  data-remarks="' + item.remarks +'" > \
+            <div class="pLR-16 pTB-8"> \
+                <div class="fS16 title-text c-31"> \
+                    <span>' + item.name + '</span> \
+                </div> \
+                <div class="mT-8"> \
+                <div class="mT4 row-flex fill"> \
+                    <div class="light-txt"> \
+                        <span class="b">' + item.remarks + '</span> \
+                    </div> \
+                </div> \
+            </div> \
+            </div> \
+        </div>';
+    return str;
+}
+
+var complaintDispalyString = function(id,value) {
+	var str = '\
+		<span class="tag label label-info c-31" data-id="' + id + '"> \
+		<span>' + value + '</span> \
+		<i class="fa fa-times-circle del-complaint" aria-hidden="true"></i> \
+		</span>';
+	
+	return str;
+
+}
+
+
+var addComplaintString  = function(value) {
+	
+    var str = '\
+        <div class="card-xl bCw curP bS-5" > \
+            <div class="pLR-16 pTB-8 add-button" data-url="/complaints/api/add_complaints/"> \
+                <div class="fS16 title-text c-31"> \
+                    <span id="add-value">' + value + '</span> \
+                </div> \
+                <div class="mT-8"> \
+                <div class="mT4 row-flex fill"> \
+                    <div class="light-txt "> \
+                        <span class="b" > Add to Database </span> \
+                    </div> \
+                </div> \
+            </div> \
+            </div> \
+        </div>';
+    return str;
+}
+
+
+    function formatMember(data) {
+    
+    console.log($(this));
+    console.log(data);
+    
+    if(data.length == 0 && !($(this).hasClass("add-term")))
+    	return
+    	
+    
+    var final_str = "";
+
+
+	data_type = $(this).data('type')
+	
+	if(data_type == 'patient')
+	{
+		$.each(data,function (i,item) {
+			final_str += createPatientString(i,item)
+		});
+	}
+	else if(data_type == 'disease')
+	{
+		$.each(data,function (i,item) {
+			final_str += createDiseaseString(i,item)
+		});
+	}
+	else if(data_type == 'medicine')
+	{
+		$.each(data,function (i,item) {
+			final_str += createMedicineString(i,item)
+		});	
+	}
+	else if(data_type == 'complaints')
+	{
+		$.each(data,function (i,item) {
+			final_str += createComplaintString(i,item)
+		});
+		
+		final_str +=  addComplaintString($(this).val())
+	}
+	else if(data_type == 'medicine-type' || data_type == 'medicine-frequency' || data_type == 'medicine-dosage')
+	{
+		$.each(data,function (i,item) {
+			final_str += createMedicineFieldString(i,item)
+		});	
+	}
+
+
+	
+
+    var pos = $(this).position();
+    
+    if($('#search-results').length == 0) {
+    	  //it doesn't exist
+    	console.log("Creating new search-result")
+    	$('<div id="search-results"> </div>')
+        .html(final_str)
+        .css({
+            top: pos.top + $(this).height()  + 5,
+            left: pos.left,
+            position: 'absolute',
+            width: $(this).width()
+        }).insertAfter($(this)).css("z-index", "1000").addClass("bS-5 position-abs");
+    }
+    else
+    {
+    	console.log("Editing existing search-result")
+        $('#search-results')
+        .html(final_str)
+        .css({
+            top: pos.top + $(this).height()  + 5,
+            left: pos.left,
+            position: 'absolute',
+            width: $(this).width()
+        }).css("z-index", "1000");
+    }
+    
+    if($('#search-close').length == 0)
+    {
+    	console.log("Creating close button")
+        $('<div id="search-close"> </div>')
+        .html("close")
+        .css({
+            top: pos.top + $(this).height()  + 2,
+            left: pos.left + $(this).width() - 35,
+            position: 'absolute',
+            opacity: 0.8,
+        }).insertAfter($(this)).css("z-index", "2000").addClass("curP position-abs c-red")
+        
+        $(document).off("click","#search-close");
+        
+        $(document).on("click", "#search-close" , function(event) {
+        	event.stopImmediatePropagation();
+            $('#search-results').remove();
+            $('#search-close').remove();
+        });
+        
+    }
+    
+    	/*
+    	 * bind click action to add-button 
+    	 */
+    	
+	    $(document).off("click",".add-button");
+	    
+	    $(document).on("click", ".add-button" , function(event) {
+	    
+		    	event.stopImmediatePropagation();
+		    	
+		    $.ajaxSetup({
+		        beforeSend: function(xhr, settings) {
+		            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+		            }
+		        }
+		    });
+		    //Save Form Data........
+		    
+		    var complaints = {}
+		    complaint_name = $('#add-value').text() 
+		    
+		    $.ajax({
+		        cache: false,
+		        url : window.location.origin+$(this).data("url"),
+		        type: "POST",
+		        dataType : "json",
+		        contentType: "application/json;",
+		        data : JSON.stringify({'complaint_name':complaint_name}),
+		        context : this,
+		        success : function (data) {
+		        	
+		        	if(data.ret == 'False')
+		        	{
+		        		/*
+		        		 * TODO add some visual indication for the user
+		        		 */
+		        		console.log(data.result);
+		        		return;
+		        	}
+		        	
+				    var str = complaintDispalyString(data.id,data.description);
+			    	$('#added_complaint').append(str);
+			    	
+			    	$(document).off("click",".del-complaint");
+			    	
+			    	$(document).on("click", ".del-complaint" , function( event ) {
+			    		$(this).parent().remove();
+			    	});
+			    	
+			    	$('#id_complaints').val("")
+			    	
+			    	event.stopImmediatePropagation();
+			    	
+			        $('#search-close').remove();
+			        $('#search-results').remove();
+		        	
+		        },
+		        error : function (xhRequest, ErrorText, thrownError) {
+		            //alert("Failed to process annotation correctly, please try again");
+		            console.log('xhRequest: ' + xhRequest + "\n");
+		            console.log('ErrorText: ' + ErrorText + "\n");
+		            console.log('thrownError: ' + thrownError + "\n");
+		        }
+		    });	
+
+	    	
+	    });
+    
+    
+    
+	if(data_type == 'patient')
+	{
+	    $(document).off("click",".patient-card");
+	    
+	    $(document).on("click", ".patient-card" , function(event ) {
+	    	
+	        console.log($(this).data("fname"))
+	        console.log($(this).data("mname"))
+	        console.log($(this).data("lname"))
+	        console.log($(this).data("sex"))
+	        console.log($(this).data("age"))
+	        console.log($(this).data("dob"))
+	        console.log($(this).data("mob"))
+	        
+	        $('#id_patient-id').val($(this).data("id"))
+	        $('#id_first-name').val($(this).data("fname"))
+	        $('#id_middle-name').val($(this).data("mname"))
+	        $('#id_last-name').val($(this).data("lname"))
+	        $('#id_sex').val($(this).data("sex"))
+	        $('#id_age').val($(this).data("age"))
+	        $('#id_dob').val($(this).data("dob"))
+	        $('#id_mobile-number').val($(this).data("mob"))
+	        event.stopImmediatePropagation();
+	        $('#search-close').remove();
+	        $('#search-results').remove();
+	    });
+	}
+	else if(data_type == 'disease')
+	{
+	    $(document).off("click",".disease-card");
+	    
+	    $(document).on("click", ".disease-card" , function(event) {
+	    	
+	        console.log($(this).data("name"))
+	        console.log($(this).data("id"))
+	        
+	        $('#id_disease-id').val($(this).data("id"))
+	        $('#id_disease').val($(this).data("name"))
+	        event.stopImmediatePropagation();
+	        $('#search-close').remove();
+	        $('#search-results').remove();
+	    });
+	}
+	else if(data_type == 'medicine')
+	{
+	    $(document).off("click",".medicine-card");
+	    
+	    $(document).on("click", ".medicine-card" , function(event) {
+	    	
+	        console.log($(this).data("name"))
+	        console.log($(this).data("id"))
+	        
+	        $('#id_medicine-id').val($(this).data("id"))
+	        $('#id_type').val($(this).data("type"))
+	        $('#id_medicine').val($(this).data("medicine"))
+	        $('#id_dosage').val($(this).data("dosage"))
+	        $('#id_frequency').val($(this).data("frequency"))
+	        $('#id_duration').val($(this).data("duration"))
+	        event.stopImmediatePropagation();
+	        $('#search-close').remove();
+	        $('#search-results').remove();
+	    });
+	}
+	else if(data_type == 'complaints')
+	{
+	    $(document).off("click",".complaint-card");
+	    
+	    $(document).on("click", ".complaint-card" , function() {
+	    	
+	    	console.log($(this))
+		    var str = complaintDispalyString($(this).data("id"),$(this).data("description"));
+	    	$('#added_complaint').append(str);
+	    	
+	    	
+	    	$(document).off("click",".del-complaint");
+	    	
+	    	$(document).on("click", ".del-complaint" , function(event) {
+	    		event.stopImmediatePropagation();
+	    		$(this).parent().remove();
+	    	});
+	    	
+	    	$('#id_complaints').val("")
+	    	
+	        $('#search-close').remove();
+	        $('#search-results').remove();
+	        
+	    });
+	}
+	else if(data_type == 'medicine-type' || data_type == 'medicine-frequency' || data_type == 'medicine-dosage')
+	{
+		$(document).off("click",".medicine-field-card");
+	    $(document).on("click", ".medicine-field-card" , function() {
+	    	
+	    	console.log($(this))
+	    	
+	    	$(this).val(data.value)
+	    	
+	        $('#search-close').remove();
+	        $('#search-results').remove();
+	        
+	    });
+		
+	}
+ }
+    
+    function findMember(t,ele) {
+    if(t.length >=3)
+    {
+        console.log(ele);
+        url = ele.data('url')
+        console.log(url)
+        $.ajax({
+            // the URL for the request
+            url: window.location.origin+url,
+         
+            // the data to send (will be converted to a query string)
+            data: {
+                format:'json',
+                q:t
+            },
+         
+            context: ele,
+            
+            // whether this is a POST or GET request
+            type: "GET",
+         
+            // the type of data we expect back
+            dataType : "json",
+         
+            // code to run if the request succeeds;
+            // the response is passed to the function
+            success: formatMember,
+         
+            // code to run if the request fails; the raw request and
+            // status codes are passed to the function
+            error: function( xhr, status, errorThrown ) {
+                //alert( "Sorry, there was a problem!" );
+                console.log( "Error: " + errorThrown );
+                console.log( "Status: " + status );
+                console.dir( xhr );
+                 var snackbarContainer = document.querySelector('#flash_message');
+                 var msg = {message: "Something went wrong. Try Again!!!"};
+                 snackbarContainer.MaterialSnackbar.showSnackbar(msg);
+
+            },
+         
+            // code to run regardless of success or failure
+            complete: function( xhr, status ) {
+                //alert( "The request is complete!" );
+            }
+        });
+    }
+    else{
+    	$('#search-results').remove();
+    	$('#search-close').remove();
+    }
+    
+    
+    }
+
+    $('.search-term').keyup(function() {
+      clearTimeout(thread);
+      var $this = $(this); thread = setTimeout(function(){findMember($this.val(),$this)}, 500);
+    });
+    });
