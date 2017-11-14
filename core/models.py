@@ -165,6 +165,23 @@ class Patient(models.Model):
         super(Patient, self).save(*args, **kwargs)
         
 
+class Vitals(models.Model):
+    vital_id = models.AutoField(primary_key=True)
+    weigth = models.CharField(max_length=30, blank=True,null=True)
+    height = models.CharField(max_length=30, blank=True,null=True)
+    oe = models.CharField(max_length=30, blank=True,null=True)
+    p_ce_cn_iol = models.CharField(max_length=30, blank=True,null=True)
+    temp = models.CharField(max_length=30, blank=True,null=True)
+    pulse = models.CharField(max_length=30, blank=True,null=True)
+    bp = models.CharField(max_length=30, blank=True,null=True)
+    rr = models.CharField(max_length=30, blank=True,null=True)
+    cns = models.CharField(max_length=30, blank=True,null=True)
+    chest = models.CharField(max_length=30, blank=True,null=True)
+    cvs = models.CharField(max_length=30, blank=True,null=True)
+    pa = models.CharField(max_length=30, blank=True,null=True)
+    tests = models.TextField(blank=True,null=True)
+
+
 class PatientForm(forms.ModelForm):
     patient_id = forms.IntegerField(required=False)
     class Meta:
