@@ -145,7 +145,7 @@
 	
 	var medicineDispalyString = function(id,type,medicine,frequency,dosage,duration) {
 		var str = '\
-			<tr data-id="' + id + '"> \
+			<tr class="medicine-display" data-id="' + id + '"> \
 			<td>' + type + ' - ' + medicine + ' : ' + dosage + '</td> \
 			<td>' + frequency + '</td> \
 			<td>' + ' for ' +  duration + '</td> \
@@ -156,6 +156,29 @@
 
 	}
 
+	var vitalsDispalyString = function(data) {
+		var str = '\
+			<tr class="vitals-display" data-id="' + data.id + '"> \
+			<td> Weight: ' + data.weight + '</td> \
+			<td> Height: ' + data.height + '</td> \
+			<td> OE: ' + data.oe + '</td> \
+			<td> P/CL/CN/I/O/L: ' + data.pce+ '</td> \
+			<td> Temp: ' + data.temp + '</td> \
+			<td> Pulse: ' + data.pulse + '</td> \
+			<td> BP: ' + data.bp + '</td> \
+			<td> RR: ' + data.rr + '</td> \
+			<td> CNS: ' + data.cns + '</td> \
+			<td> Chest: ' + data.chest + '</td> \
+			<td> CVS: ' + data.cvs + '</td> \
+			<td> PA: ' + data.pa + '</td> \
+			<td> Tests: ' + data.tests + '</td> \
+			</tr>';
+		
+		return str;
+
+	}
+
+	
 
 	var addComplaintString  = function(value) {
 		
@@ -266,6 +289,159 @@ var add_medicine = function () {
             console.log('thrownError: ' + thrownError + "\n");
         }
     });	
+}
+
+var add_vitals = function () {
+	
+	var weight = $('#id_input_weight').val();
+	var height = $('#id_input_height').val();
+	var oe = $('#id_input_oe').val();
+	var pce = $('#id_input_pce').val();
+	var bp = $('#id_input_bp').val();
+	var rr = $('#id_input_rr').val();
+	var temp = $('#id_input_temp').val();
+	var pulse = $('#id_input_pulse').val();
+	var cvs = $('#id_input_cvs').val();
+	var cns = $('#id_input_cns').val();
+	var chest = $('#id_input_chest').val();
+	var pa = $('#id_input_pa').val();
+	var tests = $('#id_input_tests').val();
+	
+	
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        }
+    });
+	
+	
+    $.ajax({
+        cache: false,
+        url : window.location.origin+"/core/api/add_vitals/",
+        type: "POST",
+        dataType : "json",
+        contentType: "application/json;",
+        data : JSON.stringify({'weight':weight, 'height':height, 'oe':oe, 'pce':pce, 'bp':bp, 'rr':rr, 'temp':temp, 'pulse':pulse, 'cvs':cvs, 'cns':cns, 'chest': chest
+        	, 'pa':pa, 'tests':tests}),
+        context : this,
+        success : function (data) {
+        	
+        	if(data.ret == 'False')
+        	{
+        		/*
+        		 * TODO add some visual indication for the user
+        		 */
+        		console.log(data.result);
+        		return;
+        	}
+        	
+		    var str = vitalsDispalyString(data);
+	    	$('#added_vitals').append(str);
+	    	
+	    	/*
+	    	 * Remove all input boxes
+	    	 */
+	    	$('#id_input_weight').val("")
+	    	$('#id_input_height').val("")
+	    	$('#id_input_oe').val("");       
+	    	$('#id_input_pce').val("");     
+			$('#id_input_bp').val("");       
+			$('#id_input_rr').val("");       
+			$('#id_input_temp').val("");   
+			$('#id_input_pulse').val(""); 
+			$('#id_input_cvs').val("");     
+			$('#id_input_cns').val("");     
+			$('#id_input_chest').val(""); 
+			$('#id_input_pa').val("");       
+			$('#id_input_tests').val(""); 
+	    	event.stopImmediatePropagation();
+        	
+        },
+        error : function (xhRequest, ErrorText, thrownError) {
+            //alert("Failed to process annotation correctly, please try again");
+            console.log('xhRequest: ' + xhRequest + "\n");
+            console.log('ErrorText: ' + ErrorText + "\n");
+            console.log('thrownError: ' + thrownError + "\n");
+        }
+    });	
+}
+
+var add_visit = function() {
+	
+	var complaintIds = new Array();	
+	$('.complaint-display').each(function () {
+		console.log($(this))
+		complaintIds.push($(this).attr('data-id'));
+        console.log($(this).attr('data-id'));
+    });
+
+	var medicineIds = new Array();	
+	$('.medicine-display').each(function () {
+		console.log($(this))
+		medicineIds.push($(this).attr('data-id'));
+        console.log($(this).attr('data-id'));
+    });
+
+	var diseaseIds = new Array();	
+	$('.disease-display').each(function () {
+		console.log($(this))
+		diseaseIds.push($(this).attr('data-id'));
+        console.log($(this).attr('data-id'));
+    });
+
+	var vitalId = $(".vitals-display").data("id")
+	var Remark = $("#id_input_remarks").val()
+	
+	console.log(complaintIds);
+	console.log(medicineIds);
+	console.log(diseaseIds);
+	console.log(vitalId);
+	console.log(Remark);
+	
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        }
+    });
+	
+	
+    $.ajax({
+        cache: false,
+        url : window.location.origin+"/visit/api/add_visit/",
+        type: "POST",
+        dataType : "json",
+        contentType: "application/json;",
+        data : JSON.stringify({'complaints':complaintIds, 'medicines':medicineIds, 'diseases':diseaseIds, 'vitals':vitalId, 'remark':Remark }),
+        context : this,
+        success : function (data) {
+        	
+        	if(data.ret == 'False')
+        	{
+        		/*
+        		 * TODO add some visual indication for the user
+        		 */
+        		console.log(data.result);
+        		return;
+        	}
+        	
+        	$('a[href="#div_id_report"]').removeClass("disabled")
+        	$('a[href="#div_id_report"]').tab('show')
+	    	event.stopImmediatePropagation();
+        	
+        },
+        error : function (xhRequest, ErrorText, thrownError) {
+            //alert("Failed to process annotation correctly, please try again");
+            console.log('xhRequest: ' + xhRequest + "\n");
+            console.log('ErrorText: ' + ErrorText + "\n");
+            console.log('thrownError: ' + thrownError + "\n");
+        }
+    });	
+
+	
 }
 
 
@@ -480,7 +656,7 @@ var thread = null;
 		        	}
 		        	
 				    var str = diseaseDispalyString(data.id,data.name);
-			    	$('#added_complaint').append(str);
+			    	$('#added_disease').append(str);
 			    	
 			    	$(document).off("click",".del-disease");
 			    	

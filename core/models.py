@@ -181,6 +181,8 @@ class Vitals(models.Model):
     pa = models.CharField(max_length=30, blank=True,null=True)
     tests = models.TextField(blank=True,null=True)
 
+    def __unicode__(self):
+        return "weight - %s Height - %s" % (self.weigth, self.height) 
 
 class PatientForm(forms.ModelForm):
     patient_id = forms.IntegerField(required=False)

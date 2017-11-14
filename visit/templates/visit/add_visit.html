@@ -14,19 +14,31 @@
     			    <a class="nav-link active" data-toggle="tab" href="#div_id_complaints" role="tab">Complaints</a>
     			  </li>
     			  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#div_id_vitals" role="tab">Vitals</a>
+                  </li>
+    			  <li class="nav-item">
     			    <a class="nav-link" data-toggle="tab" href="#div_id_medicine" role="tab">Medicines</a>
     			  </li>
     			  <li class="nav-item">
     			    <a class="nav-link" data-toggle="tab" href="#div_id_disease" role="tab">Diagnosis</a>
     			  </li>
     			  <li class="nav-item">
-    			    <a class="nav-link disabled" data-toggle="tab" href="#" role="tab">Disabled</a>
+    			    <a class="nav-link disabled" data-toggle="tab" href="#div_id_report" role="tab">Report</a>
     			  </li>
 			    </ul>
         </div>
 
         <div class="row col-sm-12 centered mL-32 mT-32" id="added_complaint">
         </div>
+
+        <div class="row col-sm-12 centered mL-32 mT-32" >
+            <table class="table row col-sm-12">
+                <tbody id="added_vitals" class="col-sm-12 fS14">
+
+                </tbody>
+            </table>
+        </div>
+
 
         <div class="row col-sm-12 centered mL-32 mT-32" >
             <table class="table row col-sm-12">
@@ -105,6 +117,135 @@
                 </fieldset>
             </div>
 
+            <div id="div_id_vitals" class="tab-pane row" role="tabpanel">
+                <fieldset class="scheduler-border col-sm-12 centered">
+                    <legend class="scheduler-border">Vitals</legend>
+                    <table >
+                    <tr>
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_weight">
+                            <strong>Weight</strong>
+                            <input id="id_input_weight" class="translit form-input " name="weight" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_height">
+                            <strong>Height</strong>
+                            <input id="id_input_height" class="translit form-input " name="height" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_oe">
+                            <strong>OE</strong>
+                            <input id="id_input_oe" class="translit form-input " name="oe" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_pce">
+                            <strong>P/CL/CN/I/O/L</strong>
+                            <input id="id_input_pce" class="translit form-input " name="pce" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                     </tr>
+
+                    <tr>
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_temp">
+                            <strong>Temp</strong>
+                            <input id="id_input_temp" class="translit form-input " name="temp" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_pulse">
+                            <strong>Pulse</strong>
+                            <input id="id_input_pulse" class="translit form-input " name="pulse" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_bp">
+                            <strong>BP</strong>
+                            <input id="id_input_bp" class="translit form-input " name="bp" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_rr">
+                            <strong>RR</strong>
+                            <input id="id_input_rr" class="translit form-input " name="rr" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+                     </tr>
+
+                    <tr>
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_cns">
+                            <strong>CNS</strong>
+                            <input id="id_input_cns" class="translit form-input " name="cns" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_chest">
+                            <strong>Chest</strong>
+                            <input id="id_input_chest" class="translit form-input " name="chest" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_cvs">
+                            <strong>CVS</strong>
+                            <input id="id_input_cvs" class="translit form-input " name="cvs" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+
+                        <td class="form-element pLR-8 w80px ">
+                            <label for="id_input_pa">
+                            <strong>PA</strong>
+                            <input id="id_input_pa" class="translit form-input " name="pa" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" />
+                            </label>
+                        </td> 
+                     </tr>
+
+                    <tr>
+		                <td class="form-element pLR-8">
+		                    <label for="id_tests">
+		                        <strong>Tests</strong>
+		                        <textarea class="translit form-input" name="tests" id="id_input_tests"
+		                        rows="5" cols="50" > </textarea>
+		                    </label>
+		                </td>                        
+                    </tr>
+
+                     <tr>
+                       <td>
+                           <div class="pull-left">
+                              <input class="button" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_vitals(this)"/>
+                            </div>
+                       </td>
+                     </tr>
+                    </table>
+                </fieldset>
+            </div>
+
+
             <div id="div_id_disease" class="tab-pane row col-sm-12 centered" role="tabpanel">
                 <div class="form-element pLR-8">
                 {% csrf_token %}
@@ -114,7 +255,23 @@
                         spellcheck="false" autocomplete="off" maxlength="300" data-url="{% url "complaints:api_get_disease" %}" data-type="disease" />
                     </label>
                 </div>
+                <div class="form-element pLR-8">
+                    <label for="id_remarks">
+                        <strong>Remarks</strong>
+                        <textarea class="translit form-input" name="remarks" id="id_input_remarks"
+                        rows="5" cols="50" > </textarea>
+                    </label>
+                </div>
+               <div class="pull-left">
+                  <input class="button" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_visit(this)"/>
+                </div>
             </div>
+
+            <div id="div_id_report" class="tab-pane row col-sm-12 centered" role="tabpanel">
+            Report Generated Successfully.
+
+            </div>
+
 
 
         </div>

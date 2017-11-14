@@ -6,7 +6,7 @@ from django.db import models
 
 from django.utils import timezone
 
-from core.models import Patient
+from core.models import Patient, Vitals
 from medication_list.models import MedicationList
 from complaints.models import Complaints, Disease
 
@@ -28,9 +28,11 @@ class Visit(models.Model):
     medicines = models.ManyToManyField(MedicationList)
 
     duration = models.CharField(max_length=100,
-                   help_text="Number of day or months"
+                   help_text="Number of day or months", blank=True, null=True
                 )
-
+    
+    vitals = models.ForeignKey(Vitals, null=True, blank=True)
+    
     remarks = models.TextField(max_length=200,
                                default="NAD",
                                help_text="limit to 200 words"

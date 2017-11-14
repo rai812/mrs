@@ -10,9 +10,10 @@ from django.http.response import Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 import json
 
+from django.views.decorators.csrf import csrf_protect
 
 
-from core.models import PatientForm, Patient, PatientSearchForm
+from core.models import PatientForm, Patient, PatientSearchForm, Vitals
 from core.search import get_query, normalize_query, get_query_for_nterms, strip_stopwords
 
 # Create your views here.
@@ -100,5 +101,57 @@ def add_patient(request):
 def get_patient_detail(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
     return render(request, "core/get_patient_detail.html", {"obj": patient})
-    
+
+@csrf_protect
+@login_required
+def add_vitals(request):
+    if request.is_ajax():
+        if request.method == 'GET':
+            data = {}
+            data['ret'] = 'False'
+            data['result'] = 'Failure: Invalid request method!!!'
+            r = json.dumps(data)
+            return HttpResponse(r, content_type="application/json")
+        
+        if request.method == 'POST':
+            
+            recv_data = json.loads(request.body)
+            
+           
+            vitals = Vitals()
+            vitals.weight = recv_data.get('weight', None)
+            vitals.height = recv_data.get('height', None)
+            vitals.p_ce_cn_iol = recv_data.get('pce', None)
+            vitals.oe = recv_data.get('oe', None)
+            vitals.temp = recv_data.get('temp', None)
+            vitals.pulse = recv_data.get('pulse', None)
+            vitals.bp = recv_data.get('bp', None)
+            vitals.rr = recv_data.get('rr', None)
+            vitals.cns = recv_data.get('cns', None)
+            vitals.chest = recv_data.get('chest', None)
+            vitals.cvs = recv_data.get('cvs', None)
+            vitals.pa = recv_data.get('pa', None)
+            vitals.tests = recv_data.get('tests', None)
+            vitals.save()
+            data = {}
+            data['result'] = 'Successfully added'
+            data['ret'] = 'True'
+            data['id'] = vitals.vital_id
+            data['weight'] = vitals.weight
+            data['height'] = vitals.height
+            data['pce'] = vitals.p_ce_cn_iol
+            data['oe'] = vitals.oe
+            data['temp'] = vitals.temp
+            data['pulse'] = vitals.pulse
+            data['bp'] = vitals.bp
+            data['rr'] = vitals.rr
+            data['cns'] = vitals.cns
+            data['chest'] = vitals.chest
+            data['cvs'] = vitals.cvs
+            data['pa'] = vitals.pa
+            data['tests'] = vitals.tests
+            r = json.dumps(data)
+            return HttpResponse(r, content_type="application/json")
+    raise Http404
+
     
