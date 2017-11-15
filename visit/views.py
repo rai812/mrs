@@ -43,39 +43,7 @@ def add_visit(request):
         
         return render(request, "visit/add_visit.html", {'patient_detail':patient_detail})
     
-    
-    user = request.user
-    print "Received a request to add a New Patient...."
-
-    try:
-        patient_instance = Patient()
-        if request.method == "GET":
-            patient_form = PatientForm(instance = patient_instance)
-        elif request.method == "POST":
-            if(len(str(request.POST.get('patient_id'))) > 0):
-                patient_instance = Patient.objects.get(patient_id= request.POST.get('patient_id'))
-            patient_form = PatientForm(request.POST,instance = patient_instance)
-            if patient_form.is_valid():
-                saved_patient = patient_form.save(commit = False)
-                saved_patient.save()
-                error_message = "Patient Saved Successfully"
-                print("Patient Saved Successfully")
-                request.session['patient_id'] =  saved_patient.patient_id
-                return redirect(reverse("history:add_history"))
-            else:
-                print("Patient Saved error")
-                print(patient_form.errors)
-        else:
-            raise Http404('Bad Request:: Unsupported Request Method.')
-        
-        return render(request, "core/add_patient.html", {'form':patient_form,})
-
-    except:
-        traceback.print_exc()
-        for frame in traceback.extract_tb(sys.exc_info()[2]):
-            fname,lineno,fn,text = frame
-            print "Error in %s on line %d" % (fname, lineno)
-        raise Http404('Bad Request:: Some Error in server.')
+    raise Http404("Invalid request Method")
     
 def get_visit_detail(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
