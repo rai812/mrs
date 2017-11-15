@@ -141,6 +141,7 @@ def add_complaints(request):
                 r = json.dumps(data)
                 return HttpResponse(r, content_type="application/json")
             
+            print("Adding complaints ", complaint_name)
             complaint = Complaints()
             complaint.description = complaint_name
             complaint.save()

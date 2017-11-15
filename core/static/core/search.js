@@ -307,7 +307,21 @@ var add_vitals = function () {
 	var pa = $('#id_input_pa').val();
 	var tests = $('#id_input_tests').val();
 	
-	
+	console.log(weight);
+	console.log(height);
+	console.log(oe);
+	console.log(pce);
+	console.log(bp);
+	console.log(rr);
+	console.log(temp);
+	console.log(pulse);
+	console.log(cvs);
+	console.log(cns);
+	console.log(chest);
+	console.log(pa);
+	console.log(tests);
+
+
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -569,8 +583,8 @@ var thread = null;
 		    //Save Form Data........
 		    
 		    var complaints = {}
-		    complaint_name = $('#add--complaint-value').text() 
-		    
+		    complaint_name = $('#add-complaint-value').text() 
+		    console.log(complaint_name)
 		    $.ajax({
 		        cache: false,
 		        url : window.location.origin+$(this).data("url"),

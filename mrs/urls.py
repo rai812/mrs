@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'^visits/', include('visit.urls', namespace='visits')),
+    url(r'^visit/', include('visit.urls', namespace='visit')),
     url(r'^complaints/', include('complaints.urls', namespace='complaints')),
     url(r'^history/', include('history.urls', namespace='history')),
     url(r'^medicines/', include('medication_list.urls', namespace='medicines')),    

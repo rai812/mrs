@@ -59,6 +59,19 @@ class Patient(models.Model):
           else:
             return "%s %s" % (self.first_name.capitalize(), self.middle_name.capitalize())
 
+    def __str__(self):
+        if self.middle_name and self.last_name:
+            return "%s %s %s" % (self.first_name.capitalize(),
+                                 self.middle_name.capitalize(),
+                                 self.last_name.capitalize()
+                                 )
+        elif self.last_name or self.middle_name:
+          if self.last_name:
+            return "%s %s" % (self.first_name.capitalize(), self.last_name.capitalize())
+          else:
+            return "%s %s" % (self.first_name.capitalize(), self.middle_name.capitalize())
+
+
     def get_age(self):
         """
         Extract the current age from dob field
@@ -80,7 +93,7 @@ class Patient(models.Model):
             name_list.append(p.full_name)
         if full_name in name_list:
             error = "Patient is already registered"
-            print error
+            print(error)
             return False
         else:
             return True
@@ -96,21 +109,21 @@ class Patient(models.Model):
         """
 
         if self.middle_name and self.last_name:
-            self.full_name = unicode(self.first_name.capitalize() + " " +
+            self.full_name = str(self.first_name.capitalize() + " " +
                                      self.middle_name.capitalize() + " " +
                                      self.last_name.capitalize()
                                      )
         else:
             if self.last_name:
-                self.full_name = unicode(self.first_name.capitalize() + " " +
+                self.full_name = str(self.first_name.capitalize() + " " +
                                      self.last_name.capitalize()
                                      )
             elif self.middle_name:
-                self.full_name = unicode(self.first_name.capitalize() + " " +
+                self.full_name = str(self.first_name.capitalize() + " " +
                                      self.middle_name.capitalize()
                                      )
             else:
-                self.full_name = unicode(self.first_name.capitalize())
+                self.full_name = str(self.first_name.capitalize())
         
         print("Set full name as ", self.full_name)
         return self.full_name
@@ -126,7 +139,7 @@ class Patient(models.Model):
         """
 
         if self.dob:
-            min_allowed_dob = datetime.date(1900, 01, 01)
+            min_allowed_dob = datetime.date(1900, 1, 1)
             max_allowed_dob = datetime.date.today()
             if self.dob >= min_allowed_dob and \
                 self.dob <= max_allowed_dob:
@@ -167,7 +180,7 @@ class Patient(models.Model):
 
 class Vitals(models.Model):
     vital_id = models.AutoField(primary_key=True)
-    weigth = models.CharField(max_length=30, blank=True,null=True)
+    weight = models.CharField(max_length=30, blank=True,null=True)
     height = models.CharField(max_length=30, blank=True,null=True)
     oe = models.CharField(max_length=30, blank=True,null=True)
     p_ce_cn_iol = models.CharField(max_length=30, blank=True,null=True)
@@ -182,7 +195,11 @@ class Vitals(models.Model):
     tests = models.TextField(blank=True,null=True)
 
     def __unicode__(self):
-        return "weight - %s Height - %s" % (self.weigth, self.height) 
+        return "weight - %s Height - %s" % (self.weight, self.height) 
+
+    def __str__(self):
+        return "weight - %s Height - %s" % (self.weight, self.height) 
+
 
 class PatientForm(forms.ModelForm):
     patient_id = forms.IntegerField(required=False)

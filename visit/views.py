@@ -10,7 +10,11 @@ from django.http.response import Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 import json
 
-from core.models import PatientForm, Patient, PatientSearchForm
+from visit.models import Visit
+from medication_list.models import MedicationList
+from complaints.models import Complaints, Disease
+
+from core.models import PatientForm, Patient, PatientSearchForm, Vitals
 from core.search import get_query, normalize_query, get_query_for_nterms, strip_stopwords
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_protect
@@ -78,22 +82,30 @@ def add_visit_api(request):
             
             recv_data = json.loads(request.body)
             print(recv_data)
-            complaints = recv_data.getlist('complaints', [])
-            medicines = recv_data.getlist('medicines', [])
+            complaints = recv_data.get('complaints', [])
+            medicines = recv_data.get('medicines', [])
             vitals = recv_data.get('vitals', None)
-            diseases = recv_data.getlist('diseases', [])
+            diseases = recv_data.get('diseases', [])
             remark = recv_data.get('remark', None)
             
             visit = Visit()
-            if len(medicines) > 0:
-                visit.medicines.add(medicines)
-            if len(complaints) > 0:
-                visit.complaints.add(complaints)
-            if len(diseases) > 0:
-                visit.diagnose.add(diseases)
             visit.remarks = recv_data.get('remark', None)
             visit.patient_detail = Patient.objects.get(patient_id = request.session['patient_id'])
+            visit.vitals = Vitals.objects.get(vital_id = vitals)
             visit.save()
+            if len(medicines) > 0:
+                medicine_objs = MedicationList.objects.filter(pk__in=medicines)
+                for obj in medicine_objs:
+                    visit.medicines.add(obj)
+            if len(complaints) > 0:
+                complaint_objs = Complaints.objects.filter(pk__in=complaints)
+                for obj in complaint_objs:
+                    visit.complaints.add(obj)
+            if len(diseases) > 0:
+                disease_objs = Disease.objects.filter(pk__in=diseases)
+                for obj in disease_objs:
+                    visit.diagnose.add(obj)
+
             data = {}
             data['result'] = 'Successfully added'
             data['ret'] = 'True'

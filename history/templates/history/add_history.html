@@ -2,7 +2,7 @@
 {% load staticfiles  %}
 
 {% block title %}
-<span class="fS24">{{ patient.full_name }} </span> <span class="fS16 c-31 mL-32"> Medical History </span> <a href="{% url "visits:add_visit" %}"> <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+<span class="fS24">{{ patient.full_name }} </span> <span class="fS16 c-31 mL-32"> Medical History </span> <a href="{% url "visit:add_visit" %}"> <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
 {% endblock %}
 
 

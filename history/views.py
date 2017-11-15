@@ -59,7 +59,7 @@ def add_history(request):
 
 #             return redirect()
         else:
-            print "form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid()
+            print("form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid())
             page_context = {'form1': form1,'form':form2,  'patient': patient_detail, 'medical_history':patient_medical_history, 'medical_files':patient_medical_files}
             return render(request,'history/add_history.html', page_context)
 

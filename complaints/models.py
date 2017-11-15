@@ -17,9 +17,15 @@ class Complaints(models.Model):
                               )
     def __unicode__(self):
         return "%s" % (self.description)
+
+    def __str__(self):
+        return "%s" % (self.description)
     
     
 class Disease(models.Model):
     disease_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     symptoms = models.ManyToManyField(Complaints, blank=True)
+
+    def __str__(self):
+        return "%s" % (self.name)

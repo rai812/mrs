@@ -66,7 +66,7 @@ def get_patients(request):
 def add_patient(request):
 
     user = request.user
-    print "Received a request to add a New Patient...."
+    print("Received a request to add a New Patient....")
 
     try:
         patient_instance = Patient()
@@ -95,7 +95,7 @@ def add_patient(request):
         traceback.print_exc()
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
-            print "Error in %s on line %d" % (fname, lineno)
+            print("Error in %s on line %d" % (fname, lineno))
         raise Http404('Bad Request:: Some Error in server.')
     
 def get_patient_detail(request, pk):
@@ -117,7 +117,7 @@ def add_vitals(request):
             
             recv_data = json.loads(request.body)
             
-           
+            print("Printing weight ", recv_data.get('weight', None))
             vitals = Vitals()
             vitals.weight = recv_data.get('weight', None)
             vitals.height = recv_data.get('height', None)
@@ -150,6 +150,7 @@ def add_vitals(request):
             data['cvs'] = vitals.cvs
             data['pa'] = vitals.pa
             data['tests'] = vitals.tests
+            print(data)
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
     raise Http404

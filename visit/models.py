@@ -40,3 +40,6 @@ class Visit(models.Model):
 
     def __unicode__(self):
         return "%s - %s" % (self.patient_detail.full_name, self.visit_date.strftime('%Y-%m-%d'))
+    
+    def __str__(self):
+        return "%s - %s" % (self.patient_detail.full_name, self.visit_date.strftime('%Y-%m-%d'))
