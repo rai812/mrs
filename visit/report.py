@@ -23,6 +23,10 @@ class fcMaker(object):
       noto_font = os.path.join(settings.STATIC_ROOT, 'fonts/NotoSans-Regular.ttf')
       pdfmetrics.registerFont(TTFont("Noto Regular", noto_font))
 
+      sumana_bold_font = os.path.join(settings.STATIC_ROOT, 'fonts/Sumana-Bold.ttf')
+      pdfmetrics.registerFont(TTFont("Sumana Bold", sumana_bold_font))
+
+
       self.PAGE_SIZE = A4
       self.c = canvas.Canvas(response, pagesize=self.PAGE_SIZE)
       self.width, self.height = self.PAGE_SIZE
@@ -90,6 +94,16 @@ class fcMaker(object):
               fontName='Noto Regular',
               fontSize=12,
               leading=14,
+              alignment=TA_LEFT,
+              textColor=colors.blue,
+          )
+
+      self.styles['Headhi'] = ParagraphStyle(
+              'Headhi',
+              parent=self.styles['default'],
+              fontName='Sumana Bold',
+              fontSize=14,
+              leading=16,
               alignment=TA_LEFT,
               textColor=colors.blue,
           )
@@ -211,12 +225,12 @@ class fcMaker(object):
 
       ## insert vertical line
       x1, y1 = self.coord(2.25, 2.65, inch)
-      x2, y2 = self.coord(2.25 , 11, inch) 
+      x2, y2 = self.coord(2.25 , 10.75, inch) 
       self.c.line(x1,y1,x2,y2);
 
       ## insert line at the end
-      x1, y1 = self.coord(0.25, 11, inch)
-      x2, y2 = self.coord(8.0 , 11, inch) 
+      x1, y1 = self.coord(0.25, 10.75, inch)
+      x2, y2 = self.coord(8.0 , 10.75, inch) 
       self.c.line(x1,y1,x2,y2);
       
       title = """07752-409149 &nbsp; <br/> MOB. 7987044826 &nbsp;"""
@@ -274,7 +288,13 @@ class fcMaker(object):
       """
       p = Paragraph(title, self.styles["hi"])
       p.wrapOn(self.c, self.width, self.height)
-      p.drawOn(self.c, *self.coord(0.25, 11.25, inch))
+      p.drawOn(self.c, *self.coord(0.25, 11.00, inch))
+
+      title = """दवाइयों के लिए - """ 
+      p = Paragraph(title, self.styles["Headhi"])
+      p.wrapOn(self.c, self.width, self.height)
+      p.drawOn(self.c, *self.coord(0.75, 11.25, inch))
+
 
   def coord(self, x, y, unit=1):
       """
