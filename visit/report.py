@@ -1,3 +1,4 @@
+#coding=utf-8
 from django.conf import settings
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -18,6 +19,9 @@ class fcMaker(object):
       # install the fonts we need
       oleo_font = os.path.join(settings.STATIC_ROOT, 'fonts/OleoScript-Regular.ttf')
       pdfmetrics.registerFont(TTFont("Oleo Regular", oleo_font))
+
+      noto_font = os.path.join(settings.STATIC_ROOT, 'fonts/NotoSans-Regular.ttf')
+      pdfmetrics.registerFont(TTFont("Noto Regular", noto_font))
 
       self.PAGE_SIZE = A4
       self.c = canvas.Canvas(response, pagesize=self.PAGE_SIZE)
@@ -79,6 +83,17 @@ class fcMaker(object):
               alignment=TA_LEFT,
               textColor=colors.blue,
           )
+
+      self.styles['hi'] = ParagraphStyle(
+              'hi',
+              parent=self.styles['default'],
+              fontName='Noto Regular',
+              fontSize=12,
+              leading=14,
+              alignment=TA_LEFT,
+              textColor=colors.blue,
+          )
+
 
       self.styles['head2'] = ParagraphStyle(
               'head2',
@@ -166,8 +181,13 @@ class fcMaker(object):
       p.drawOn(self.c, *self.coord(0.15, 1.75, inch))
 
       # insert the Line
-      self.c.line(*self.coord(0.25, 1.85, inch), *self.coord(8.0 , 1.85, inch));
-      self.c.line(*self.coord(0.25, 2.15, inch), *self.coord(8.0 , 2.15, inch));
+      x1, y1 = self.coord(0.25, 1.85, inch)
+      x2, y2 = self.coord(8.0 , 1.85, inch)
+      self.c.line( x1,y1,x2,y2 );
+      
+      x1, y1 = self.coord(0.25, 2.15, inch)
+      x2, y2 = self.coord(8.0 , 2.15, inch)
+      self.c.line(x1,y1,x2,y2);
 
 
       title = """Timing: 5:00 PM to 8:00 PM. Sunday Closed"""
@@ -184,12 +204,21 @@ class fcMaker(object):
       p.wrapOn(self.c, self.width, self.height)
       p.drawOn(self.c, *self.coord(0.65, 2.45, inch))
 
-      ## insert horizontal line after patient name 
-      self.c.line(*self.coord(0.25, 2.65, inch), *self.coord(8.0 , 2.65, inch));
+      ## insert horizontal line after patient name
+      x1, y1 = self.coord(0.25, 2.65, inch)
+      x2, y2 = self.coord(8.0 , 2.65, inch) 
+      self.c.line(x1,y1,x2,y2);
 
-      ## insert vertical line 
-      self.c.line(*self.coord(2.25, 2.65, inch), *self.coord(2.25 , 11, inch));
+      ## insert vertical line
+      x1, y1 = self.coord(2.25, 2.65, inch)
+      x2, y2 = self.coord(2.25 , 11, inch) 
+      self.c.line(x1,y1,x2,y2);
 
+      ## insert line at the end
+      x1, y1 = self.coord(0.25, 11, inch)
+      x2, y2 = self.coord(8.0 , 11, inch) 
+      self.c.line(x1,y1,x2,y2);
+      
       title = """07752-409149 &nbsp; <br/> MOB. 7987044826 &nbsp;"""
       p = Paragraph(title, self.styles["top"])
 
@@ -240,6 +269,12 @@ class fcMaker(object):
 
       f = Frame(2.45*inch, 0.35*inch, 6*inch, 4*inch, showBoundary=1)
       f.addFromList(front_page, self.c)
+
+      title = """कृपया दवाई डॉक्टर को दिखाकर ही प्रयोग करें  - 
+      """
+      p = Paragraph(title, self.styles["hi"])
+      p.wrapOn(self.c, self.width, self.height)
+      p.drawOn(self.c, *self.coord(0.25, 11.25, inch))
 
   def coord(self, x, y, unit=1):
       """
