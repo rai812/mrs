@@ -1,76 +1,446 @@
-from io import BytesIO
-from reportlab.lib.pagesizes import letter, A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Table
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.units import inch
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import mm
-
+#coding=utf-8
 from django.conf import settings
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import mm, inch
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Image, Paragraph, Table, Frame, SimpleDocTemplate, PageTemplate, PageBreak, NextPageTemplate
 import os
+from django.http import HttpResponse
+from reportlab.lib import colors
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
+from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
+
+class fcMaker(object):
+  """"""
+  styles = {}
+  def __init__(self, response):
+      # install the fonts we need
+      oleo_font = os.path.join(settings.STATIC_ROOT, 'fonts/OleoScript-Regular.ttf')
+      pdfmetrics.registerFont(TTFont("Oleo Regular", oleo_font))
+
+      noto_font = os.path.join(settings.STATIC_ROOT, 'fonts/NotoSans-Regular.ttf')
+      pdfmetrics.registerFont(TTFont("Noto Regular", noto_font))
+
+      sumana_bold_font = os.path.join(settings.STATIC_ROOT, 'fonts/Sumana-Bold.ttf')
+      pdfmetrics.registerFont(TTFont("Sumana Bold", sumana_bold_font))
+
+      martel_reg_font = os.path.join(settings.STATIC_ROOT, 'fonts/MartelSans-Regular.ttf')
+      pdfmetrics.registerFont(TTFont("Martel Regular", martel_reg_font))
+
+      martel_semi_font = os.path.join(settings.STATIC_ROOT, 'fonts/MartelSans-SemiBold.ttf')
+      pdfmetrics.registerFont(TTFont("Martel Semi", martel_semi_font))
+
+      martel_bold_font = os.path.join(settings.STATIC_ROOT, 'fonts/MartelSans-Bold.ttf')
+      pdfmetrics.registerFont(TTFont("Martel Bold", martel_bold_font))
+
+      kruti_reg_font = os.path.join(settings.STATIC_ROOT, 'fonts/Kruti_Dev_500.ttf')
+      pdfmetrics.registerFont(TTFont("Kruti 500", kruti_reg_font))
+
+      kruti_bold_font = os.path.join(settings.STATIC_ROOT, 'fonts/Kruti_Dev_712.ttf')
+      pdfmetrics.registerFont(TTFont("Kruti 712", kruti_bold_font))
+
+
+      self.PAGE_SIZE = A4
+      self.buffer = response
+      self.width, self.height = self.PAGE_SIZE
+      fcMaker.styles['default']= ParagraphStyle(
+                  'default',
+                  fontName='Times-Roman',
+                  fontSize=10,
+                  leading=12,
+                  leftIndent=0,
+                  rightIndent=0,
+                  firstLineIndent=0,
+                  alignment=TA_LEFT,
+                  spaceBefore=0,
+                  spaceAfter=0,
+                  bulletFontName='Times-Roman',
+                  bulletFontSize=10,
+                  bulletIndent=0,
+                  textColor= colors.black,
+                  backColor=None,
+                  wordWrap=None,
+                  borderWidth= 0,
+                  borderPadding= 0,
+                  borderColor= None,
+                  borderRadius= None,
+                  allowWidows= 1,
+                  allowOrphans= 0,
+                  textTransform=None,  # 'uppercase' | 'lowercase' | None
+                  endDots=None,
+                  splitLongWords=1,
+              );
+
+      fcMaker.styles['title'] = ParagraphStyle(
+              'title',
+              parent=fcMaker.styles['default'],
+              fontName='Oleo Regular',
+              fontSize=24,
+              leading=42,
+              alignment=TA_CENTER,
+              textColor=colors.red,
+          )
+      fcMaker.styles['head'] = ParagraphStyle(
+              'head',
+              parent=fcMaker.styles['default'],
+              fontName='Helvetica-Bold',
+              fontSize=12,
+              leading=14,
+              alignment=TA_CENTER,
+              textColor=colors.blue,
+          )
+
+      fcMaker.styles['text'] = ParagraphStyle(
+              'head',
+              parent=fcMaker.styles['default'],
+              fontName='Martel Regular',
+              fontSize=12,
+              leading=14,
+              alignment=TA_JUSTIFY,
+              textColor=colors.blue,
+          )
+
+      fcMaker.styles['hi'] = ParagraphStyle(
+              'hi',
+              parent=fcMaker.styles['default'],
+              fontName='Martel Semi',
+              fontSize=12,
+              leading=14,
+              alignment=TA_LEFT,
+              textColor=colors.blue,
+          )
+
+      fcMaker.styles['Headhi'] = ParagraphStyle(
+              'Headhi',
+              parent=fcMaker.styles['default'],
+              fontName='Martel Bold',
+              fontSize=14,
+              leading=16,
+              alignment=TA_LEFT,
+              textColor=colors.blue,
+          )
+
+
+      fcMaker.styles['head2'] = ParagraphStyle(
+              'head2',
+              parent=fcMaker.styles['default'],
+              fontName='Helvetica-Bold',
+              fontSize=10,
+              leading=12,
+              alignment=TA_CENTER,
+              textColor=colors.blue,
+          )
+
+      fcMaker.styles['top'] = ParagraphStyle(
+              'top',
+              parent=fcMaker.styles['default'],
+              fontName='Helvetica-Bold',
+              fontSize=10,
+              leading=12,
+              alignment=TA_RIGHT,
+              textColor=colors.blue,
+              borderPadding = 10,
+          )
+
+      fcMaker.styles['alert'] = ParagraphStyle(
+              'alert',
+              parent=fcMaker.styles['default'],
+              leading=14,
+              backColor=colors.yellow,
+              borderColor=colors.black,
+              borderWidth=1,
+              borderPadding=5,
+              borderRadius=2,
+              spaceBefore=10,
+              spaceAfter=10,
+          )
+
+      fcMaker.data = {
+        'patient_name': "Abhishek Rai",
+        'patient_age': "28",
+        'patient_sex': "M",
+        'visits': None
+      }
+
+  @staticmethod
+  def _header_footer(canvas, doc):
+    #save the state before making any changes
+    canvas.saveState()
+
+    file_path = os.path.join(settings.STATIC_ROOT, 'img/logo.jpg')
+    logo = Image(file_path)
+    logo.drawHeight = 99
+    logo.drawWidth = 99
+
+    logo.wrapOn(canvas, doc.width, doc.height)
+    logo.drawOn(canvas, *fcMaker.coordinates(0.15, 1.50,doc.height, inch))
+
+    # Title Page
+    title = """Dr. Ashish Kumar Rai"""
+    p = Paragraph(title, fcMaker.styles["title"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 0.75,doc.height, inch))
+
+    title = """M.B.B.S. M.D. (Medicine)"""
+    p = Paragraph(title, fcMaker.styles["head"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 1.00,doc.height, inch))
+
+    title = """Regd.No. CGMC - 4657/2013"""
+    p = Paragraph(title, fcMaker.styles["head"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 1.25,doc.height, inch))
+
+
+    title = """CLINIC: Plot No. 24 Near Ganesh sweets, R.K. Nagar, Seepat Road Bilaspur (C.G.)"""
+    p = Paragraph(title, fcMaker.styles["head2"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 1.50,doc.height, inch))
+
+
+    title = """RESI: 28 Harsingar, R.K. Nagar Bilaspur (C.G.) """
+    p = Paragraph(title, fcMaker.styles["head2"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 1.75,doc.height, inch))
+
+    # insert the Line
+    x1, y1 = fcMaker.coordinates(0.25, 1.85,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(8.0 , 1.85,doc.height, inch)
+    canvas.line( x1,y1,x2,y2 );
     
- 
-class MyPrint:
-    def __init__(self, buffer, pagesize):
-        self.buffer = buffer
-        if pagesize == 'A4':
-            self.pagesize = A4
-        elif pagesize == 'Letter':
-            self.pagesize = letter
-        self.width, self.height = self.pagesize
- 
-    @staticmethod
-    def _header_footer(canvas, doc):
-        # Save the state of our canvas so we can draw on it
-        canvas.saveState()
-        styles = getSampleStyleSheet()
- 
-        # Header
-        header = Paragraph('This is a multi-line header.  It goes on every page.   ' * 5, styles['Normal'])
-        w, h = header.wrap(doc.width, doc.topMargin)
-        header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
- 
-        # Footer
-        footer = Paragraph('This is a multi-line footer.  It goes on every page.   ' * 5, styles['Normal'])
-        w, h = footer.wrap(doc.width, doc.bottomMargin)
-        footer.drawOn(canvas, doc.leftMargin, h)
- 
-        # Release the canvas
-        canvas.restoreState()
+    x1, y1 = fcMaker.coordinates(0.25, 2.15,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(8.0 , 2.15,doc.height, inch)
+    canvas.line(x1,y1,x2,y2);
 
 
-    def print_users(self):
-            buffer = self.buffer
-            doc = SimpleDocTemplate(buffer,
-                                    rightMargin=72,
-                                    leftMargin=72,
-                                    topMargin=72,
-                                    bottomMargin=72,
-                                    pagesize=self.pagesize)
-     
-            # Our container for 'Flowable' objects
-            elements = []
-     
-            # A large collection of style sheets pre-made for us
-            styles = getSampleStyleSheet()
-            styles.add(ParagraphStyle(name='centered', alignment=TA_CENTER))
-     
-            # Draw things on the PDF. Here's where the PDF generation happens.
-            # See the ReportLab documentation for the full list of functionality.
-            users = range(1,10000,1)
-            elements.append(Paragraph('My User Names', styles['Heading1']))
-            for i, user in enumerate(users):
-                elements.append(Paragraph(str(user), styles['Normal']))
-     
-            doc.build(elements, onFirstPage=self._header_footer, onLaterPages=self._header_footer,
-                      canvasmaker=NumberedCanvas)
-     
-            # Get the value of the BytesIO buffer and write it to the response.
-            pdf = buffer.getvalue()
-            buffer.close()
-            return pdf
+    title = """Timing: 5:00 PM to 8:00 PM. Sunday Closed"""
+    p = Paragraph(title, fcMaker.styles["head"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 2.10,doc.height, inch))
+
+    ## patient details 
+
+    title = """Patient's Name: %s  Age: %s Sex: %s"""% ((fcMaker.data['patient_name'] + '.'*70)[:70], (fcMaker.data['patient_age']+ '.'*10)[:10],
+    (fcMaker.data['patient_sex'] + '.'*10)[:10],)
+    p = Paragraph(title, fcMaker.styles["text"])
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.65, 2.45,doc.height, inch))
+
+    ## insert horizontal line after patient name
+    x1, y1 = fcMaker.coordinates(0.25, 2.65,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(8.0 , 2.65,doc.height, inch) 
+    canvas.line(x1,y1,x2,y2);
+
+    ## insert vertical line
+    x1, y1 = fcMaker.coordinates(2.25, 2.65,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(2.25 , 10.75,doc.height, inch) 
+    canvas.line(x1,y1,x2,y2);
+
+    ## insert line at the end
+    x1, y1 = fcMaker.coordinates(0.25, 10.75,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(8.0 , 10.75,doc.height, inch) 
+    canvas.line(x1,y1,x2,y2);
+    
+    title = """07752-409149 &nbsp; <br/> MOB. 7987044826 &nbsp;"""
+    p = Paragraph(title, fcMaker.styles["top"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0, 0.50,doc.height, inch))
+
+    file_path = os.path.join(settings.STATIC_ROOT, 'img/rx.png')
+    logo = Image(file_path)
+    logo.drawHeight = 40
+    logo.drawWidth = 40
+
+    logo.wrapOn(canvas, doc.width, doc.height)
+    logo.drawOn(canvas, *fcMaker.coordinates(2.35, 3.25,doc.height, inch))
+
+    title = """कृपया दवाई डॉक्टर को दिखाकर ही प्रयोग करें  - 
+    """
+    p = Paragraph(title, fcMaker.styles["hi"])
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.25, 11.00,doc.height, inch))
+
+    title = """दवाइयों के लिए - """ 
+    p = Paragraph(title, fcMaker.styles["Headhi"])
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.85, 11.35,doc.height, inch))
+
+    #release the canvas 
+    canvas.restoreState()
+
+  @staticmethod
+  def _header_footer_page2(canvas, doc):
+    #save the state before making any changes
+    canvas.saveState()
+
+    file_path = os.path.join(settings.STATIC_ROOT, 'img/logo.jpg')
+    logo = Image(file_path)
+    logo.drawHeight = 99
+    logo.drawWidth = 99
+
+    logo.wrapOn(canvas, doc.width, doc.height)
+    logo.drawOn(canvas, *fcMaker.coordinates(0.15, 1.50,doc.height, inch))
+
+    # Title Page
+    title = """Dr. Ashish Kumar Rai"""
+    p = Paragraph(title, fcMaker.styles["title"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 0.75,doc.height, inch))
+
+    title = """M.B.B.S. M.D. (Medicine)"""
+    p = Paragraph(title, fcMaker.styles["head"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 1.00,doc.height, inch))
+
+    title = """Regd.No. CGMC - 4657/2013"""
+    p = Paragraph(title, fcMaker.styles["head"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 1.25,doc.height, inch))
+
+
+    title = """CLINIC: Plot No. 24 Near Ganesh sweets, R.K. Nagar, Seepat Road Bilaspur (C.G.)"""
+    p = Paragraph(title, fcMaker.styles["head2"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 1.50,doc.height, inch))
+
+
+    title = """RESI: 28 Harsingar, R.K. Nagar Bilaspur (C.G.) """
+    p = Paragraph(title, fcMaker.styles["head2"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 1.75,doc.height, inch))
+
+    # insert the Line
+    x1, y1 = fcMaker.coordinates(0.25, 1.85,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(8.0 , 1.85,doc.height, inch)
+    canvas.line( x1,y1,x2,y2 );
+    
+    x1, y1 = fcMaker.coordinates(0.25, 2.15,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(8.0 , 2.15,doc.height, inch)
+    canvas.line(x1,y1,x2,y2);
+
+
+    title = """Timing: 5:00 PM to 8:00 PM. Sunday Closed"""
+    p = Paragraph(title, fcMaker.styles["head"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 2.10,doc.height, inch))
+
+    ## patient details 
+
+    title = """Patient's Name: %s  Age: %s Sex: %s"""% ((fcMaker.data['patient_name'] + '.'*70)[:70], (fcMaker.data['patient_age']+ '.'*10)[:10],
+    (fcMaker.data['patient_sex'] + '.'*10)[:10],)
+    p = Paragraph(title, fcMaker.styles["text"])
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.65, 2.45,doc.height, inch))
+
+    ## insert horizontal line after patient name
+    x1, y1 = fcMaker.coordinates(0.25, 2.65,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(8.0 , 2.65,doc.height, inch) 
+    canvas.line(x1,y1,x2,y2);
+
+    ## insert line at the end
+    x1, y1 = fcMaker.coordinates(0.25, 10.75,doc.height, inch)
+    x2, y2 = fcMaker.coordinates(8.0 , 10.75,doc.height, inch) 
+    canvas.line(x1,y1,x2,y2);
+    
+    title = """07752-409149 &nbsp; <br/> MOB. 7987044826 &nbsp;"""
+    p = Paragraph(title, fcMaker.styles["top"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0, 0.50,doc.height, inch))
+
+    file_path = os.path.join(settings.STATIC_ROOT, 'img/rx.png')
+    logo = Image(file_path)
+    logo.drawHeight = 40
+    logo.drawWidth = 40
+
+    logo.wrapOn(canvas, doc.width, doc.height)
+    logo.drawOn(canvas, *fcMaker.coordinates(0.35, 3.25,doc.height, inch))
+
+    title = """कृपया दवाई डॉक्टर को दिखाकर ही प्रयोग करें  - 
+    """
+    p = Paragraph(title, fcMaker.styles["hi"])
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.25, 11.00,doc.height, inch))
+
+    title = """दवाइयों के लिए - """ 
+    p = Paragraph(title, fcMaker.styles["Headhi"])
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.85, 11.35,doc.height, inch))
+
+    #release the canvas 
+    canvas.restoreState()
+
+
+  def print_data(self):
+      buffer = self.buffer
+      doc = SimpleDocTemplate(buffer,
+                              rightMargin=0,
+                              leftMargin=0,
+                              topMargin=0,
+                              bottomMargin=0,
+                              pagesize=self.PAGE_SIZE)
+
+      # Our container for 'Flowable' objects
+      elements = []
+
+      print("Printing doc size ", doc.width, doc.height)
+      print("Printing self size ", self.width, self.height)
+      # A large collection of style sheets pre-made for us
+      styles = getSampleStyleSheet()
+      styles.add(ParagraphStyle(name='centered', alignment=TA_CENTER))
+
+      # Draw things on the PDF. Here's where the PDF generation happens.
+      # See the ReportLab documentation for the full list of functionality.
+      # for single visit if text size exceed the some threshold the call 
+      # TwoCol page and for each new visit call OneCol page.
+      users = range(1,10000,1)
+      elements.append(Paragraph('My User Names', styles['Heading1']))
+      for i, user in enumerate(users):
+          if i != 0 and (i % 41) == 0:
+            elements.append(NextPageTemplate('TwoCol'))
+            elements.append(PageBreak())
+
+          elements.append(Paragraph(str(user), styles['Normal']))
+
+      x1, y1 = fcMaker.coordinates(2.45,10.65, doc.height, inch)
+      frame1 = Frame(x1,y1, doc.width - 3.05*inch, doc.height - 4.20*inch, showBoundary=1)
+      x1, y1 = fcMaker.coordinates(0.45,10.65, doc.height, inch)
+      frame2 = Frame(x1,y1, doc.width - 1.05*inch, doc.height - 4.20*inch, showBoundary=1)
+  
+      doc.addPageTemplates([PageTemplate(id='OneCol',frames=[frame1], onPage=self._header_footer),
+      PageTemplate(id='TwoCol',frames=[frame2], onPage=self._header_footer_page2) ], )
+
+      doc.build(elements,
+                canvasmaker=NumberedCanvas)
+
+      # Get the value of the BytesIO buffer and write it to the response.
+      pdf = buffer.getvalue()
+      buffer.close()
+      return pdf
+
+  @staticmethod
+  def coordinates(x, y, height, unit=1):
+    """
+    Helper function for help with height.
+    """
+    x, y = x * unit, height -  y * unit
+    return x,y
 
 class NumberedCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
@@ -96,97 +466,11 @@ class NumberedCanvas(canvas.Canvas):
                              "Page %d of %d" % (self._pageNumber, page_count))
 
 
-class LetterMaker(object):
-    """"""
- 
-    #----------------------------------------------------------------------
-    def __init__(self, pdf_file, org, seconds):
-        self.c = canvas.Canvas(pdf_file, pagesize=letter)
-        self.styles = getSampleStyleSheet()
-        self.width, self.height = letter
-        self.organization = org
-        self.seconds  = seconds
- 
- 
-    #----------------------------------------------------------------------
-    def createDocument(self):
-        """"""
-        voffset = 65
- 
-        # create return address
-        address = """<font size="9">
-        Dr. Ashish Kumar Rai<br/>
-        M.B.B.S. M.D. (Medicine)<br/>
-        Regd.No. CGMC-4657/2013<br/>
-        CLINIC: Plot No. 24, Near Ganesh Sweets, R.K. Nagar, Seepat Road, Bilaspur (C.G.) <br/>
-        RESI.: 28, Harsingar Colony, R. K. Nagar, Bilaspur (C.G.) <br/>
-        <hr/> <br/>
-        Timing: 5:00 PM to 8:00 PM. Sunday Closed. <br/> <hr/> </font>
-        """
-        p = Paragraph(address, self.styles["Normal"])        
- 
-        # add a logo and size it
-        file_path = os.path.join(settings.STATIC_ROOT, 'img/logo.jpg')
-        logo = Image(file_path)
-        logo.drawHeight = 2*inch
-        logo.drawWidth = 2*inch
-##        logo.wrapOn(self.c, self.width, self.height)
-##        logo.drawOn(self.c, *self.coord(140, 60, mm))
-##        
- 
-        data = [[logo, p]]
-        table = Table(data, colWidths=4*inch)
-        table.setStyle([("VALIGN", (0,0), (0,0), "TOP")])
-        table.wrapOn(self.c, self.width, self.height)
-        table.drawOn(self.c, *self.coord(18, 60, mm))
- 
-        # insert body of letter
-        ptext = "Dear Sir or Madam:"
-        self.createParagraph(ptext, 20, voffset+35)
- 
-        ptext = """
-        The document you are holding is a set of requirements for your next mission, should you
-        choose to accept it. In any event, this document will self-destruct <b>%s</b> seconds after you
-        read it. Yes, <b>%s</b> can tell when you're done...usually.
-        """ % (self.seconds, self.organization)
-        p = Paragraph(ptext, self.styles["Normal"])
-        p.wrapOn(self.c, self.width-70, self.height)
-        p.drawOn(self.c, *self.coord(20, voffset+48, mm))
- 
-    #----------------------------------------------------------------------
-    def coord(self, x, y, unit=1):
-        """
-        # http://stackoverflow.com/questions/4726011/wrap-text-in-a-table-reportlab
-        Helper class to help position flowables in Canvas objects
-        """
-        x, y = x * unit, self.height -  y * unit
-        return x, y    
- 
-    #----------------------------------------------------------------------
-    def createParagraph(self, ptext, x, y, style=None):
-        """"""
-        if not style:
-            style = self.styles["Normal"]
-        p = Paragraph(ptext, style=style)
-        p.wrapOn(self.c, self.width, self.height)
-        p.drawOn(self.c, *self.coord(x, y, mm))
- 
-    #----------------------------------------------------------------------
-    def savePDF(self):
-        """"""
-        self.c.save()
-
-def pdfTesting():
-    doc = LetterMaker("example.pdf", "The MVP", 10)
-    doc.createDocument()
-    doc.savePDF()
 
 
-if __name__ == '__main__':
-    buffer = BytesIO()
-      
-    report = MyPrint(buffer, 'Letter')
-    pdf = report.print_users()
-  
-    with open('arquivo.pdf', 'wb') as f:
-        f.write(pdf)
+def fc_maker_view(request):
+  response = HttpResponse(content_type='application/pdf')
+  response['Content-Disposition'] = 'attachment; filename="pdf1.pdf"'
+  doc = fcMaker(response)
+  doc.print_data()
+  return response

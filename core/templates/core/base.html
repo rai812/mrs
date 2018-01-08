@@ -99,7 +99,10 @@
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="{% static "tether.min.js" %}"></script>
     <script src="{% static "bootstrap/js/bootstrap.min.js" %}" ></script>
-    <script src="{% static "core/search.js" %}"></script>
+    <script src="{% static "core/utils.js" %}"></script>
+    {% block extra_script %}
+    
+    {% endblock %}
         <!-- Menu Toggle Script -->
     <script>
     $("#menu-toggle").click(function(e) {

@@ -155,4 +155,56 @@ def add_vitals(request):
             return HttpResponse(r, content_type="application/json")
     raise Http404
 
+@csrf_protect
+@login_required
+def add_patient_api(request):
+    if request.is_ajax():
+        if request.method == 'GET':
+            data = {}
+            data['ret'] = 'False'
+            data['result'] = 'Failure: Invalid request method!!!'
+            r = json.dumps(data)
+            return HttpResponse(r, content_type="application/json")
+        
+        if request.method == 'POST':
+            
+            recv_data = json.loads(request.body)
+            
+            patient = Patient()
+            full_name = recv_data.get('full_name', None)
+            splitting = full_name.split()
+            
+            first_name = splitting[0]
+            last_name = splitting[-1]
+            
+            if(first_name == last_name):
+                patient.first_name = first_name
+            elif len(splitting) > 2:
+                ## there exist the middle name
+                patient.first_name = first_name
+                patient.middle_name = " ".join(splitting[1:-2])
+                patient.last_name = last_name
+            else:
+                patient.first_name = first_name
+                patient.last_name = last_name
+                
+                
+            patient.sex = recv_data.get('sex', None)
+            patient.age = recv_data.get('age', None)
+            patient.save()
+            data = {}
+            data['result'] = 'Successfully added'
+            data['ret'] = 'True'
+            data["id"] =  patient.patient_id,
+            data["full_name"] =  patient.full_name,
+            data["age"] =  patient.age,
+            data["sex"] =  patient.sex
+            data['history'] = "False"
+            data['files'] = "False"
+            print(data)
+            r = json.dumps(data)
+            return HttpResponse(r, content_type="application/json")
+    raise Http404
+
+
     

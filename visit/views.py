@@ -38,14 +38,13 @@ def add_visit(request):
     """
     
     if request.method == 'GET':
-        if request.session.get('patient_id', None) is None:
-            redirect(reverse("add_patient"))
-            
-        patient_detail = Patient.objects.get(patient_id = request.session.get('patient_id'))
-        if patient_detail is None:
-            raise Http404("Invalid Userid in session!!!!")
-        
-        return render(request, "visit/add_visit.html", {'patient_detail':patient_detail})
+#         if request.session.get('patient_id', None) is None:
+#             redirect(reverse("add_patient"))
+#             
+#         patient_detail = Patient.objects.get(patient_id = request.session.get('patient_id'))
+#         if patient_detail is None:
+#             raise Http404("Invalid Userid in session!!!!")
+        return render(request, "visit/add_visit.html", {})
     
     raise Http404("Invalid request Method")
     

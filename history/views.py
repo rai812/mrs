@@ -11,6 +11,9 @@ from core.models import Patient
 
 from complaints.models import Disease 
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+
+from django.views.decorators.csrf import csrf_protect
 # Create your views here.
 
 def add_history(request):
@@ -69,4 +72,62 @@ def add_history(request):
 
         page_context = {'form1': form,'form':formset, 'patient': patient_detail,'medical_history':patient_medical_history, 'medical_files':patient_medical_files}
         return render(request,'history/add_history.html', page_context)
+    
+@csrf_protect
+@login_required        
+def add_history_api(request):
+    if request.is_ajax():
+        if request.method == 'GET':
+            data = {}
+            data['ret'] = 'False'
+            data['result'] = 'Failure: Invalid request method!!!'
+            r = json.dumps(data)
+            return HttpResponse(r, content_type="application/json")
         
+        if request.method == 'POST':
+            
+            recv_data = json.loads(request.body)
+            print("Printing request body ", recv_data)
+#             form1 = DocumentForm(recv_data)
+#             form2 = MedicalHistoryForm(recv_data)
+#             if form1.is_valid() and form2.is_valid():
+#                 try:
+#                     files = request.FILES.getlist('document')
+#                     for a_file in files:
+#                         instance = MedicalFiles()
+#                         # fill other fields
+#                         instance.description = form1.cleaned_data['description']
+#                         instance.patient_detail = patient_detail
+#                         instance.document = a_file
+#                         instance.save()
+#                     
+#                     # save the individual medical history
+#                     if len(form2.cleaned_data['disease']) > 0:
+#                         medical_history = form2.save(commit=False)
+#                         print(form2.cleaned_data)
+#                         if form2.cleaned_data['disease_id'] is None:
+#                              disease = Disease()
+#                              disease.name = form2.cleaned_data['disease']
+#                              disease.save()
+#                              medical_history.disease = disease;
+#                         else:
+#                             disease = Disease.objects.get(disease_id= form2.cleaned_data['disease_id'])
+#                             medical_history.disease = disease;
+#                         medical_history.patient_detail = patient_detail
+#                         medical_history.save()
+#                 except forms.ValidationError:
+#                     pass
+#     
+#                 page_context = {'form1': form1,'form':form2,  'patient': patient_detail, 'medical_history':patient_medical_history,
+#                                 'medical_files':patient_medical_files}
+#                 return render(request,'history/add_history.html', page_context)
+#     
+#     #             return redirect()
+#             else:
+#                 print("form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid())
+#                 page_context = {'form1': form1,'form':form2,  'patient': patient_detail, 'medical_history':patient_medical_history, 'medical_files':patient_medical_files}
+#                 return render(request,'history/add_history.html', page_context)
+
+            r = json.dumps({})
+            return HttpResponse(r, content_type="application/json")
+    raise Http404

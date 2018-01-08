@@ -13,7 +13,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 
-class fcMaker(object):
+class ReportMaker(object):
   """"""
   def __init__(self, response):
       # install the fonts we need
@@ -25,6 +25,9 @@ class fcMaker(object):
 
       sumana_bold_font = os.path.join(settings.STATIC_ROOT, 'fonts/Sumana-Bold.ttf')
       pdfmetrics.registerFont(TTFont("Sumana Bold", sumana_bold_font))
+
+      yatra_font = os.path.join(settings.STATIC_ROOT, 'fonts/YatraOne-Regular.ttf')
+      pdfmetrics.registerFont(TTFont("YatraOne Regular", yatra_font))
 
 
       self.PAGE_SIZE = A4
@@ -78,10 +81,21 @@ class fcMaker(object):
               textColor=colors.blue,
           )
 
-      self.styles['text'] = ParagraphStyle(
-              'head',
+      self.styles['side_head'] = ParagraphStyle(
+              'side_head',
               parent=self.styles['default'],
-              fontName='Helvetica',
+              fontName='Helvetica-Bold',
+              fontSize=10,
+              leading=12,
+              alignment=TA_LEFT,
+              textColor=colors.black,
+          )
+
+
+      self.styles['text'] = ParagraphStyle(
+              'text',
+              parent=self.styles['default'],
+              fontName='YatraOne Regular',
               fontSize=12,
               leading=14,
               alignment=TA_LEFT,
@@ -101,11 +115,21 @@ class fcMaker(object):
       self.styles['Headhi'] = ParagraphStyle(
               'Headhi',
               parent=self.styles['default'],
-              fontName='Sumana Bold',
+              fontName='YatraOne Regular',
               fontSize=14,
               leading=16,
               alignment=TA_LEFT,
               textColor=colors.blue,
+          )
+
+      self.styles['Headhi2'] = ParagraphStyle(
+              'Headhi2',
+              parent=self.styles['default'],
+              fontName='YatraOne Regular',
+              fontSize=14,
+              leading=16,
+              alignment=TA_CENTER,
+              textColor=colors.red,
           )
 
 
@@ -164,7 +188,6 @@ class fcMaker(object):
       # Title Page
       title = """Dr. Ashish Kumar Rai"""
       p = Paragraph(title, self.styles["title"])
-
       p.wrapOn(self.c, self.width, self.height)
       p.drawOn(self.c, *self.coord(0.15, 0.75, inch))
 
@@ -223,6 +246,14 @@ class fcMaker(object):
       x2, y2 = self.coord(8.0 , 2.65, inch) 
       self.c.line(x1,y1,x2,y2);
 
+      ## here we will put the heading for vitals
+      title = """ Weight <br/> <br/> Height <br/> <br/> OE <br/> <br/> P/CL/CN/I/O/L <br/> <br/> Temp <br/> <br/> 
+      Pulse <br/> <br/> BP <br/> <br/> RR <br/> <br/> CNS <br/> <br/> Chest <br /> <br/> CVS <br/>  <br/> PA <br/> <br/> Tests"""
+      p = Paragraph(title, self.styles["side_head"])
+      p.wrapOn(self.c, self.width, self.height)
+      x2, y2 = self.coord(0.45, 7.00, inch)
+      p.drawOn(self.c, x2, y2)
+
       ## insert vertical line
       x1, y1 = self.coord(2.25, 2.65, inch)
       x2, y2 = self.coord(2.25 , 10.75, inch) 
@@ -235,7 +266,6 @@ class fcMaker(object):
       
       title = """07752-409149 &nbsp; <br/> MOB. 7987044826 &nbsp;"""
       p = Paragraph(title, self.styles["top"])
-
       p.wrapOn(self.c, self.width, self.height)
       p.drawOn(self.c, *self.coord(0, 0.50, inch))
 
@@ -247,46 +277,24 @@ class fcMaker(object):
       logo.wrapOn(self.c, self.width, self.height)
       logo.drawOn(self.c, *self.coord(2.35, 3.25, inch))
 
-
-      # self.c.showPage()
-
-      # #Page Two
-      # side1_text = """Text goes here"""
-      # p = Paragraph(side1_text, self.styles["default"])
-
-      # side1_image = Image(file_path)
-      # side1_image.drawHeight = 99
-      # side1_image.drawWidth = 99
-
-      # data = [[side1_image], [p]]
-      # table = Table(data, colWidths=2.25*inch)
-      # table.setStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-      #                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-      #                 ("TOPPADDING", (0, 0), (-1, -1), 3)])
-      # table.wrapOn(self.c, self.width, self.height)
-      # table.drawOn(self.c, *self.coord(.25, 2.75, inch))
-
-      # self.c.showPage()
-
-      #Page Three
       side2_text = """This is where and how the main text will appear on the rear of this card. <br/>"""* 30
-      p_side2 = Paragraph(side2_text, self.styles["default"])
-      # data = [[p_side2]]
-      # table_side2 = Table(data, colWidths=2.25*inch, rowHeights=2.55*inch)
-      # table_side2.setStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-      #                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-      #                 ("TOPPADDING", (0, 0), (-1, -1), 3),
-      #                 ("BOX", (0, 0), (-1,-1), 0.25, colors.red)])
+      p_side2 = Paragraph(side2_text, self.styles["text"])
       front_page = []
-      # front_page.append(table_side2)
       front_page.append(p_side2)
 
-      f = Frame(2.45*inch, 0.35*inch, 6*inch, 4*inch, showBoundary=1)
+      f = Frame(2.45*inch, 1.0*inch, 5.54*inch, 7.35*inch, showBoundary=1)
       f.addFromList(front_page, self.c)
+
+
+      title = """07752-409149 &nbsp; <br/> MOB. 7987044826 &nbsp;"""
+      p = Paragraph(title, self.styles["top"])
+      p.wrapOn(self.c, self.width, self.height)
+      p.drawOn(self.c, *self.coord(0, 11.10, inch))
+
 
       title = """कृपया दवाई डॉक्टर को दिखाकर ही प्रयोग करें  - 
       """
-      p = Paragraph(title, self.styles["hi"])
+      p = Paragraph(title, self.styles["text"])
       p.wrapOn(self.c, self.width, self.height)
       p.drawOn(self.c, *self.coord(0.25, 11.00, inch))
 
@@ -295,6 +303,16 @@ class fcMaker(object):
       p.wrapOn(self.c, self.width, self.height)
       p.drawOn(self.c, *self.coord(0.75, 11.25, inch))
 
+      title = """<font size=20> NATH </font> PHARMACY & PATHOLOGY """
+      p = Paragraph(title, self.styles["Headhi2"])
+      p.wrapOn(self.c, self.width, self.height)
+      p.drawOn(self.c, *self.coord(0.15, 11.25, inch))
+
+      title = """Plot No. 24 Near Ganesh sweets, R.K. Nagar, Seepat Road Bilaspur (C.G.)"""
+      p = Paragraph(title, self.styles["head2"])
+
+      p.wrapOn(self.c, self.width, self.height)
+      p.drawOn(self.c, *self.coord(0.15, 11.60, inch))
 
   def coord(self, x, y, unit=1):
       """
@@ -310,8 +328,12 @@ class fcMaker(object):
 def fc_maker_view(request):
   response = HttpResponse(content_type='application/pdf')
   response['Content-Disposition'] = 'attachment; filename="pdf1.pdf"'
-  doc = fcMaker(response)
+  doc = ReportMaker(response)
   doc.createDocument()
   doc.savePDF()
   return response
+
+
+
+
 

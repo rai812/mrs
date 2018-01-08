@@ -2,7 +2,7 @@
 {% load staticfiles  %}
 
 {% block title %}
-<span class="fS24">{{ patient_detail.full_name }} </span> <span class="fS16 c-31 mL-32"> Prescription </span>
+<span class="fS24">Add Visit </span>
 {% endblock %}
 
 
@@ -10,8 +10,14 @@
     <div class="row">
         <div class="row col-sm-12 centered mL-32">
 	        <ul class="nav nav-tabs">
+                  <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#div_id_patient" role="tab">Patient Detail</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link " data-toggle="tab" href="#div_id_history" role="tab">History</a>
+                  </li>
     			  <li class="nav-item">
-    			    <a class="nav-link active" data-toggle="tab" href="#div_id_complaints" role="tab">Complaints</a>
+    			    <a class="nav-link " data-toggle="tab" href="#div_id_complaints" role="tab">Complaints</a>
     			  </li>
     			  <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#div_id_vitals" role="tab">Vitals</a>
@@ -28,32 +34,166 @@
 			    </ul>
         </div>
 
-        <div class="row col-sm-12 centered mL-32 mT-32" id="added_complaint">
-        </div>
-
-        <div class="row col-sm-12 centered mL-32 mT-32" >
-            <table class="table row col-sm-12">
-                <tbody id="added_vitals" class="col-sm-12 fS14">
-
-                </tbody>
-            </table>
-        </div>
-
-
-        <div class="row col-sm-12 centered mL-32 mT-32" >
-            <table class="table row col-sm-12">
-                <tbody id="added_medicine" class="col-sm-12 fS14">
-
-                </tbody>
-            </table>
-        </div>
-
-        <div class="row col-sm-12 centered mL-32 mT-32" id="added_disease">
-        </div>
-
-
         <div class="row col-sm-12 centered mL-32 mT-32 tab-content">
-            <div id="div_id_complaints" class="tab-pane active row col-sm-12 centered" role="tabpanel">
+ 
+            <div id="div_id_patient" class="tab-pane active row col-sm-12 centered" role="tabpanel">
+                 <div class="form-element pLR-8">
+                 {% csrf_token %}
+			         <div id="div_id_first_name" class="form-element">
+			            <label for="id_full_name">
+			                <strong>Name</strong>
+			                <input id="id_full_name" class="translit form-input search-term add-term" name="full_name" type="text"
+			                 spellcheck="false" autocomplete="off" maxlength="300" data-url="{% url "api_get_patient" %}" data-type="patient" value="" required />
+			            </label>
+			        </div>
+
+                     <div id="div_id_age" class="form-element">
+                        <label for="id_age">
+                            <strong>Age</strong>
+                            <input id="id_age" class="translit form-input " name="age" type="text"
+                             spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+                        </label>
+                    </div>
+
+			        <div id="div_id_sex" class="form-element">
+			            <label for="id_sex">
+			                <strong>sex</strong>
+			            </label>        
+			            <select id="id_sex" name="sex">
+			                <option value="Male" selected=selected>Male</option>
+			                <option value="Female">Female</option>
+			                <option value="Others">Others</option>
+			            </select>
+			        </div>
+                </div>
+                
+               <div class="pull-left">
+                  <input class="button" type="button" name="add" value="Add" id="id-patient-add" onclick="add_patient(this)"/>
+                </div>
+                
+                
+            </div>
+
+            <div id="div_id_history" class="tab-pane row col-sm-12 centered" role="tabpanel">
+			    <fieldset class="scheduler-border">
+			        <legend class="scheduler-border">Patient Medical History</legend>
+			        
+			        {% comment %}  Start if first form {% endcomment %}
+			        <form id="id-form-medical-history" method="post" enctype="multipart/form-data" class="a-mdl-form ">
+			        
+			        <fieldset class="scheduler-border">
+			            <legend class="scheduler-border">History</legend>
+			            {% url 'complaints:api_get_disease' as url %}
+			             <input id="id_disease-id" class="translit form-input " name="disease_id" type="hidden" maxlength="300" />
+			            <table>
+			            <tr>
+			            {% comment %}  
+			                <td class="form-element pLR-8"> 
+			                    <label for="id_disease">
+			                    <strong>Disease</strong>
+			                    <input id="id_disease" class="translit form-input search-term" name="disease" type="text"
+			                     spellcheck="false" autocomplete="off" maxlength="300" data-url="{{ url }}" data-type="disease" />
+			                </label>
+			                </td>
+			                <td class="form-element pLR-8">
+			                    <label for="id_date_of_diagnosis">
+			                        <strong>Date of diagnosis</strong>
+			                        <input type='date' class="translit form-input" name="date_of_diagnosis" id="id_date_of_diagnosis"
+			                        spellcheck="false" autocomplete="off" maxlength="300" " />
+			                    </label>
+			                </td>
+			                <td class="pLR-8">
+			                <table>
+			                    <tr>
+			                       <td class="form-element pLR-8 row-flex">
+			                          <span class="mR-8">
+			                            <strong>Active?</strong>
+			                            </span>
+			                        </td>
+			                        <td>
+			                              <span class = "material-switch pull-right mL-8" >
+			                                <input type='checkbox' name="active" id="id_active"/>
+			                                <label for="id_active" class="label-danger" ></label>
+			                             </span>
+			                        </td>
+			                    </tr>
+			                    <tr>
+			                        <td class="form-element pLR-8 row-flex">
+			                          <span class="mR-8">
+			                            <strong>Infectious?</strong>
+			                          </span>
+			                        </td>
+			                        <td>
+			                              <span class = "material-switch pull-right mL-8" >
+			                                <input type='checkbox' name="infectious_disease" id="id_infectious-disease"/>
+			                                <label for="id_infectious-disease" class="label-danger" ></label>
+			                             </span>
+			                        </td>
+			                    </tr>
+			                    <tr>
+			                        <td class="form-element pLR-8 row-flex">
+			                          <span class="mR-8">
+			                            <strong>allergic?</strong>
+			                          </span>
+			                        </td>
+			                        <td>
+			                          <span class = "material-switch pull-right mL-8" >
+			                             <input type='checkbox' name="allergic_disease" id="id_allergic-disease"/>
+			                            <label for="id_allergic-disease" class="badge-danger" ></label>
+			                          </span>
+			                        </td>
+			                    </tr>
+			                    </table>
+			                </td>
+			                {% endcomment %}
+			                <td class="form-element pLR-8">
+			                    <label for="id_status">
+			                        <strong>Remark</strong>
+			                        <textarea class="translit form-input" name="status" id="id_status"
+			                        rows="5" cols="50" > </textarea>
+			                    </label>
+			                </td>
+			            </tr>
+			            </table>
+			        </tr>    
+			    </fieldset>
+			    </form>
+			    {% comment %}  First form end and second for start{% endcomment %}
+			    
+			    <form id="id-form-medical-files" method="post" enctype="multipart/form-data" class="a-mdl-form ">
+			    <fieldset class="scheduler-border">
+			        <legend class="scheduler-border">Medical files</legend>
+			         <table>
+			            <tr>
+			                <td class="form-element pLR-8"> 
+			                    <label for="id_description">
+			                    <strong>Description</strong>
+			                    <input id="id_description" class="translit form-input" name="description" type="text"
+			                     spellcheck="false" autocomplete="off" maxlength="300"  />
+			                </label>
+			                </td>
+			                <td class="form-element pLR-8"> 
+			                    <label for="id_document">
+			                    <strong>Document</strong>
+			                    <input id="id_document" class="translit form-input " name="document" type="file" multiple/>
+			                </label>
+			                    <span class="help-text">You can select multiple files</span>
+			                </td>
+			            </tr>
+			            
+			            <tr>
+	                       <td>
+	                           <div class="pull-left">
+	                              <input class="button" type="button" name="addHistory" value="Add" id="id-history-add" onclick="add_history(this)"/>
+	                            </div>
+	                       </td>
+                        </tr>
+			         </table>
+			    </fieldset>
+                </form>
+            </div>
+
+            <div id="div_id_complaints" class="tab-pane row col-sm-12 centered" role="tabpanel">
                 <div class="form-element pLR-8">
                 {% csrf_token %}
                     <label for="id_complaints">
@@ -275,7 +415,136 @@
 
 
         </div>
+        
+        {% comment %}  Here View woudl start{% endcomment %}
+        
+       <div class="row col-sm-12 centered mL-32 mT-32" >
+        <table class="table" id="div_id_patient_details">
+            <span class="fS24"> Personal Dossier</span>
+            <tr id="added_patient">
+            </tr>
+        </table>
+        </div>
+
+        <div class="row col-sm-12 centered mL-32 mT-32">
+        <table class="table ">
+        <span class="fS24"> Complaints</span>
+               <thead >
+                <tr>
+                  <th >Complaints</th>
+                </tr>
+              </thead>
+            
+                <tbody id="added_complaint" class="col-sm-12 fS14">
+
+                </tbody>
+            </table>
+        
+
+        </div>
+
+
+        <div class="row col-sm-12 centered mL-32 mT-32" id="added_history">
+            <table class="table mB-32" id="div_id_medical_histroy">
+            <span class="fS24"> Medical History</span>
+              <thead >
+                <tr>
+                  <th >Remark</th>
+                </tr>
+              </thead>
+              <tbody class="added_medicalHistory">
+              {% comment %}  This is where we put medical history{% endcomment %}
+              </tbody>
+            </table>
+        
+            <table class="table" id="div_id_medical_files">
+            <span class="fS24"> Medical Files</span>
+              <thead >
+                <tr>
+                  <th >#</th>
+                  <th >description</th>
+                  <th >uploaded at</th>
+                  <th >document</th>
+                </tr>
+              </thead>
+              <tbody class="added_medicalFiles">
+                {% comment %}  This is where we put medical files{% endcomment %}
+              </tbody>
+            </table>
+        </div>
+
+        <div class="row col-sm-12 centered mL-32 mT-32" >
+            <table class="table">
+            <span class="fS24"> O/E</span>
+            <thead >
+                <tr>
+                  <th >Wight</th>
+                  <th >P/CN/CL/I/O/L</th>
+                  <th >Temp</th>
+                  <th >Pulse</th>
+                  <th >BP</th>
+                  <th >RR</th>
+                  <th >CNS</th>
+                  <th >Chest</th>
+                  <th >CVS</th>
+                  <th >PA</th>
+                  <th >Tests</th>
+                </tr>
+              </thead>
+                <tbody id="added_vitals" class="col-sm-12 fS14">
+
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="row col-sm-12 centered mL-32 mT-32" >
+            <table class="table">
+            <span class="fS24"> Medication</span>
+               <thead >
+                <tr>
+                  <th >Medicine</th>
+                  <th >Frequency</th>
+                  <th >Duration</th>
+                </tr>
+              </thead>
+            
+                <tbody id="added_medicine" class="col-sm-12 fS14">
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row col-sm-12 centered mL-32 mT-32">
+        <table class="table ">
+        <span class="fS24"> Diagnosis</span>
+               <thead >
+                <tr>
+                  <th >Disease</th>
+                </tr>
+              </thead>
+            
+                <tbody id="added_disease" class="col-sm-12 fS14">
+
+                </tbody>
+            </table>
+        
+        </div>
+        
+        
     </div>
 </section>
 
 {% endblock %}
+
+{% block extra_script %}
+<script src="{% static "core/utils.js" %}"></script>
+<script src="{% static "core/visitPatient.js" %}"></script>
+<script src="{% static "core/visitHistory.js" %}"></script>
+<script src="{% static "core/visitVitals.js" %}"></script>
+<script src="{% static "core/visitComplaints.js" %}"></script>
+<script src="{% static "core/visitMedicine.js" %}"></script>
+<script src="{% static "core/visitDiagnose.js" %}"></script>
+<script src="{% static "core/visit.js" %}"></script>
+{% endblock %}
+
