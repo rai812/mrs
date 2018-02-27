@@ -34,7 +34,9 @@ class MedicationList(models.Model):
 
     def __str__(self):
         return "%s-%s : %s, %s for %s" % (self.type, self.medicine,self.dosage, self.frequency, self.duration)
-
+    
+    def getDisplayValue(self):
+        return "%s : %s, %s for %s" % ( self.medicine,self.dosage, self.frequency, self.duration)
 
     def get_absolute_url(self):
         return reverse("get_patient_detail",kwargs={"pk":self.id})

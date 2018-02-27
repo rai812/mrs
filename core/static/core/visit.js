@@ -23,8 +23,9 @@ var add_visit = function() {
     });
 
 	var vitalId = $(".vitals-display").data("id")
-	var Remark = $("#id_input_remarks").val()
-	
+	var Remark = $("#id_input_remarks").val();
+	var Tests = $("#id_input_tests").val();
+	var patient_id = $('.patient-display').attr('data-id');
 	console.log(complaintIds);
 	console.log(medicineIds);
 	console.log(diseaseIds);
@@ -46,7 +47,8 @@ var add_visit = function() {
         type: "POST",
         dataType : "json",
         contentType: "application/json;",
-        data : JSON.stringify({'complaints':complaintIds, 'medicines':medicineIds, 'diseases':diseaseIds, 'vitals':vitalId, 'remark':Remark }),
+        data : JSON.stringify({'complaints':complaintIds, 'medicines':medicineIds, 'diseases':diseaseIds, 'vitals':vitalId, 'remark':Remark, 'patient_id':patient_id,
+        	'tests': Tests, 'visit_container_id': $("#id_visit_container_id").val()}),
         context : this,
         success : function (data) {
         	
@@ -59,9 +61,9 @@ var add_visit = function() {
         		return;
         	}
         	
-        	$('a[href="#div_id_report"]').removeClass("disabled")
-        	$('a[href="#div_id_report"]').tab('show')
-	    	event.stopImmediatePropagation();
+        	$('.ui.menu').find('.item').tab('change tab', 'report');
+        	$('#id_btn_report').attr("href").val(window.location.origin + "visit/report/"+ data.visit_container_id)
+        	
         	
         },
         error : function (xhRequest, ErrorText, thrownError) {
@@ -73,219 +75,186 @@ var add_visit = function() {
     });	
 }
 
+var show_report = function(element) {
+	$('.ui.modal')
+	  .modal('show')
+	;
+	$("#added_patient").focus();
+};
+
+var goto_add_visit = function(element) {
+	console.log($(element));
+	window.location.href = window.location.origin+"/visit/add-visit/?visit_container_id=" + $(element).data('id');
+}
 
 $(document).ready(function() {
-var thread = null;
+	
+	$('#id_full_name').focus();
+	$(document).off("keydown");	  
+	$(document).on("keydown" , function(e) {
+		  if (e.ctrlKey) {
+		  if(e.keyCode == 39) { // right  
+			  $('.ui.menu').find('.item').tab('change tab', 'history');
+	        	e.stopImmediatePropagation();
+	        }
+		  }
+		  else if(e.keyCode == 113){
+			// F2 key press show the modal
+			  show_report();
+		  }
+		});
 
-    function formatMember(data) {
-    
-	    console.log($(this));
-	    console.log(data);
-	    
-	    if(data.length == 0 && !($(this).hasClass("add-term")))
-	    	return
-	    	
-	    
-	    var final_str = "";
 	
-	
-		data_type = $(this).data('type')
-		
-		if(data_type == 'patient')
-		{
-			$.each(data,function (i,item) {
-				final_str += createPatientString(i,item)
-			});
-		}
-		else if(data_type == 'disease')
-		{
-			$.each(data,function (i,item) {
-				final_str += createDiseaseString(i,item)
-			});
-			
-			final_str +=  addDiseaseString($(this).val())
-		}
-		else if(data_type == 'medicine')
-		{
-			$.each(data,function (i,item) {
-				final_str += createMedicineString(i,item)
-			});	
-		}
-		else if(data_type == 'complaints')
-		{
-			$.each(data,function (i,item) {
-				final_str += createComplaintString(i,item)
-			});
-			
-			final_str +=  addComplaintString($(this).val())
-		}
-		else if(data_type == 'medicine-type' || data_type == 'medicine-frequency' || data_type == 'medicine-dosage')
-		{
-			$.each(data,function (i,item) {
-				final_str += createMedicineFieldString(i,item)
-			});	
-		}
-	
-		/*
-		 * Creating search result to be displayed
-		 */
-	    var pos = $(this).position();
-	    
-	    if($('#search-results').length == 0) {
-	    	  //it doesn't exist
-	    	console.log("Creating new search-result")
-	    	$('<div id="search-results"> </div>')
-	        .html(final_str)
-	        .css({
-	            top: pos.top + $(this).height()  + 5,
-	            left: pos.left,
-	            position: 'absolute',
-	            width: $(this).width()
-	        }).insertAfter($(this)).css("z-index", "1000").addClass("bS-5 position-abs");
-	    }
-	    else
-	    {
-	    	console.log("Editing existing search-result")
-	        $('#search-results')
-	        .html(final_str)
-	        .css({
-	            top: pos.top + $(this).height()  + 5,
-	            left: pos.left,
-	            position: 'absolute',
-	            width: $(this).width()
-	        }).css("z-index", "1000");
-	    }
-	    
-	    if($('#search-close').length == 0)
-	    {
-	    	console.log("Creating close button")
-	        $('<div id="search-close"> </div>')
-	        .html("close")
-	        .css({
-	            top: pos.top + $(this).height()  + 2,
-	            left: pos.left + $(this).width() - 35,
-	            position: 'absolute',
-	            opacity: 0.8,
-	        }).insertAfter($(this)).css("z-index", "2000").addClass("curP position-abs c-red")
-	        
-	        $(document).off("click","#search-close");
-	        
-	        $(document).on("click", "#search-close" , function(event) {
-	        	event.stopImmediatePropagation();
-	            $('#search-results').remove();
-	            $('#search-close').remove();
-	        });
-	        
-	    }
-	    
-		/*
-		 * bind click action to add-buttons 
-		 */
-	    	
-	    $(document).off("click",".add-complaint-button");
-		    
-	    $(document).on("click", ".add-complaint-button" , function(event) {
-	    
-		    	event.stopImmediatePropagation();
-		    	
-		    	addComplaints.apply(this, arguments);
-		    	
-	    });
-	    
-	    $(document).off("click",".add-disease-button");
-	    $(document).on("click", ".add-disease-button" , function(event) {
-	    
-	    	event.stopImmediatePropagation();
-	    	
-	    	addDisease.apply(this, arguments);
-		    	
-	    });
-	
-	    
-		if(data_type == 'patient')
-		{
-			$(this).keydown( function(e) {
-		        if (e.keyCode == 40) {      
-		        	$('.patient-card:first').focus();
-		        }
-			})
-			
-			addPatientCardAction($(this));
-		}
-		else if(data_type == 'disease')
-		{
-			addDiseaseCardAction();
-		}
-		else if(data_type == 'medicine')
-		{
-			addMedicineCardAction();
-		}
-		else if(data_type == 'complaints')
-		{
-			addComplaintsCardAction();
-		}
-		else if(data_type == 'medicine-type' || data_type == 'medicine-frequency' || data_type == 'medicine-dosage')
-		{
-			addMedicineFieldCardAction();
-		}
-    }
-    
-    function findMember(t,ele) {
-	    if(t.length >=3)
-	    {
-	        console.log(ele);
-	        url = ele.data('url')
-	        console.log(url)
-	        $.ajax({
-	            // the URL for the request
-	            url: window.location.origin+url,
-	         
-	            // the data to send (will be converted to a query string)
-	            data: {
-	                format:'json',
-	                q:t
-	            },
-	         
-	            context: ele,
-	            
-	            // whether this is a POST or GET request
-	            type: "GET",
-	         
-	            // the type of data we expect back
-	            dataType : "json",
-	         
-	            // code to run if the request succeeds;
-	            // the response is passed to the function
-	            success: formatMember,
-	         
-	            // code to run if the request fails; the raw request and
-	            // status codes are passed to the function
-	            error: function( xhr, status, errorThrown ) {
-	                //alert( "Sorry, there was a problem!" );
-	                console.log( "Error: " + errorThrown );
-	                console.log( "Status: " + status );
-	                console.dir( xhr );
-	                /*
-	                 var snackbarContainer = document.querySelector('#flash_message');
-	                 var msg = {message: "Something went wrong. Try Again!!!"};
-	                 snackbarContainer.MaterialSnackbar.showSnackbar(msg);
-	                */
-	            },
-	         
-	            // code to run regardless of success or failure
-	            complete: function( xhr, status ) {
-	                //alert( "The request is complete!" );
-	            }
-	        });
-	    }
-	    else{
-	    	$('#search-results').remove();
-	    	$('#search-close').remove();
-	    }
-    }
+	$('.tabular.menu .item').tab(
+			{
+		'onVisible': function(name){
+			console.log(name);
+			if("patient" == name){
 
-    $('.search-term').keyup(function() {
-      clearTimeout(thread);
-      var $this = $(this); thread = setTimeout(function(){findMember($this.val(),$this)}, 500);
-    	});
-    });
+				$('#id_full_name').focus();
+				$(document).off("keydown");	  
+				$(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) {
+					  if(e.keyCode == 39) { // right  
+						  $('.ui.menu').find('.item').tab('change tab', 'history');
+				        	e.stopImmediatePropagation();
+				        }
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+				
+			}else if("history" == name){
+				  $('#id_status').focus();
+				  $(document).off("keydown");	  
+				  $(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) {
+					        if (e.keyCode == 37) { // left      
+					        	$('.ui.menu').find('.item').tab('change tab', 'patient');
+					        	e.stopImmediatePropagation();
+					        }
+					        else if(e.keyCode == 39) { // right
+					        
+					        	$('.ui.menu').find('.item').tab('change tab', 'complaints');
+					        	e.stopImmediatePropagation();
+					        }					  
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+				
+			}else if("complaints" == name){
+				  $('#id_complaints').focus();
+				  $(document).off("keydown");	  
+				  $(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) {
+				        if (e.keyCode == 37) { // left      
+				        	$('.ui.menu').find('.item').tab('change tab', 'history');
+				        	e.stopImmediatePropagation();
+				        }
+				        else if(e.keyCode == 39) { // right
+				        
+				        	$('.ui.menu').find('.item').tab('change tab', 'vitals');
+				        	e.stopImmediatePropagation();
+				        }
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+				
+			}else if("vitals" == name){
+				$('#id_input_weight').focus();
+				  $(document).off("keydown");	  
+				  $(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) {
+				        if (e.keyCode == 37) { // left      
+				        	$('.ui.menu').find('.item').tab('change tab', 'complaints');
+				        	e.stopImmediatePropagation();
+				        }
+				        else if(e.keyCode == 39) { // right
+				        
+				        	$('.ui.menu').find('.item').tab('change tab', 'medicine');
+				        	e.stopImmediatePropagation();
+				        }
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+
+			}else if("medicine" == name){
+				  $('#id_input_medicine').focus();
+				  $(document).off("keydown");	  
+				  $(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) { 
+					  if (e.keyCode == 37) { // left      
+				        	$('.ui.menu').find('.item').tab('change tab', 'vitals');
+				        	e.stopImmediatePropagation();
+				        }
+				        else if(e.keyCode == 39) { // right
+				        
+				        	$('.ui.menu').find('.item').tab('change tab', 'diagnosis');
+				        	e.stopImmediatePropagation();
+				        }
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+				
+			}else if("diagnosis" == name){
+				$('#id_disease').focus();
+				  $(document).off("keydown");	  
+				  $(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) {
+				        if (e.keyCode == 37) { // left      
+				        	$('.ui.menu').find('.item').tab('change tab', 'medicine');
+				        	e.stopImmediatePropagation();
+				        }
+				        else if(e.keyCode == 39) { // right
+					        
+				        	$('.ui.menu').find('.item').tab('change tab', 'report');
+				        	e.stopImmediatePropagation();
+				        }
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+
+			}else if("report" == name){
+				  $(document).off("keydown");	  
+				  $(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) {
+				        if (e.keyCode == 37) { // left      
+				        	$('.ui.menu').find('.item').tab('change tab', 'diagnosis');
+				        	e.stopImmediatePropagation();
+				        }
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+				
+			}
+				
+		},
+	});
+});

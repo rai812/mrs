@@ -59,7 +59,7 @@ def get_complaints(request):
         data['name'] = obj.description
         data['remarks'] = obj.remarks or ""
         result.append(data)
-        
+    print("size of results ", len(result));
     r = json.dumps(result)
                   
     return HttpResponse(r, content_type="application/json")

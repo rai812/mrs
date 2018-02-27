@@ -168,3 +168,111 @@ var addMedicineFieldCardAction = function () {
     });
 
 }
+
+$(document).ready(function() {
+	$('.ui.search.medicine')
+	.search({
+	  // change search endpoint to a custom endpoint by manipulating apiSettings
+	  apiSettings: {
+	    url: '/medicines/api/get_medicine/?q={query}',
+	    onResponse: function(githubResponse) {
+	        var
+	          response = {
+	      		  results : Array()
+	          }
+	        ;
+	        // translate GitHub API response to work with search
+	        $.each(githubResponse, function(index, item) {
+	          // add result to category
+	          response.results.push({
+	          	id: item.id,
+	            title       : item.medicine,
+	            description : item.dosage + " " + item.frequency + " for " + item.duration ,
+	            type: item.type,
+	            dosage: item.dosage,
+	            frequency: item.frequency,
+	            duration: item.duration,
+	          });
+	        });
+	        return response;
+	      },
+	  },
+	      minCharacters : 3,
+	      onSelect: function(result, response){
+	      	console.log(result);
+	      	console.log(response);
+	      	
+		    var str = medicineDispalyString(result.id,result.type,result.title,result.frequency,result.dosage,result.duration);
+	    	$('#added_medicine').append(str);
+	    	
+	    	$(document).off("click",".del-medicine");
+	    	
+	    	$(document).on("click", ".del-medicine" , function( event ) {
+	    		/*
+	    		 * Assuming this in td and we want to remove the row
+	    		 */
+	    		$(this).parent().parent().remove();
+	    	});
+	    	
+	    	show_success("Medicine Added!!!", " press F2 to view the report." );
+	    	
+	    	$('#id_input_medicine').focus();
+	      },
+
+	})
+	;
+
+	$('.ui.search.dosage')
+	.search({
+	  // change search endpoint to a custom endpoint by manipulating apiSettings
+	  apiSettings: {
+	    url: '/medicines/api/get_dosage_values/?q={query}',
+	    onResponse: function(githubResponse) {
+	        var
+	          response = {
+	      		  results : Array()
+	          }
+	        ;
+	        // translate GitHub API response to work with search
+	        $.each(githubResponse, function(index, item) {
+	          // add result to category
+	          response.results.push({
+	            title       : item.value,
+	          });
+	        });
+	        return response;
+	      },
+	  },
+	      minCharacters : 1,
+	})
+	;
+
+	$('.ui.search.frequency')
+	.search({
+	  // change search endpoint to a custom endpoint by manipulating apiSettings
+	  apiSettings: {
+	    url: '/medicines/api/get_frequency_values/?q={query}',
+	    onResponse: function(githubResponse) {
+	        var
+	          response = {
+	      		  results : Array()
+	          }
+	        ;
+	        // translate GitHub API response to work with search
+	        $.each(githubResponse, function(index, item) {
+	          // add result to category
+	          response.results.push({
+	            title       : item.value,
+	          });
+	        });
+	        return response;
+	      },
+	  },
+	      minCharacters : 1,
+	})
+	;
+	
+	
+	
+});
+

@@ -1,4 +1,5 @@
 {% extends "core/base.html" %}
+{% load staticfiles  %}
 
 {% block title %}
 Patient's Records
@@ -9,55 +10,48 @@ Patient's Records
 <section class="pT-8 pB-16 wFull">
     <div class="row centered">
         <div class="col-sm-12 row centered">
-            <div class="col-sm-4">
-                <div class="links-card">
-                    <a href="{% url "add_patient" %}" class="member">
-                        <div class="action-button c-61 svg48">
-                        {% include "common/svg/person.html" %}
-                        </div>
-                        <div class="caption">
-                            Add Person
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-sm-4">
-                <div class="links-card">
-                    <a href="" class="member">
-                        <div class="action-button c-61 svg48">
-                        {% include "common/svg/person.html" %}
-                        </div>
-                        <div class="caption">
-                            Add Poetry
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-sm-4">
-                <div class="links-card">
-                    <a href="" class="member">
-                        <div class="action-button c-61 svg48">
-                        {% include "common/svg/person.html" %}
-                        </div>
-                        <div class="caption">
-                            Add Book
-                        </div>
-                    </a>
-                </div>
+            <div class="col-sm-12  row centered">
+            <table>
+            	<tr>
+              		<td>
+					  <div class="ui icon input">	
+					    <input class="prompt" placeholder="Search" type="text" id="id_patient_search" required>
+					    <i class="search icon"></i>
+					  </div>
+					  <div class="results"></div>            		
+            		</td>
+            		<td>
+						<div class="ui selection dropdown">
+						  <input name="field" id="id_search_field" type="hidden">
+						  <i class="dropdown icon"></i>
+						  <div class="default text">Field</div>
+						  <div class="menu">
+						    <div class="item" data-value="name">Name</div>
+						    <div class="item" data-value="mobile_number">Mobile Number</div>
+						  </div>
+						</div>
+            		</td>
+            		
+            		<td>
+            			<input class="ui button" type="button" name="Search" onclick="get_patients(this)" value="Search" tabindex="0"/>
+            		</td>
+            	</tr>
+            </table>
+            
             </div>
         </div>
     </div>
 </section>
 
-
-{% include "common/include/search-bar.html" %}
-
-<div class="row centered">
-{% include "common/include/empty-results-graphics.html" %}
+<div class="row centered" id="id_patient_list">
+{% include "core/patient_list.html" %}
 </div>
 
 
 
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static "core/utils.js" %}"></script>
+<script src="{% static "core/patient.js" %}"></script>
 {% endblock %}

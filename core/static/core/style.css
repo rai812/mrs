@@ -184,6 +184,8 @@ h1 {
 .wHalf { width: 50%; }
 .w80p { width: 80%; }
 .w80px { width: 80px; }
+.w120px { width: 120px; }
+.w160px { width: 160px; }
 .mW-512 { max-width: 512px;}
 .tAc {
     text-align: center !important;
@@ -1030,6 +1032,18 @@ legend.scheduler-border {
     left: 20px;
 }
 
+
+.input_label {
+    margin: 0px 0px 0.5em;
+    display: inline-block;
+    width: 100%;
+    color: #222;
+    -moz-user-select: none;
+}
+
+.ui.modal > .content {
+ color: black !important;
+}
 /* adapted from http://maxwells.github.io/bootstrap-tags.html */
 .tag {
   font-size: 14px;

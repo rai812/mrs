@@ -8,7 +8,6 @@ from django import forms
 from django.core.urlresolvers import reverse
 import datetime
 
-
 # Create your models here.
 
 
@@ -80,6 +79,7 @@ class Patient(models.Model):
 
     def get_absolute_url(self):
         return reverse("get_patient_detail",kwargs={"pk":self.patient_id})
+        
     def check_before_you_add(self):
       """
         Checks whether the patient has already been registered in the
@@ -179,20 +179,20 @@ class Patient(models.Model):
         
 
 class Vitals(models.Model):
-    vital_id = models.AutoField(primary_key=True)
-    weight = models.CharField(max_length=30, blank=True,null=True)
-    height = models.CharField(max_length=30, blank=True,null=True)
-    oe = models.CharField(max_length=30, blank=True,null=True)
+    vital_id    = models.AutoField(primary_key=True)
+    weight      = models.CharField(max_length=30, blank=True,null=True)
+    height      = models.CharField(max_length=30, blank=True,null=True)
+    oe          = models.CharField(max_length=30, blank=True,null=True)
     p_ce_cn_iol = models.CharField(max_length=30, blank=True,null=True)
-    temp = models.CharField(max_length=30, blank=True,null=True)
-    pulse = models.CharField(max_length=30, blank=True,null=True)
-    bp = models.CharField(max_length=30, blank=True,null=True)
-    rr = models.CharField(max_length=30, blank=True,null=True)
-    cns = models.CharField(max_length=30, blank=True,null=True)
-    chest = models.CharField(max_length=30, blank=True,null=True)
-    cvs = models.CharField(max_length=30, blank=True,null=True)
-    pa = models.CharField(max_length=30, blank=True,null=True)
-    tests = models.TextField(blank=True,null=True)
+    temp        = models.CharField(max_length=30, blank=True,null=True)
+    pulse       = models.CharField(max_length=30, blank=True,null=True)
+    bp          = models.CharField(max_length=30, blank=True,null=True)
+    rr          = models.CharField(max_length=30, blank=True,null=True)
+    cns         = models.CharField(max_length=30, blank=True,null=True)
+    chest       = models.CharField(max_length=30, blank=True,null=True)
+    cvs         = models.CharField(max_length=30, blank=True,null=True)
+    pa          = models.CharField(max_length=30, blank=True,null=True)
+    tests       = models.TextField(blank=True,null=True)
 
     def __unicode__(self):
         return "weight - %s Height - %s" % (self.weight, self.height) 

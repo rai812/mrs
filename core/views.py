@@ -12,16 +12,28 @@ import json
 
 from django.views.decorators.csrf import csrf_protect
 
+from django.core.paginator import Paginator
 
 from core.models import PatientForm, Patient, PatientSearchForm, Vitals
 from core.search import get_query, normalize_query, get_query_for_nterms, strip_stopwords
+from _csv import field_size_limit
 
 # Create your views here.
 
 @login_required
 def index(request):
-    form = PatientSearchForm()
-    return render(request, "core/index.html", {"form": form})
+    patient_list = Patient.objects.all()
+    paginator = Paginator(patient_list, 10)
+    page = request.GET.get('page', 1)
+    ## TODO check the criteriea and change the patient_list
+    try:
+        patients = paginator.page(page)
+    except PageNotAnInteger:
+        patients = paginator.page(1)
+    except EmptyPage:
+        patients = paginator.page(paginator.num_pages)
+
+    return render(request, "core/index.html", {'patients': patients})
 
 @login_required
 def get_patients(request):
@@ -58,7 +70,7 @@ def get_patients(request):
         data['url'] = obj.get_absolute_url()
         result.append(data)
         
-    r = json.dumps(result)
+    r = json.dumps({"results": result})
                   
     return HttpResponse(r, content_type="application/json")
 
@@ -101,6 +113,35 @@ def add_patient(request):
 def get_patient_detail(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
     return render(request, "core/get_patient_detail.html", {"obj": patient})
+
+@login_required
+def get_patient_list(request):
+    
+    field = request.GET.get('field', "")
+    query = request.GET.get('q', "")
+    
+    if len(field) == 0 or len(query) == 0:
+        patient_list = Patient.objects.all()
+    elif field == "name":
+        entry_query = get_query(query, ['first_name', 'middle_name','last_name'])
+        patient_list = Patient.objects.filter(entry_query).order_by('first_name')[:10]
+    elif field == "mobile_number":
+        entry_query = get_query(query, ['mobile_number'])
+        patient_list = Patient.objects.filter(entry_query).order_by('first_name')[:10]    
+    else:
+        patient_list = Patient.objects.all()[:10]
+        
+    paginator = Paginator(patient_list, 10)
+    page = request.GET.get('page', 1)
+    ## TODO check the criteriea and change the patient_list
+    try:
+        patients = paginator.page(page)
+    except PageNotAnInteger:
+        patients = paginator.page(1)
+    except EmptyPage:
+        patients = paginator.page(paginator.num_pages)
+
+    return render(request, 'core/patient_list.html', { 'patients': patients})
 
 @csrf_protect
 @login_required

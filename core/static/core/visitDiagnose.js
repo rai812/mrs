@@ -84,10 +84,6 @@ var addDisease = function() {
 	    	
 	    	$('#id_disease').val("")
 	    	
-	    	event.stopImmediatePropagation();
-	    	
-	        $('#search-close').remove();
-	        $('#search-results').remove();
         	
         },
         error : function (xhRequest, ErrorText, thrownError) {
@@ -100,28 +96,51 @@ var addDisease = function() {
 
 }
 
-var addDiseaseCardAction = function () {
-    $(document).off("click",".disease-card");
-    
-    $(document).on("click", ".disease-card" , function() {
-    	
-    	console.log($(this))
-	    var str = diseaseDispalyString($(this).data("id"),$(this).data("name"));
-    	$('#added_disease').append(str);
-    	
-    	
-    	$(document).off("click",".del-disease");
-    	
-    	$(document).on("click", ".del-disease" , function(event) {
-    		event.stopImmediatePropagation();
-    		$(this).parent().remove();
-    	});
-    	
-    	$('#id_disease').val("")
-    	
-        $('#search-close').remove();
-        $('#search-results').remove();
-        
-    });
+$(document).ready(function() {
+	$('.ui.search.disease')
+	.search({
+	  // change search endpoint to a custom endpoint by manipulating apiSettings
+	  apiSettings: {
+	    url: '/complaints/api/get_disease/?q={query}',
+	    onResponse: function(githubResponse) {
+	        var
+	          response = {
+	      		  results : Array()
+	          }
+	        ;
+	        // translate GitHub API response to work with search
+	        $.each(githubResponse, function(index, item) {
+	          // add result to category
+	          response.results.push({
+	        	id: item.id,
+	            title       : item.name,
+	          });
+	        });
+	        return response;
+	      },
+	  },
+	      minCharacters : 3,
+	      onSelect: function(result, response){
+		      	console.log(result);
+		      	console.log(response);
+		      	
+			    var str = diseaseDispalyString(result.id,result.title);
+		    	$('#added_disease').append(str);
+		    	
+		    	
+		    	$(document).off("click",".del-disease");
+		    	
+		    	$(document).on("click", ".del-disease" , function(event) {
+		    		event.stopImmediatePropagation();
+		    		$(this).parent().remove();
+		    	});
+		    	
+		    	$('#id_disease').val("")
+		    	$('#id_disease').focus();
+		    	show_success("Diagnosis Added!!!", " press F2 to view the report." );
+		      },
 
-}
+	})
+	;
+
+});

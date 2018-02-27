@@ -13,10 +13,10 @@ from complaints.models import Complaints, Disease
 
 # Create your models here.
 
+
 class Visit(models.Model):
     
     visit_id  = models.AutoField(primary_key=True)
-    patient_detail = models.ForeignKey(Patient)
 
     visit_date = models.DateTimeField(auto_now=True)
 
@@ -39,7 +39,24 @@ class Visit(models.Model):
                                )
 
     def __unicode__(self):
-        return "%s - %s" % (self.patient_detail.full_name, self.visit_date.strftime('%Y-%m-%d'))
+        return "%s" % (self.visit_date.strftime('%Y-%m-%d'))
     
+    def __str__(self):
+        return "%s" % (self.visit_date.strftime('%Y-%m-%d'))
+    
+    
+class VisitContainer(models.Model):
+    
+    patient_detail = models.ForeignKey(Patient)
+
+    visit_date = models.DateTimeField(auto_now=True)
+
+    visits = models.ManyToManyField(Visit,
+                                   blank=True)
+        
+ 
+    def __unicode__(self):
+        return "%s - %s" % (self.patient_detail.full_name, self.visit_date.strftime('%Y-%m-%d'))
+     
     def __str__(self):
         return "%s - %s" % (self.patient_detail.full_name, self.visit_date.strftime('%Y-%m-%d'))

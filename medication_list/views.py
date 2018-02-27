@@ -158,7 +158,7 @@ def add_medicine(request):
             medicine.dosage = recv_data.get('dosage', None)
             medicine.frequency = recv_data.get('frequency', None)
             medicine.duration = recv_data.get('duration', None)
-            medicine.type = recv_data.get('type', None)
+            medicine.type = recv_data.get('type', "Tab")
             medicine.save()
             data = {}
             data['result'] = 'Successfully added'

@@ -13,9 +13,16 @@
     <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}"></link>
     <link rel="stylesheet" href="{% static "core/style.css" %}"></link>
     <link rel="stylesheet" href="{% static "font-awesome/css/font-awesome.min.css" %}">
+    <link rel="stylesheet" href="{% static "semantic/semantic.min.css" %}"></link>
+    <link rel="stylesheet" href="{% static "semantic/Semantic-UI-Alert.css" %}"></link>
+    
+    {% block extra_style %}
+    
+    {% endblock %}
+    
     <script src="{% static "jquery-3.2.1.min.js" %}"></script>
   </head>
-  <body>
+  <body class="bc-blue">
     <header>
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">Dashboard</a>
@@ -99,6 +106,8 @@
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="{% static "tether.min.js" %}"></script>
     <script src="{% static "bootstrap/js/bootstrap.min.js" %}" ></script>
+    <script src="{% static "semantic/semantic.min.js" %}"></script>
+	<script src="{% static "semantic/Semantic-UI-Alert.js" %}"></script>
     <script src="{% static "core/utils.js" %}"></script>
     {% block extra_script %}
     

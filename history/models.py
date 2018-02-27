@@ -13,7 +13,7 @@ from complaints.models import Disease
 
 class MedicalHistory(models.Model):
     medicine_id = models.AutoField(primary_key=True)
-    disease = models.ForeignKey(Disease)
+    disease = models.ForeignKey(Disease,null=True,blank=True)
     status = models.TextField("Status",
                               max_length=500,
                               null=True,

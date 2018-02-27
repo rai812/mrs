@@ -10,7 +10,7 @@ from django.http.response import Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 import json
 
-from visit.models import Visit
+from visit.models import Visit, VisitContainer
 from medication_list.models import MedicationList
 from complaints.models import Complaints, Disease
 
@@ -20,6 +20,22 @@ from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
+
+@login_required
+def index(request):
+    visit_list = VisitContainer.objects.all()
+#     paginator = Paginator(patient_list, 10)
+#     page = request.GET.get('page', 1)
+#     ## TODO check the criteriea and change the patient_list
+#     try:
+#         patients = paginator.page(page)
+#     except PageNotAnInteger:
+#         patients = paginator.page(1)
+#     except EmptyPage:
+#         patients = paginator.page(paginator.num_pages)
+
+    return render(request, "visit/index.html", {'visit_containers': visit_list})
+
 
 @login_required
 def add_visit(request):
@@ -44,7 +60,10 @@ def add_visit(request):
 #         patient_detail = Patient.objects.get(patient_id = request.session.get('patient_id'))
 #         if patient_detail is None:
 #             raise Http404("Invalid Userid in session!!!!")
-        return render(request, "visit/add_visit.html", {})
+        visit_container_id = request.GET.get('visit_container_id',None)
+        visit_container = VisitContainer.objects.get(id = visit_container_id);
+        return render(request, "visit/add_visit.html", {'visit_container_id': visit_container_id,
+                                                        'visit_container': visit_container})
     
     raise Http404("Invalid request Method")
     
@@ -81,17 +100,34 @@ def add_visit_api(request):
             
             recv_data = json.loads(request.body)
             print(recv_data)
+            visit_container = recv_data.get('visit_container_id', None)
+            patient_id = recv_data.get('patient_id', None)
+
+            if visit_container is None:
+                visit_container = VisitContainer();
+                visit_container.patient_detail = Patient.objects.get(patient_id = patient_id);
+                visit_container.save();
+            else:
+                visit_container = VisitContainer.objects.get(id=visit_container);
             complaints = recv_data.get('complaints', [])
             medicines = recv_data.get('medicines', [])
             vitals = recv_data.get('vitals', None)
             diseases = recv_data.get('diseases', [])
             remark = recv_data.get('remark', None)
+            tests = recv_data.get('tests', None)
+            
+            
             
             visit = Visit()
             visit.remarks = recv_data.get('remark', None)
-            visit.patient_detail = Patient.objects.get(patient_id = request.session['patient_id'])
+            
             visit.vitals = Vitals.objects.get(vital_id = vitals)
+            visit.vitals.tests = tests;
+            visit.vitals.save();
             visit.save()
+            
+            visit_container.visits.add(visit);
+            
             if len(medicines) > 0:
                 medicine_objs = MedicationList.objects.filter(pk__in=medicines)
                 for obj in medicine_objs:
@@ -108,6 +144,9 @@ def add_visit_api(request):
             data = {}
             data['result'] = 'Successfully added'
             data['ret'] = 'True'
+            data['visit_container_id'] = visit_container.id
+            data['visit_id'] = visit.visit_id
+            data['test'] = tests
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
     raise Http404

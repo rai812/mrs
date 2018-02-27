@@ -1,0 +1,57 @@
+{% extends "core/base.html" %}
+{% load staticfiles  %}
+
+{% block title %}
+Visit's Records
+{% endblock %}
+
+{% block content %}
+
+<section class="pT-8 pB-16 wFull">
+    <div class="row centered">
+        <div class="col-sm-12 row centered">
+            <div class="col-sm-12  row centered">
+            <table>
+            	<tr>
+              		<td>
+					  <div class="ui icon input">	
+					    <input class="prompt" placeholder="Search" type="text" id="id_patient_search" required>
+					    <i class="search icon"></i>
+					  </div>
+					  <div class="results"></div>            		
+            		</td>
+            		<td>
+						<div class="ui selection dropdown">
+						  <input name="field" id="id_search_field" type="hidden">
+						  <i class="dropdown icon"></i>
+						  <div class="default text">Field</div>
+						  <div class="menu">
+						    <div class="item" data-value="name">Name</div>
+						    <div class="item" data-value="mobile_number">Mobile Number</div>
+						  </div>
+						</div>
+            		</td>
+            		
+            		<td>
+            			<input class="ui button" type="button" name="Search" onclick="get_patients(this)" value="Search" tabindex="0"/>
+            		</td>
+            	</tr>
+            </table>
+            
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row centered" id="id_patient_list">
+{% include "visit/visit_list.html" %}
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static "core/utils.js" %}"></script>
+<script src="{% static "core/visit.js" %}"></script>
+{% endblock %}

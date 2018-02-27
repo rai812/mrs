@@ -24,6 +24,11 @@ var createPatientString = function(i,item) {
     return str;
 }
 
+var createPatientString1 = function(i, item) {
+	var str= '\
+		'
+}
+
 
 var patientDispalyString = function(id, full_name, age, sex) {
 	var str = '\
@@ -78,36 +83,8 @@ var add_patient = function () {
         		console.log(data.result);
         		return;
         	}
-        	
-		    var str = patientDispalyString(data.id,data.full_name,data.age,data.sex);
-	    	$('#added_patient').append(str);
-	    
-	    	/*
-	    	 * TODO Add ajax request for updating the Medical history records
-	    	 * Display the History TAB after the response
-	    	 */
-	    	/*
-	    	if(data.history == "True")
-	    	{
-	    		str = medicalHistoryDispalyString(data.medicalHistory)
-	    		$('#added_medicalHistory').append(str);
-	    	}
-	    	
-	    	if(data.files == "True")
-	    	{
-	    		str = medicalFilesDispalyString(data.medicalHistory)
-	    		$('#added_medicalFiles').append(str);
-	    	}
-	    	*/
 
-	    	
-	    	/*
-	    	 * Remove all input boxes
-	    	 */
-	    	$('#id_full_name').val("")
-	    	$('#id_age').val("")
-	    	$('#id_sex').val("");
-        	$('a[href="#div_id_history"]').tab('show')
+        	patientExitAction(data.id,data.full_name,data.age,data.sex, "");        	
 	    	event.stopImmediatePropagation();
         	
         },
@@ -134,17 +111,20 @@ var addPatientCardAction = function(prevElement) {
 	
 	$(document).on("keydown", ".patient-card" , function(e ) {
         if (e.keyCode == 40) {
+        	e.stopImmediatePropagation();
         	console.log("Down Key pressed");
             $(".patient-card:focus").next().focus();
    
         }
         if (e.keyCode == 38) {
+        	e.stopImmediatePropagation();
         	console.log("UP Key pressed");
             $(".patient-card:focus").prev().focus();
         }
         
         if(e.keyCode == 13)
         {
+        	e.stopImmediatePropagation();
             console.log($(this).data("fname"))
             console.log($(this).data("mname"))
             console.log($(this).data("lname"))
@@ -153,44 +133,17 @@ var addPatientCardAction = function(prevElement) {
             console.log($(this).data("dob"))
             console.log($(this).data("mob"))
             
-            
-            var str = patientDispalyString($(this).data("id"),$(this).data("full_name"),$(this).data("age"),$(this).data("sex"));
-        	$('#added_patient').append(str);
-
-        	$(document).off("click",".del-patient");
-        	
-        	$(document).on("click", ".del-patient" , function( event ) {
-        		/*
-        		 * Assuming this in td and we want to remove the row
-        		 */
-        		$(this).parent().parent().remove();
-        	});
-
-        	
-        	/* 
-        	 * GET the history from the user ID TODO
-        	 */
-
-        	
-        	/*
-        	 * Remove all input boxes
-        	 */
-        	$('#id_full_name').val($(this).data("full_name"))
-        	$('#id_age').val($(this).data("age"))
-        	$('#id_sex').val($(this).data("sex"));
-            $('#search-close').remove();
-            $('#search-results').remove();
-        	$('a[href="#div_id_history"]').tab('show')
+            patientExitAction($(this).data("id"),$(this).data("full_name"),$(this).data("age"),$(this).data("sex"), "");            
         }
         
         if(e.keyCode == 27)
         {
+        	e.stopImmediatePropagation();
             $('#search-close').remove();
             $('#search-results').remove();
             prevElement.focus();
         }
         
-        e.stopImmediatePropagation();
 	});
 	
 	
@@ -206,25 +159,79 @@ var addPatientCardAction = function(prevElement) {
         console.log($(this).data("age"))
         console.log($(this).data("dob"))
         console.log($(this).data("mob"))
-        
-        
-        var str = patientDispalyString($(this).data("id"),$(this).data("full_name"),$(this).data("age"),$(this).data("sex"));
-    	$('#added_patient').append(str);
-    	
-    	/* 
-    	 * GET the history from the user ID TODO
-    	 */
-
-    	
-    	/*
-    	 * Remove all input boxes
-    	 */
-    	$('#id_full_name').val($(this).data("full_name"))
-    	$('#id_age').val($(this).data("age"))
-    	$('#id_sex').val($(this).data("sex"));
-        $('#search-close').remove();
-        $('#search-results').remove();
-    	$('a[href="#div_id_history"]').tab('show')
+    
+        patientExitAction($(this).data("id"),$(this).data("full_name"),$(this).data("age"),$(this).data("sex"), "");
         event.stopImmediatePropagation();
     });
 }
+
+var patientExitAction = function(id, full_name, age, sex, mobile) {
+
+	$('.del-patient').parent().parent().remove();
+
+	
+    var str = patientDispalyString(id,full_name,age,sex);
+	$('#added_patient').append(str);
+
+	$(document).off("click",".del-patient");
+	
+	$(document).on("click", ".del-patient" , function( event ) {
+		/*
+		 * Assuming this in td and we want to remove the row
+		 */
+		$(this).parent().parent().remove();
+		$(".medicalHistory-display").remove();
+//		$('a[href="#div_id_patient"]').tab('show')
+		$('.ui.menu').find('.item').tab('change tab', 'patient');
+	});
+	get_history(id);	
+	$('#id_full_name').val(full_name)
+	$('#id_age').val(age)
+	$('#id_sex').val(sex);
+	
+	show_success("Added Successfully!!!", " " + full_name + " selected as patient." );
+	
+	$('.ui.menu').find('.item').tab('change tab', 'history');
+	
+}
+
+$(document).ready(function() {
+	$('#id_sex').dropdown();
+	/*
+	 * Test function for UI search
+	 */
+	$('.ui.search.patient')
+	  .search({
+	    // change search endpoint to a custom endpoint by manipulating apiSettings
+	    apiSettings: {
+	      url: '/core/api/get_patients/?q={query}',
+	      onResponse: function(githubResponse) {
+	          var
+	            response = {
+	        		  results : Array()
+	            }
+	          ;
+	          // translate GitHub API response to work with search
+	          $.each(githubResponse.results, function(index, item) {
+	            // add result to category
+	            response.results.push({
+	            	id: item.patient_id,
+	              title       : item.full_name,
+	              description : item.age + " " + item.sex ,
+	              sex: item.sex,
+	              age: item.age,
+	            });
+	          });
+	          return response;
+	        },
+	    },
+	        minCharacters : 3,
+	        onSelect: function(result, response){
+	        	console.log(result);
+	        	console.log(response);
+	        	patientExitAction(result.id,result.title,result.age,result.sex,"");
+	        },
+
+	  })
+	;
+});

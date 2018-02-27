@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^core/api/get_patients/?$', views.get_patients, name='api_get_patient'),
     url(r'^core/api/add_vitals/?$', views.add_vitals, name='api_add_vitals'),
     url(r'^core/api/add_patient/?$', views.add_patient_api, name='api_add_patient'),
+    url(r'^core/get_patient_list/?$', views.get_patient_list, name='get_patient_list'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
 ]

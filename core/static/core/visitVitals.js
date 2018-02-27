@@ -2,8 +2,6 @@ var vitalsDispalyString = function(data) {
 	var str = '\
 		<tr class="vitals-display" data-id="' + data.id + '"> \
 		<td> Weight: ' + data.weight + '</td> \
-		<td> Height: ' + data.height + '</td> \
-		<td> OE: ' + data.oe + '</td> \
 		<td> P/CL/CN/I/O/L: ' + data.pce+ '</td> \
 		<td> Temp: ' + data.temp + '</td> \
 		<td> Pulse: ' + data.pulse + '</td> \
@@ -13,7 +11,6 @@ var vitalsDispalyString = function(data) {
 		<td> Chest: ' + data.chest + '</td> \
 		<td> CVS: ' + data.cvs + '</td> \
 		<td> PA: ' + data.pa + '</td> \
-		<td> Tests: ' + data.tests + '</td> \
 		</tr>';
 	return str;
 
@@ -22,8 +19,8 @@ var vitalsDispalyString = function(data) {
 var add_vitals = function () {
 	
 	var weight = $('#id_input_weight').val();
-	var height = $('#id_input_height').val();
-	var oe = $('#id_input_oe').val();
+//	var height = $('#id_input_height').val();
+//	var oe = $('#id_input_oe').val();
 	var pce = $('#id_input_pce').val();
 	var bp = $('#id_input_bp').val();
 	var rr = $('#id_input_rr').val();
@@ -33,11 +30,11 @@ var add_vitals = function () {
 	var cns = $('#id_input_cns').val();
 	var chest = $('#id_input_chest').val();
 	var pa = $('#id_input_pa').val();
-	var tests = $('#id_input_tests').val();
+//	var tests = $('#id_input_tests').val();
 	
 	console.log(weight);
-	console.log(height);
-	console.log(oe);
+//	console.log(height);
+//	console.log(oe);
 	console.log(pce);
 	console.log(bp);
 	console.log(rr);
@@ -47,7 +44,7 @@ var add_vitals = function () {
 	console.log(cns);
 	console.log(chest);
 	console.log(pa);
-	console.log(tests);
+//	console.log(tests);
 
 
     $.ajaxSetup({
@@ -65,8 +62,8 @@ var add_vitals = function () {
         type: "POST",
         dataType : "json",
         contentType: "application/json;",
-        data : JSON.stringify({'weight':weight, 'height':height, 'oe':oe, 'pce':pce, 'bp':bp, 'rr':rr, 'temp':temp, 'pulse':pulse, 'cvs':cvs, 'cns':cns, 'chest': chest
-        	, 'pa':pa, 'tests':tests}),
+        data : JSON.stringify({'weight':weight, 'pce':pce, 'bp':bp, 'rr':rr, 'temp':temp, 'pulse':pulse, 'cvs':cvs, 'cns':cns, 'chest': chest
+        	, 'pa':pa}),
         context : this,
         success : function (data) {
         	
@@ -86,8 +83,6 @@ var add_vitals = function () {
 	    	 * Remove all input boxes
 	    	 */
 	    	$('#id_input_weight').val("")
-	    	$('#id_input_height').val("")
-	    	$('#id_input_oe').val("");       
 	    	$('#id_input_pce').val("");     
 			$('#id_input_bp').val("");       
 			$('#id_input_rr').val("");       
@@ -97,8 +92,6 @@ var add_vitals = function () {
 			$('#id_input_cns').val("");     
 			$('#id_input_chest').val(""); 
 			$('#id_input_pa').val("");       
-			$('#id_input_tests').val(""); 
-	    	event.stopImmediatePropagation();
         	
         },
         error : function (xhRequest, ErrorText, thrownError) {

@@ -1,0 +1,67 @@
+
+<div class="row centered">
+    <div class="col-sm-12">
+		{% comment %}  Now here make table in pagination form{% endcomment %}
+		
+		<table class="ui stripped fixed definition table">
+		  <thead>
+		    <tr>
+		    <th></th>
+		    <th>Name</th>
+		    <th>Mobile</th>
+		    <th>Age</th>
+		    <th>Gender</th>
+		  </tr></thead>
+		  <tbody>
+			{% for patient in patients %}
+		      <tr>
+	            <td class="collapsing">
+		        	<div class="ui fitted slider checkbox">
+		          		<input type="checkbox" name="record_select"> <label></label>
+		        	</div>
+		      	</td>
+		        <td>{{ patient.full_name }}</td>
+		        <td>{{ patient.mobile }}</td>
+		        <td>{{ patient.age }} Years</td>
+		        <td>{{ patient.sex }}</td>
+		      </tr>
+    		{% endfor %}
+		  </tbody>
+{% if patients.has_other_pages %}		  
+		  <tfoot>
+		    <tr><th colspan="3">
+		      <div class="ui right floated pagination menu">
+		          {% if users.has_previous %}
+			        <a class="icon item disabled" href="?page={{ users.previous_page_number }}">
+			          <i class="left chevron icon"></i>
+			        </a>
+    			 {% else %}		      
+			        <a class="icon item disabled">
+			          <i class="left chevron icon"></i>
+			        </a>
+		        {% endif %}
+		        {% for i in patients.paginator.page_range %}
+			      {% if patients.number == i %}
+			        <a class="item active">{{ i }} </a>
+			      {% else %}
+			        <a class="item" href="?page={{ i }}">{{ i }} </a>
+			      {% endif %}
+			    {% endfor %}
+			    {% if users.has_next %}
+      		        <a class="icon item" href="?page={{ users.next_page_number }}">
+		          		<i class="right chevron icon"></i>
+			        </a>
+			    {% else %}
+      		        <a class="icon item disabled" >
+		          		<i class="right chevron icon"></i>
+			        </a>
+			    {% endif %}
+		      </div>
+		    </th>
+		  </tr>
+		</tfoot>
+{% endif %}		  
+		</table>
+		    
+    </div>
+</div>
