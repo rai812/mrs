@@ -48,33 +48,20 @@
 		        	
 		        	</td>
 		        	<td>
-		        	
-		        	<input class="ui button" data-id="{{ visit_container.id }}" type="button" name="add" value="Add visit" onclick="goto_add_visit(this)"/>
-		        	
+				        <input class="ui button" data-id="{{ visit.visit_id }}" type="button" name="add" value="Use as Template" onclick="add_new_visit(this)"/>
+
 		        	</td>
-		        	<td>
-				        <div class="ui small  disabled button" data-id="{{ visit_container.id }}">
-				          Use As Template
-				        </div>		        	
+		        	<td rowspan="{% get_visits_count visit_container %}" >
+			        	
+			        	<input class="ui button" data-id="{{ visit_container.id }}" type="button" name="add" value="Add visit" onclick="goto_add_visit(this)"/>
+			        	
 		        	</td>
+
 		        	</tr>
 		        {% endfor %}
     		{% endfor %}
 		  </tbody>
 
-  <tfoot class="full-width">
-    <tr>
-      <th></th>
-      <th colspan="7">
-        <div class="ui small button">
-          Add Visit
-        </div>
-        <div class="ui small  disabled button">
-          Use As Template
-        </div>
-      </th>
-    </tr>
-  </tfoot>
 		  
 {% comment %}  
 {% if patients.has_other_pages %}		  

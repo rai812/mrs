@@ -230,6 +230,14 @@ var complaintExitAction = function(id, description) {
 }
 
 $(document).ready(function() {
+
+    // add delete complaint action for each element if present
+    $(document).off("click",".del-complaint");
+    
+    $(document).on("click", ".del-complaint" , function( event ) {
+        $(this).parent().remove();
+    });
+
 	$('.ui.search.complaint')
 	  .search({
 	    // change search endpoint to a custom endpoint by manipulating apiSettings

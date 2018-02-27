@@ -170,6 +170,18 @@ var addMedicineFieldCardAction = function () {
 }
 
 $(document).ready(function() {
+
+	// add medicine delete function for class medicine if any
+	
+	$(document).off("click",".del-medicine");
+	
+	$(document).on("click", ".del-medicine" , function( event ) {
+		/*
+		 * Assuming this in td and we want to remove the row
+		 */
+		$(this).parent().parent().remove();
+	});
+
 	$('.ui.search.medicine')
 	.search({
 	  // change search endpoint to a custom endpoint by manipulating apiSettings

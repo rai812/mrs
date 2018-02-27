@@ -14,13 +14,13 @@
     <div class="row">
         <div class="row col-sm-12 centered mL-32">
 	        <ul class="ui tabular menu">
-                  <li class="item {% if visit_container %} disabled {% else %} active {% endif %} " data-tab="patient">
+                  <li class="item active " data-tab="patient">
                     Patient Detail
                   </li>
                   <li class="item" data-tab="history">
                     History
                   </li>
-                  <li class="item {% if visit_container %} active {% endif %}" data-tab="complaints">
+                  <li class="item" data-tab="complaints">
                     Complaints
                   </li>
                   <li class="item" data-tab="vitals">
@@ -46,7 +46,7 @@
 			            <tr>
 			                <td class= "pLR-8">
                 				<div class="ui search patient">
-								  <div class="ui icon input">
+								  <div class="ui {% if visit_container %} disabled {% endif %} icon input">
 								
 								    <input class="prompt" placeholder="Patient name..." type="text" id="id_full_name" name="full_name" required>
 								    <i class="search icon"></i>
@@ -55,7 +55,7 @@
 								</div>			                
 							</td>
 							<td class= "pLR-8">
-				                 <div id="div_id_age" class="ui right labeled input">
+				                 <div id="div_id_age" class="ui {% if visit_container %} disabled {% endif %} right labeled input">
 				                        <input id="id_age" name="age" type="text" placeholder="Age in Years..." 
 				                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
 				                        <div class="ui basic label">
@@ -66,9 +66,8 @@
 							<td class="pLR-8">
 						        <div id="div_id_sex">
 						            <label for="id_sex">
-						                <strong>sex</strong>
 						            </label>        
-						            <select id="id_sex" name="sex" class="ui dropdown">
+						            <select id="id_sex" name="sex" class="ui {% if visit_container %} disabled {% endif %} dropdown">
 						                <option value="Male" selected=selected>Male</option>
 						                <option value="Female">Female</option>
 						                <option value="Others">Others</option>
@@ -80,7 +79,7 @@
 						<tr>
 							<td class="pLR-8 pT-8">
 				               <div class="pull-left">
-                				  <input class="ui button" type="button" name="add" value="Add" id="id-patient-add" onclick="add_patient(this)" tabindex="0"/>
+                				  <input class="ui {% if visit_container %} disabled {% endif %} button" type="button" name="add" value="Add" id="id-patient-add" onclick="add_patient(this)" tabindex="0"/>
                 			   </div>
 							</td>
 						</tr>
@@ -491,11 +490,60 @@
 		              </thead>
 		            
 		                <tbody id="added_complaint" class="col-sm-12 fS14">
-		
+		                	{% for complaint in compplaints %}
+								<span class="tag label label-info c-31 complaint-display" data-id="{{complaint.complain_id}}">
+								<span>{{complaint.description}}</span>
+								<i class="fa fa-times-circle del-complaint" aria-hidden="true"></i>
+								</span>
+							{% endfor %}
 		                </tbody>
 		            </table>
 		        </div>
 		
+		        <div class="row col-sm-12 centered mL-32 mT-32" >
+		            <table class="table">
+		            <span class="fS24"> Medication</span>
+		               <thead >
+		                <tr>
+		                  <th >Medicine</th>
+		                  <th >Frequency</th>
+		                  <th >Duration</th>
+		                </tr>
+		              </thead>
+		            
+		                <tbody id="added_medicine" class="col-sm-12 fS14">
+		                	{% for medicine in medicines %}
+								<tr class="medicine-display" data-id="{{medicine.medicine_id}}">
+								<td> {{medicine.medicine}} : {{medicine.dosage}}</td>
+								<td>{{medicine.frequency}}</td>
+								<td> for {{ medicine.duration }}</td>
+								<td> <i class="fa fa-times-circle del-medicine" aria-hidden="true"></i> </td>
+								</tr>
+			        		{% endfor %}
+		                </tbody>
+		            </table>
+		        </div>
+		
+		        <div class="row col-sm-12 centered mL-32 mT-32">
+			        <table class="table ">
+			        <span class="fS24"> Diagnosis</span>
+		               <thead >
+		                <tr>
+		                  <th >Disease</th>
+		                </tr>
+		              </thead>
+		            
+		                <tbody id="added_disease" class="col-sm-12 fS14">
+		                	{% for disease in diagnose %}
+							<span class="tag label label-info c-31 disease-display " data-id="{{ disease.disease_id }}">
+								<span>{{ disease.name }}</span>
+								<i class="fa fa-times-circle del-disease" aria-hidden="true"></i>
+							</span>
+							{% endfor %}
+		                </tbody>
+		            </table>        
+		        </div>
+
 		
 		        <div class="row col-sm-12 centered mL-32 mT-32" id="added_history">
 		            <table class="table mB-32" id="div_id_medical_histroy">
@@ -532,40 +580,7 @@
 			            <tbody id="added_vitals" class="col-sm-12 fS14">
 			            </tbody>
 		            </table>
-		        </div>
-		
-		        <div class="row col-sm-12 centered mL-32 mT-32" >
-		            <table class="table">
-		            <span class="fS24"> Medication</span>
-		               <thead >
-		                <tr>
-		                  <th >Medicine</th>
-		                  <th >Frequency</th>
-		                  <th >Duration</th>
-		                </tr>
-		              </thead>
-		            
-		                <tbody id="added_medicine" class="col-sm-12 fS14">
-		
-		                </tbody>
-		            </table>
-		        </div>
-		
-		        <div class="row col-sm-12 centered mL-32 mT-32">
-			        <table class="table ">
-			        <span class="fS24"> Diagnosis</span>
-		               <thead >
-		                <tr>
-		                  <th >Disease</th>
-		                </tr>
-		              </thead>
-		            
-		                <tbody id="added_disease" class="col-sm-12 fS14">
-		
-		                </tbody>
-		            </table>        
-		        </div>
-		        
+		        </div>		        
   			</div>
 		</div>
 

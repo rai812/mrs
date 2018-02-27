@@ -97,6 +97,14 @@ var addDisease = function() {
 }
 
 $(document).ready(function() {
+
+	// add delete disease action if any
+    $(document).off("click",".del-disease");
+    	
+	$(document).on("click", ".del-disease" , function( event ) {
+		$(this).parent().remove();
+	});
+
 	$('.ui.search.disease')
 	.search({
 	  // change search endpoint to a custom endpoint by manipulating apiSettings

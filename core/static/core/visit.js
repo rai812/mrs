@@ -87,6 +87,11 @@ var goto_add_visit = function(element) {
 	window.location.href = window.location.origin+"/visit/add-visit/?visit_container_id=" + $(element).data('id');
 }
 
+var add_new_visit = function(element) {
+	console.log($(element));
+	window.location.href = window.location.origin+"/visit/add-visit/?visit_id=" + $(element).data('id') + '&use_as_template=True';	
+}
+
 $(document).ready(function() {
 	
 	$('#id_full_name').focus();

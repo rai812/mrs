@@ -61,7 +61,24 @@ def add_visit(request):
 #         if patient_detail is None:
 #             raise Http404("Invalid Userid in session!!!!")
         visit_container_id = request.GET.get('visit_container_id',None)
-        visit_container = VisitContainer.objects.get(id = visit_container_id);
+        if visit_container_id:
+            visit_container = VisitContainer.objects.get(id = visit_container_id);
+        else:
+            visit_container = None
+
+        use_as_template = request.GET.get('template',False)
+        if use_as_template:
+            visit_id = request.GET.get('visit_id',None)
+            if visit_id is None:
+                raise Http404("Invalid request Method")
+            
+            complaints = visit.complaints.all();
+            medicines = visit.medicines.all();
+            diagnose = visit.diagnose.all();
+            return render(request, "visit/add_visit.html", {'medicines': medicines, 'template': True,
+                                                        'complaints': complaints, 'diagnose': diagnose})
+
+
         return render(request, "visit/add_visit.html", {'visit_container_id': visit_container_id,
                                                         'visit_container': visit_container})
     
