@@ -65,7 +65,7 @@ def get_patients(request):
             data['dob'] = ""
         
         
-        data['mob'] = obj.mobile_number or ""
+        data['mobile'] = obj.mobile_number or ""
         data['age'] = obj.get_age()
         data['url'] = obj.get_absolute_url()
         result.append(data)
@@ -232,6 +232,7 @@ def add_patient_api(request):
                 
             patient.sex = recv_data.get('sex', None)
             patient.age = recv_data.get('age', None)
+            patient.mobile_number = recv_data.get('mobile', None)
             patient.save()
             data = {}
             data['result'] = 'Successfully added'
@@ -240,6 +241,7 @@ def add_patient_api(request):
             data["full_name"] =  patient.full_name,
             data["age"] =  patient.age,
             data["sex"] =  patient.sex
+            data["mobile"] =  patient.mobile_number
             data['history'] = "False"
             data['files'] = "False"
             print(data)
