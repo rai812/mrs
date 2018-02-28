@@ -66,12 +66,13 @@ def add_visit(request):
         else:
             visit_container = None
 
-        use_as_template = request.GET.get('template',False)
+        use_as_template = request.GET.get('use_as_template',False)
         if use_as_template:
             visit_id = request.GET.get('visit_id',None)
             if visit_id is None:
                 raise Http404("Invalid request Method")
             
+            visit = Visit.objects.get(visit_id = visit_id);
             complaints = visit.complaints.all();
             medicines = visit.medicines.all();
             diagnose = visit.diagnose.all();
@@ -137,11 +138,15 @@ def add_visit_api(request):
             
             visit = Visit()
             visit.remarks = recv_data.get('remark', None)
-            
-            visit.vitals = Vitals.objects.get(vital_id = vitals)
-            visit.vitals.tests = tests;
-            visit.vitals.save();
-            visit.save()
+            if tests:
+                if vitals:
+                    visit.vitals = Vitals.objects.get(vital_id = vitals)
+                else:
+                    temp_vital = Vitals()
+                    temp_vital.tests = tests;
+                    temp_vital.save();
+                    visit.vitals = temp_vital
+            visit.save();
             
             visit_container.visits.add(visit);
             
@@ -167,5 +172,28 @@ def add_visit_api(request):
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
     raise Http404
+
+@login_required
+def get_visit_list(request):
+    
+    field = request.GET.get('field', "")
+    query = request.GET.get('q', "")
+    
+    if len(field) == 0 or len(query) == 0:
+        visit_containers = VisitContainer.objects.all()
+    elif field == "name":
+        entry_query = get_query(query, ['patient_detail__first_name', 'patient_detail__middle_name','patient_detail__last_name'])
+        visit_containers = VisitContainer.objects.filter(entry_query).order_by('patient_detail__first_name')[:10]
+    elif field == "mobile_number":
+        entry_query = get_query(query, ['patient_detail__mobile_number'])
+        visit_containers = VisitContainer.objects.filter(entry_query).order_by('patient_detail__first_name')[:10]    
+    elif field == "disease":
+        entry_query = get_query(query, ['visits__diagnose__name'])
+        visit_containers = VisitContainer.objects.filter(entry_query).order_by('patient_detail__first_name')[:10]    
+    else:
+        visit_containers = VisitContainer.objects.all()[:10]
+        
+
+    return render(request, 'visit/visit_list.html', { 'visit_containers': visit_containers})
     
     

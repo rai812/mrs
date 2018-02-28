@@ -16,6 +16,12 @@ from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
 
+FREQUENCY_LIST = ['Take Once Daily/ दिन में एक बार ',
+                  'Take Two Times Daily/ दिन में दो बार ',
+                  'Take Two Times Daily/ दिन में तीन बार ',
+                  '']
+
+
 @login_required
 def index(request):
     form = MedicationSearchForm()

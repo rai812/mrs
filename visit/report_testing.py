@@ -504,6 +504,8 @@ class fcMaker(object):
       next_page = False
       count = 1
       visits = fcMaker.data['visits']
+      visit_count = 1;
+      visit_size = len(visits)
       for visit in visits:
           ## print the visit date
           elements.append(DateLine(text=visit.visit_date.strftime('%d-%m-%y')));
@@ -530,26 +532,25 @@ class fcMaker(object):
           elements.append(Paragraph(str(tests)[0:420], styles['Normal']))
           elements.append(FrameBreak())
           
-          
-
-          
-          history = MedicalHistory.objects.filter(patient_detail=fcMaker.data['visit_container'].patient_detail.patient_id)
-          elements.append(Paragraph('Medical History', styles['Heading2']))
-          for h in history:
-              if(next_page):
-                  count = count +  count_rows(str(h.status), 81)
-              else:
-                  count = count + count_rows(str(h.status))
-              if count > 41:
-                count = 0;
-                next_page = True
-                elements.append(NextPageTemplate('TwoCol'))
-                elements.append(PageBreak())
-            
-              elements.append(Paragraph(str(h.status), styles['Normal']))
+          ## add history to first visit only
+          if(visit_count == 1):              
+              history = MedicalHistory.objects.filter(patient_detail=fcMaker.data['visit_container'].patient_detail.patient_id)
+              elements.append(Paragraph('Medical History', styles['Heading2']))
+              for h in history:
+                  if(next_page):
+                      count = count +  count_rows(str(h.status), 81)
+                  else:
+                      count = count + count_rows(str(h.status))
+                  if count > 41:
+                    count = 0;
+                    next_page = True
+                    elements.append(NextPageTemplate('TwoCol'))
+                    elements.append(PageBreak())
                 
-          elements.append(Paragraph("<br/>", styles['Normal'])); 
-          count = count +1;
+                  elements.append(Paragraph(str(h.status), styles['Normal']))
+                    
+              elements.append(Paragraph("<br/>", styles['Normal'])); 
+              count = count +1;
     
           ## now the complaints of visit
           
@@ -629,10 +630,13 @@ class fcMaker(object):
           
           elements.append(Paragraph("<br/>", styles['Normal'])); 
           count = count +1;
-
-          elements.append(NextPageTemplate('OneCol'))
-          elements.append(PageBreak())
-
+          
+          ## if visit is last then don't break
+          if visit_count != visit_size:
+              elements.append(NextPageTemplate('OneCol'))
+              elements.append(PageBreak())
+          
+          visit_count = visit_count + 1;
       
       x1, y1 = fcMaker.coordinates(2.45,10.65, doc.height, inch)
       frame1 = Frame(x1,y1, doc.width - 3.05*inch, doc.height - 4.20*inch, showBoundary=1)

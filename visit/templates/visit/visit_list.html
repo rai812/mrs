@@ -51,12 +51,13 @@
 				        <input class="ui button" data-id="{{ visit.visit_id }}" type="button" name="add" value="Use as Template" onclick="add_new_visit(this)"/>
 
 		        	</td>
-		        	<td rowspan="{% get_visits_count visit_container %}" >
-			        	
-			        	<input class="ui button" data-id="{{ visit_container.id }}" type="button" name="add" value="Add visit" onclick="goto_add_visit(this)"/>
-			        	
-		        	</td>
-
+		        	
+		        	{% if forloop.first %}
+    		        	<td rowspan="{% get_visits_count visit_container %}" >
+				        <input class="ui button" data-id="{{ visit_container.id }}" type="button" name="add" value="Add visit" onclick="goto_add_visit(this)"/>			        	
+		        		</td>
+		        	{% endif %}
+		        	
 		        	</tr>
 		        {% endfor %}
     		{% endfor %}

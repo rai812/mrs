@@ -212,10 +212,12 @@ $(document).ready(function() {
 	            }
 	          ;
 	          // translate GitHub API response to work with search
+	          console.log("printing result from server");
+	          console.log(githubResponse.results);
 	          $.each(githubResponse.results, function(index, item) {
 	            // add result to category
 	            response.results.push({
-	            	id: item.patient_id,
+	            	id: item.id,
 	              title       : item.full_name,
 	              description : item.age + " " + item.sex ,
 	              sex: item.sex,

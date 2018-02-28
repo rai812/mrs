@@ -15,7 +15,7 @@ Visit's Records
             	<tr>
               		<td>
 					  <div class="ui icon input">	
-					    <input class="prompt" placeholder="Search" type="text" id="id_patient_search" required>
+					    <input class="prompt" placeholder="Search" type="text" id="id_visit_search" required>
 					    <i class="search icon"></i>
 					  </div>
 					  <div class="results"></div>            		
@@ -28,6 +28,7 @@ Visit's Records
 						  <div class="menu">
 						    <div class="item" data-value="name">Name</div>
 						    <div class="item" data-value="mobile_number">Mobile Number</div>
+						    <div class="item" data-value="disease">Disease</div>
 						  </div>
 						</div>
             		</td>
@@ -35,8 +36,8 @@ Visit's Records
             		<td>
             			<input class="ui button" type="button" name="Search" onclick="get_patients(this)" value="Search" tabindex="0"/>
             		</td>
-                    <td class="pull right">
-                        <input class="ui button" type="button" name="add" value="New visit" onclick="goto_add_visit(this)"/>
+                    <td class="">
+                        <input class="ui positive button" type="button" name="add" value="New visit" onclick="goto_new_visit(this)"/>
                     </td>
             	</tr>
             </table>

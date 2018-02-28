@@ -20,10 +20,11 @@ var createComplaintString = function(i,item) {
 
 var complaintDispalyString = function(id,value) {
 	var str = '\
+		<tr> <td> \
 		<span class="tag label label-info c-31 complaint-display" data-id="' + id + '"> \
 		<span>' + value + '</span> \
 		<i class="fa fa-times-circle del-complaint" aria-hidden="true"></i> \
-		</span>';
+		</span> </tr> </td>';
 	return str;
 
 }
@@ -88,7 +89,7 @@ var addComplaints = function() {
 	    	$(document).off("click",".del-complaint");
 	    	
 	    	$(document).on("click", ".del-complaint" , function( event ) {
-	    		$(this).parent().remove();
+	    		$(this).parent().parent().parent().remove();
 	    	});
 	    	
 	    	$('#id_complaints').val("")
@@ -221,7 +222,7 @@ var complaintExitAction = function(id, description) {
 	$(document).off("click",".del-complaint");
 	
 	$(document).on("click", ".del-complaint" , function( event ) {
-		$(this).parent().remove();
+		$(this).parent().parent().parent().remove();
 	});
 	
 	$('#id_complaints').val("")
@@ -235,7 +236,7 @@ $(document).ready(function() {
     $(document).off("click",".del-complaint");
     
     $(document).on("click", ".del-complaint" , function( event ) {
-        $(this).parent().remove();
+        $(this).parent().parent().parent().remove();
     });
 
 	$('.ui.search.complaint')

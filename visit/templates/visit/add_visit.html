@@ -32,6 +32,10 @@
                   <li class="item" data-tab="diagnosis">
                     Diagnosis
                   </li>
+                <li class="item" data-tab="remark">
+                    Remarks and Tests
+                  </li>
+                  
                   <li class="item" data-tab="report">
                     Report
                   </li>
@@ -410,42 +414,41 @@
 						  </div>
 						  <div class="results"></div>
 						</div>                        
-                
-                {% comment %}  
-                    <label for="id_disease">
-                        
-                        <input id="id_disease" class="translit form-input search-term add-term" name="disease" type="text"
-                        spellcheck="false" autocomplete="off" maxlength="300" data-url="{% url "complaints:api_get_disease" %}" data-type="disease" />
-                    </label>
-                    {% endcomment %}
                 </div>
-                <div class="form-element pLR-8">
-                    <label for="id_remarks">
-                        <strong>Remarks</strong>
-                        <textarea class="translit form-input" name="remarks" id="id_input_remarks"
-                        rows="5" cols="50" > </textarea>
-                    </label>
-                </div>
-                <div class="form-element pLR-8">
-                    <label for="id_tests">
-	                        <strong>Tests</strong>
-	                        <textarea class="translit form-input" name="tests" id="id_input_tests"
-	                        rows="5" cols="50" > </textarea>
-                    </label>                
-                </div>
-               <div class="pull-left">
-                  <input class="ui button" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_visit(this)"/>
+               <div class="pull-left pT-16">
+                  <input class="ui button" type="button" name="add" value="Add" id="id-disease-add" onclick="addDisease(this)"/>
                 </div>
             </div>
+
+			<div id="div_id_remark" class="ui tab row col-sm-12 centered" data-tab="remark">
+				<div class="pLR-8">
+	                <div class="form-element pLR-8">
+	                    <label for="id_remarks">
+	                        <strong>Remarks</strong>
+	                        <textarea class="translit form-input" name="remarks" id="id_input_remarks"
+	                        rows="5" cols="50" > </textarea>
+	                    </label>
+	                </div>
+	                <div class="form-element pLR-8">
+	                    <label for="id_tests">
+		                        <strong>Tests</strong>
+		                        <textarea class="translit form-input" name="tests" id="id_input_tests"
+		                        rows="5" cols="50" > </textarea>
+	                    </label>                
+	                </div>
+	               
+	               <div class="pull-left">
+	                  <input class="ui button" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_visit(this)"/>
+	                </div>
+				</div>			
+			</div>
+
 
             <div id="div_id_report" class="ui tab row col-sm-12 centered" data-tab="report">
 			<button type="button" id="id_btn_report_view" class="ui button" onclick="show_report(this)" >View Report</button>
 			
-			<input type="button" id="id_btn_report" class="ui button" href=""  onclick="window.open(this.href,'popUpWindow','height=400,width=600,left=10,top=10,,scrollbars=yes,menubar=no'); return false;" 
-			value="Download Report" />
-			
-			<button type="ui button" id="id_btn_report" class="btn btn-success" target="_blank" >Download Report</button>
-			
+			<a id="id_btn_report" class="ui disabled button" href=""  onclick="window.open(this.href,'popUpWindow','height=400,width=600,left=10,top=10,,scrollbars=yes,menubar=no'); return false;"> Download Report </a>
+						
 			{% if visit_container_id %}
 				<input id="id_visit_container_id" value="{{ visit_container_id}}" type="hidden">  </input>
 			{% endif %}
@@ -490,11 +493,14 @@
 		              </thead>
 		            
 		                <tbody id="added_complaint" class="col-sm-12 fS14">
-		                	{% for complaint in compplaints %}
+		                	{% for complaint in complaints %}
+		                	<tr> <td>
 								<span class="tag label label-info c-31 complaint-display" data-id="{{complaint.complain_id}}">
 								<span>{{complaint.description}}</span>
 								<i class="fa fa-times-circle del-complaint" aria-hidden="true"></i>
 								</span>
+								</td>
+							</tr>
 							{% endfor %}
 		                </tbody>
 		            </table>
@@ -535,10 +541,14 @@
 		            
 		                <tbody id="added_disease" class="col-sm-12 fS14">
 		                	{% for disease in diagnose %}
+		                	<tr>
+		                	<td>
 							<span class="tag label label-info c-31 disease-display " data-id="{{ disease.disease_id }}">
 								<span>{{ disease.name }}</span>
 								<i class="fa fa-times-circle del-disease" aria-hidden="true"></i>
 							</span>
+							</td>
+							</tr>
 							{% endfor %}
 		                </tbody>
 		            </table>        

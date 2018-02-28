@@ -62,7 +62,9 @@ var add_visit = function() {
         	}
         	
         	$('.ui.menu').find('.item').tab('change tab', 'report');
-        	$('#id_btn_report').attr("href").val(window.location.origin + "visit/report/"+ data.visit_container_id)
+        	$('#id_btn_report').attr("href", window.location.origin + "/visit/report/"+ data.visit_container_id)
+        	$('#id_btn_report').removeClass("disabled");
+        	
         	
         	
         },
@@ -92,7 +94,49 @@ var add_new_visit = function(element) {
 	window.location.href = window.location.origin+"/visit/add-visit/?visit_id=" + $(element).data('id') + '&use_as_template=True';	
 }
 
+var goto_new_visit = function(element) {
+	console.log($(element));
+	window.location.href = window.location.origin+"/visit/add-visit/";	
+}
+
+var get_patients = function () {
+	
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        }
+    });
+	
+    field = $("#id_search_field").val();
+	query = $("#id_visit_search").val();
+    $.ajax({
+        cache: false,
+        url : window.location.origin+"/visit/get_visit_list/?field="+field+"&q="+query,
+        type: "GET",
+        dataType : "html",
+        context : this,
+        success : function (data) {
+	    	$('#id_patient_list').html(data);
+        },
+        error : function (xhRequest, ErrorText, thrownError) {
+            //alert("Failed to process annotation correctly, please try again");
+            console.log('xhRequest: ' + xhRequest + "\n");
+            console.log('ErrorText: ' + ErrorText + "\n");
+            console.log('thrownError: ' + thrownError + "\n");
+        }
+    });	
+}
+
+
+
 $(document).ready(function() {
+	
+	$('.ui.selection.dropdown')
+	  .dropdown()
+	;
 	
 	$('#id_full_name').focus();
 	$(document).off("keydown");	  
@@ -231,6 +275,28 @@ $(document).ready(function() {
 				        }
 				        else if(e.keyCode == 39) { // right
 					        
+				        	$('.ui.menu').find('.item').tab('change tab', 'remark');
+				        	e.stopImmediatePropagation();
+				        }
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+
+			}else if("remark" == name){
+				$('#id_input_remarks').focus();
+				  $(document).off("keydown");	  
+				  $(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) {
+				        if (e.keyCode == 37) { // left      
+				        	$('.ui.menu').find('.item').tab('change tab', 'diagnosis');
+				        	e.stopImmediatePropagation();
+				        }
+				        else if(e.keyCode == 39) { // right
+					        
 				        	$('.ui.menu').find('.item').tab('change tab', 'report');
 				        	e.stopImmediatePropagation();
 				        }
@@ -247,7 +313,7 @@ $(document).ready(function() {
 				  $(document).on("keydown" , function(e) {
 					  if (e.ctrlKey) {
 				        if (e.keyCode == 37) { // left      
-				        	$('.ui.menu').find('.item').tab('change tab', 'diagnosis');
+				        	$('.ui.menu').find('.item').tab('change tab', 'remark');
 				        	e.stopImmediatePropagation();
 				        }
 					  }

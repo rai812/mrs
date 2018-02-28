@@ -12,10 +12,11 @@ var createDiseaseString = function(i,item) {
 
 var diseaseDispalyString = function(id,value) {
 	var str = '\
+		<tr> <td> \
 		<span class="tag label label-info c-31 disease-display " data-id="' + id + '"> \
 		<span>' + value + '</span> \
 		<i class="fa fa-times-circle del-disease" aria-hidden="true"></i> \
-		</span>';
+		</span> </td> </tr>';
 	
 	return str;
 
@@ -52,11 +53,11 @@ var addDisease = function() {
     });
     //Save Form Data........
 	    
-    disease_name = $('#add-disease-value').text() 
+    disease_name = $('#id_disease').val() 
 	    
     $.ajax({
         cache: false,
-        url : window.location.origin+$(this).data("url"),
+        url : window.location.origin+'/complaints/api/add_disease/',
         type: "POST",
         dataType : "json",
         contentType: "application/json;",
@@ -79,11 +80,12 @@ var addDisease = function() {
 	    	$(document).off("click",".del-disease");
 	    	
 	    	$(document).on("click", ".del-disease" , function( event ) {
-	    		$(this).parent().remove();
+	    		$(this).parent().parent().parent().remove();
 	    	});
 	    	
 	    	$('#id_disease').val("")
-	    	
+	    	$('#id_disease').focus();
+
         	
         },
         error : function (xhRequest, ErrorText, thrownError) {
@@ -102,7 +104,7 @@ $(document).ready(function() {
     $(document).off("click",".del-disease");
     	
 	$(document).on("click", ".del-disease" , function( event ) {
-		$(this).parent().remove();
+		$(this).parent().parent().parent().remove();
 	});
 
 	$('.ui.search.disease')
@@ -140,7 +142,7 @@ $(document).ready(function() {
 		    	
 		    	$(document).on("click", ".del-disease" , function(event) {
 		    		event.stopImmediatePropagation();
-		    		$(this).parent().remove();
+		    		$(this).parent().parent().parent().remove();
 		    	});
 		    	
 		    	$('#id_disease').val("")

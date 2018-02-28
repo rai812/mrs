@@ -92,7 +92,7 @@ var add_vitals = function () {
 			$('#id_input_cns').val("");     
 			$('#id_input_chest').val(""); 
 			$('#id_input_pa').val("");       
-        	
+			$('.ui.menu').find('.item').tab('change tab', 'medicine');
         },
         error : function (xhRequest, ErrorText, thrownError) {
             //alert("Failed to process annotation correctly, please try again");
