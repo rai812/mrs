@@ -2,6 +2,7 @@
 {% load staticfiles  %}
 
 {% block extra_style %}
+<link href="{% static "ime/css/jquery.ime.css" %}" rel="stylesheet" />
 {% endblock %}
 
 
@@ -155,51 +156,56 @@
 							  <div class="results"></div>
 							</div>                        
                         </td>
-                        <td class="pLR-8 ">
+                    </tr>
+                    <tr>
+                        <td class="pLR-8">
                         
-							<div class="ui search dosage">
+							<div class="ui search dosage mT-16">
 							  <div class="ui input">
 							    <input class="prompt" placeholder="Dosage" type="text" id="id_input_dosage" name="dosage" required>
 							  </div>
 							  <div class="results"></div>
 							</div>                        
-                        
-                        {% comment %}  
-                            <label for="id_input_dosage">
-                                <strong>Dosage</strong>
-                                <input id="id_input_dosage" class="translit form-input search-term" name="dosage" type="text"
-                                 spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_dosage_values" %}' data-type="medicine-dosage" />
-                            </label>
-                        {% endcomment %}
                         </td>
-                        <td class="pLR-8 ">
-							<div class="ui search frequency">
-							  <div class="ui input">
-							    <input class="prompt" placeholder="Frequency" type="text" id="id_input_frequency" name="frequency" required>
-							  </div>
-							  <div class="results"></div>
-							</div>                        
-                        {% comment %}  
-                            <label for="id_input_frequency">
-                            <strong>Frequency</strong>
-                            <input id="id_input_frequency" class="trans-hindi translit form-input search-term" name="frequency" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" data-url='{% url "medicines:api_get_frequency_values" %}' data-type="medicine-frequency" />
-                            </label>
-                            {% endcomment %}
-                        </td>
+                    </tr>
+                    <tr>
                         <td class="pLR-8">
+							<select id="id_input_frequency"  multiple="" name="frequency" class="ui fluid normal dropdown frequency mT-16">
+							  <option value="">Frequency</option>
+							<option value="Take Once Daily / दिन में एक बार (OD)">Take Once Daily / दिन में एक बार (OD)</option>
+							<option value="Take Two Times Daily / दिन में दो बार (BD)">Take Two Times Daily / दिन में दो बार (BD)</option>
+							<option value="Take Three Times Daily / दिन में तीन बार (TDS)">Take Two Times Daily / दिन में तीन बार (TDS)</option>
+							<option value="Take At Night Daily / केवल रात में (HS)">Take At Night Daily / केवल रात में (HS)</option>
+							<option value="Four Times Daily / दिन में चार बार (QID)">Four Times Daily / दिन में चार बार (QID)</option>
+							<option value="SOS (if need) / जरुरत पड़ने पर ">SOS (if need) / जरुरत पड़ने पर </option>
+							<option value="Take Before Food / खाने से पहले (AC)">Take Before Food / खाने से पहले (AC)</option>
+							<option value="Take After Food / खाने के बाद (PC)">Take After Food / खाने के बाद (PC)</option>
+							<option value="Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)">Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)</option>
+							<option value="Before Breakfast / खाली पेट (BBF)">Before Breakfast / खाली पेट (BBF)</option>
+							</select>                       
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pLR-8 ">
 
-							  <div class="ui input">
-							    <input class="prompt" placeholder="Duration" type="text" id="id_input_duration" name="duration" required>
-							  </div>
-
-						{% comment %}  
-                            <label for="id_input_duration">
-                                <strong>Duration</strong>
-                                <input id="id_input_duration" class="translit form-input" name="duration" type="text"
-                                 spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                        {% endcomment %}
+				                 <div id="div_id_duration" class="ui right labeled input mT-16">
+				                        <input id="id_input_duration" name="duration" type="text" placeholder="Duration in Days..." 
+				                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+				                        <div class="ui basic label">
+				    						Days
+				  						</div>
+				                </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pLR-8">
+			                <div class="form-element mT-16">
+			                    <label for="id_medicine_remarks">
+			                        <strong>Remarks</strong>
+			                        <textarea class="hindi-text form-input" name="medicine_remarks" id="id_medicine_remarks"
+			                        rows="3" cols="50" > </textarea>
+			                    </label>
+			                </div>
                         </td>
                      </tr>
                      <tr>
@@ -523,6 +529,7 @@
 								<td> {{medicine.medicine}} : {{medicine.dosage}}</td>
 								<td>{{medicine.frequency}}</td>
 								<td> for {{ medicine.duration }}</td>
+								<td> {{ medicine.remarks }}</td>
 								<td> <i class="fa fa-times-circle del-medicine" aria-hidden="true"></i> </td>
 								</tr>
 			        		{% endfor %}
@@ -600,6 +607,11 @@
 {% endblock %}
 
 {% block extra_script %}
+<script src="{% static "ime/libs/rangy/rangy-core.js" %}"></script>
+<script src="{% static "ime/src/jquery.ime.js" %}"></script>
+<script src="{% static "ime/src/jquery.ime.selector.js" %}"></script>
+<script src="{% static "ime/src/jquery.ime.preferences.js" %}"></script>
+<script src="{% static "ime/src/jquery.ime.inputmethods.js" %}"></script>
 
 <script src="{% static "core/utils.js" %}"></script>
 <script src="{% static "core/visitPatient.js" %}"></script>

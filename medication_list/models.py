@@ -28,7 +28,14 @@ class MedicationList(models.Model):
     duration = models.CharField(max_length=100,
                    help_text="Number of day or months", blank=True, null=True
                 )
-    
+
+    remarks = models.TextField(max_length=200,
+                               blank=True,null=True,
+                               help_text="limit to 200 words"
+                               )    
+
+
+
     def __unicode__(self):
         return "%s-%s : %s, %s for %s" % (self.type, self.medicine,self.dosage, self.frequency, self.duration)
 
@@ -36,7 +43,13 @@ class MedicationList(models.Model):
         return "%s-%s : %s, %s for %s" % (self.type, self.medicine,self.dosage, self.frequency, self.duration)
     
     def getDisplayValue(self):
-        return "%s : %s, %s for %s" % ( self.medicine,self.dosage, self.frequency, self.duration)
+      if self.remarks:
+        remark = self.remarks.encode('utf-8')
+      else:
+        remark = ""
+      if(len(remark) < 3):
+        remark = ""
+      return "%s : %s, %s %s for %s days" % ( self.medicine,self.dosage, self.frequency, remark , self.duration)
 
     def get_absolute_url(self):
         return reverse("get_patient_detail",kwargs={"pk":self.id})

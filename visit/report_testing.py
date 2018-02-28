@@ -78,6 +78,9 @@ class fcMaker(object):
 #       kruti_bold_font = os.path.join(settings.STATIC_ROOT, 'fonts/Kruti_Dev_712.ttf')
 #       pdfmetrics.registerFont(TTFont("Kruti 712", kruti_bold_font))
 
+      krishna = os.path.join(settings.STATIC_ROOT, 'fonts/K010.TTF')
+      pdfmetrics.registerFont(TTFont("Krishna", krishna))
+
 
       self.PAGE_SIZE = A4
       self.buffer = response
@@ -149,6 +152,16 @@ class fcMaker(object):
               alignment=TA_LEFT,
               textColor=colors.blue,
           )
+
+      self.styles['mix'] = ParagraphStyle(
+              'mix',
+              parent=self.styles['default'],
+              fontName='Noto Regular',
+              fontSize=12,
+              leading=14,
+              alignment=TA_LEFT,
+              textColor=colors.black,
+      )
 
       self.styles['hi'] = ParagraphStyle(
               'hi',
@@ -303,7 +316,7 @@ class fcMaker(object):
     Pulse <br/> <br/> BP <br/> <br/> RR <br/> <br/> CNS <br/> <br/> Chest <br /> <br/> CVS <br/>  <br/> PA <br/> <br/> Tests"""
     p = Paragraph(title, fcMaker.styles["side_head"])
     p.wrapOn(canvas, doc.width, doc.height)
-    p.drawOn(canvas, *fcMaker.coordinates(0.45, 7.00,doc.height, inch))
+    p.drawOn(canvas, *fcMaker.coordinates(0.35, 7.00,doc.height, inch))
 
 
 
@@ -341,6 +354,18 @@ class fcMaker(object):
     p = Paragraph(title, fcMaker.styles["Headhi"])
     p.wrapOn(canvas, doc.width, doc.height)
     p.drawOn(canvas, *fcMaker.coordinates(0.85, 11.35,doc.height, inch))
+
+
+    title = """<font size=20> NATH </font> PHARMACY & PATHOLOGY """
+    p = Paragraph(title, fcMaker.styles["Headhi2"])
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 11.25,doc.height, inch))
+
+    title = """Plot No. 24 Near Ganesh sweets, R.K. Nagar, Seepat Road Bilaspur (C.G.)"""
+    p = Paragraph(title, fcMaker.styles["head2"])
+
+    p.wrapOn(canvas, doc.width, doc.height)
+    p.drawOn(canvas, *fcMaker.coordinates(0.15, 11.60, doc.height, inch))
 
     #release the canvas 
     canvas.restoreState()
@@ -511,17 +536,17 @@ class fcMaker(object):
           elements.append(DateLine(text=visit.visit_date.strftime('%d-%m-%y')));
           
           ## first print the vitals then break frame
-          weight      = visit.vitals.weight or "NDA"
-          p_ce_cn_iol = visit.vitals.p_ce_cn_iol or "NDA"
-          temp        = visit.vitals.temp or "NDA"
-          pulse       = visit.vitals.pulse or "NDA"
-          bp          = visit.vitals.bp or "NDA"
-          rr          = visit.vitals.rr or "NDA"
-          cns         = visit.vitals.cns or "NDA"
-          chest       = visit.vitals.chest or "NDA"
-          cvs         = visit.vitals.cvs or "NDA"
-          pa          = visit.vitals.pa or "NDA"
-          tests       = visit.vitals.tests or "NDA"
+          weight      = visit.vitals.weight or "NAD"
+          p_ce_cn_iol = visit.vitals.p_ce_cn_iol or "NAD"
+          temp        = visit.vitals.temp or "NAD"
+          pulse       = visit.vitals.pulse or "NAD"
+          bp          = visit.vitals.bp or "NAD"
+          rr          = visit.vitals.rr or "NAD"
+          cns         = visit.vitals.cns or "NAD"
+          chest       = visit.vitals.chest or "NAD"
+          cvs         = visit.vitals.cvs or "NAD"
+          pa          = visit.vitals.pa or "NAD"
+          tests       = visit.vitals.tests or "NAD"
           
           title = " %s KG <br/> <br/> %s <br/> <br/> %s <br/> <br/> \
             %s bpm<br/> <br/> %s mmHg<br/> <br/> %s bpm<br/> <br/> %s <br/> <br/> %s cm<br /> <br/> %s <br/>  <br/> %s <br/> <br/>" % (
@@ -587,7 +612,7 @@ class fcMaker(object):
                 elements.append(NextPageTemplate('TwoCol'))
                 elements.append(PageBreak())
             
-              elements.append(Paragraph(h.getDisplayValue(), styles['Normal']))
+              elements.append(Paragraph(h.getDisplayValue(), fcMaker.styles["mix"]))
     
           elements.append(Paragraph("<br/>", styles['Normal'])); 
           count = count +1;
@@ -639,16 +664,16 @@ class fcMaker(object):
           visit_count = visit_count + 1;
       
       x1, y1 = fcMaker.coordinates(2.45,10.65, doc.height, inch)
-      frame1 = Frame(x1,y1, doc.width - 3.05*inch, doc.height - 4.20*inch, showBoundary=1)
+      frame1 = Frame(x1,y1, doc.width - 3.05*inch, doc.height - 4.20*inch, showBoundary=0)
       
       x1, y1 = fcMaker.coordinates(0.45,10.65, doc.height, inch)
-      frame2 = Frame(x1,y1, doc.width - 1.05*inch, doc.height - 4.20*inch, showBoundary=1)
+      frame2 = Frame(x1,y1, doc.width - 1.05*inch, doc.height - 4.20*inch, showBoundary=0)
   
       x1, y1 = fcMaker.coordinates(1.25 ,10.65, doc.height, inch)
-      vital_frame = Frame(x1,y1, doc.width - 7.35*inch, doc.height - 4.25*inch, showBoundary=1)
+      vital_frame = Frame(x1,y1, doc.width - 7.35*inch, doc.height - 4.25*inch, showBoundary=0)
 
       x1, y1 = fcMaker.coordinates(0.45 ,10.65, doc.height, inch)
-      test_frame = Frame(x1,y1, doc.width - 6.57*inch, doc.height - 8.00*inch, showBoundary=1)
+      test_frame = Frame(x1,y1, doc.width - 6.57*inch, doc.height - 8.00*inch, showBoundary=0)
   
       
       doc.addPageTemplates([PageTemplate(id='OneCol',frames=[vital_frame, test_frame,frame1], onPage=self._header_footer),
@@ -690,7 +715,7 @@ class NumberedCanvas(canvas.Canvas):
  
     def draw_page_number(self, page_count):
         # Change the position of this to wherever you want the page number to be
-        self.drawRightString(211 * mm, 15 * mm + (0.2 * inch),
+        self.drawRightString(200 * mm, 15 * mm + (0.2 * inch),
                              "Page %d of %d" % (self._pageNumber, page_count))
 
 

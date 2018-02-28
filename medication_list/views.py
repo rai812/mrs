@@ -16,10 +16,17 @@ from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
 
-FREQUENCY_LIST = ['Take Once Daily/ दिन में एक बार ',
-                  'Take Two Times Daily/ दिन में दो बार ',
-                  'Take Two Times Daily/ दिन में तीन बार ',
-                  '']
+FREQUENCY_LIST = ['Take Once Daily / दिन में एक बार (OD)',
+                  'Take Two Times Daily / दिन में दो बार (BD)',
+                  'Take Two Times Daily / दिन में तीन बार (TDS)',
+                  'Take At Night Daily / केवल रात में (HS)',
+                  'Four Times Daily / दिन में चार बार (QID)',
+                  'SOS (if need) / जरुरत पड़ने पर ',
+                  'Take Before Food / खाने से पहले (AC)',
+                  'Take After Food / खाने के बाद (PC)',
+                  'Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)',
+                  'Before Breakfast / खाली पेट (BBF)',
+                  ]
 
 
 @login_required
@@ -50,6 +57,7 @@ def get_medicine(request):
         data['dosage'] = obj.dosage
         data['frequency'] = obj.frequency
         data['duration'] = obj.duration or ""
+        data['remarks'] = obj.remarks or ""
         result.append(data)
         
     r = json.dumps(result)
@@ -159,12 +167,17 @@ def add_medicine(request):
                 r = json.dumps(data)
                 return HttpResponse(r, content_type="application/json")
             
+            remarks = recv_data.get('remarks', "")
+            frequency = recv_data.get('frequency', None)
+            print(frequency);
+            print(type(frequency));
             medicine = MedicationList()
             medicine.medicine = recv_data.get('medicine', None)
             medicine.dosage = recv_data.get('dosage', None)
-            medicine.frequency = recv_data.get('frequency', None)
+            medicine.frequency = ", ".join(frequency)
             medicine.duration = recv_data.get('duration', None)
             medicine.type = recv_data.get('type', "Tab")
+            medicine.remarks = remarks
             medicine.save()
             data = {}
             data['result'] = 'Successfully added'
@@ -175,6 +188,7 @@ def add_medicine(request):
             data['frequency'] = medicine.frequency
             data['duration'] = medicine.duration
             data['type'] = medicine.type
+            data['remarks'] = medicine.remarks
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
     raise Http404
