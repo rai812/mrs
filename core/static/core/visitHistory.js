@@ -93,7 +93,7 @@ var add_history = function () {
 	    	$('#id_status').val(data.sex);
         	$('a[href="#div_id_complaints"]').tab('show')
         	show_success("History Added!!!", " press F2 to view the report." );
-        	$('.ui.menu').find('.item').tab('change tab', 'complaints');
+        	$('.ui.menu').find('.item').tab('change tab', 'vitals');
         },
         error : function (xhRequest, ErrorText, thrownError) {
             //alert("Failed to process annotation correctly, please try again");

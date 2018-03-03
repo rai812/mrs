@@ -549,34 +549,14 @@ class fcMaker(object):
           tests       = visit.vitals.tests or "NAD"
           
           title = " %s KG <br/> <br/> %s <br/> <br/> %s <br/> <br/> \
-            %s bpm<br/> <br/> %s mmHg<br/> <br/> %s bpm<br/> <br/> %s <br/> <br/> %s cm<br /> <br/> %s <br/>  <br/> %s <br/> <br/>" % (
+            %s /minutes<br/> <br/> %s mmHg<br/> <br/> %s <br/> <br/> %s <br/> <br/> %s <br /> <br/> %s <br/>  <br/> %s <br/> <br/>" % (
                 weight,p_ce_cn_iol,temp,pulse,bp,rr,cns,chest,cvs,pa);
           elements.append(Paragraph(title, styles['Normal']))
           elements.append(FrameBreak())
           
           elements.append(Paragraph(str(tests)[0:420], styles['Normal']))
           elements.append(FrameBreak())
-          
-          ## add history to first visit only
-          if(visit_count == 1):              
-              history = MedicalHistory.objects.filter(patient_detail=fcMaker.data['visit_container'].patient_detail.patient_id)
-              elements.append(Paragraph('Medical History', styles['Heading2']))
-              for h in history:
-                  if(next_page):
-                      count = count +  count_rows(str(h.status), 81)
-                  else:
-                      count = count + count_rows(str(h.status))
-                  if count > 41:
-                    count = 0;
-                    next_page = True
-                    elements.append(NextPageTemplate('TwoCol'))
-                    elements.append(PageBreak())
-                
-                  elements.append(Paragraph(str(h.status), styles['Normal']))
-                    
-              elements.append(Paragraph("<br/>", styles['Normal'])); 
-              count = count +1;
-    
+              
           ## now the complaints of visit
           
           complaints = visit.complaints.all();
@@ -596,7 +576,27 @@ class fcMaker(object):
     
           elements.append(Paragraph("<br/>", styles['Normal'])); 
           count = count +1;
-    
+
+          ## add history to first visit only
+          if(visit_count == 1):              
+              history = MedicalHistory.objects.filter(patient_detail=fcMaker.data['visit_container'].patient_detail.patient_id)
+              elements.append(Paragraph('Medical History', styles['Heading2']))
+              for h in history:
+                  if(next_page):
+                      count = count +  count_rows(str(h.status), 81)
+                  else:
+                      count = count + count_rows(str(h.status))
+                  if count > 41:
+                    count = 0;
+                    next_page = True
+                    elements.append(NextPageTemplate('TwoCol'))
+                    elements.append(PageBreak())
+                
+                  elements.append(Paragraph(str(h.status), styles['Normal']))
+                    
+              elements.append(Paragraph("<br/>", styles['Normal'])); 
+              count = count +1;
+		  
           ## vitals would be added via headers so add diagnosis
           
           medicines = visit.medicines.all();
@@ -639,19 +639,21 @@ class fcMaker(object):
           
           ## Now add the remark
           final_str = visit.remarks
-          final_str = final_str.encode('utf-8');
-          if(next_page):
+          final_str = final_str.encode('utf-8')
+          if (len(final_str) > 3):
+            if(next_page):
               count = count +  count_rows(str(final_str), 81)
-          else:
+            else:
               count = count + count_rows(str(final_str))
-          if count > 41:
-            count = 0;
-            next_page = True
-            elements.append(NextPageTemplate('TwoCol'))
-            elements.append(PageBreak())
+            if count > 41:
+              count = 0;
+              next_page = True
+              elements.append(NextPageTemplate('TwoCol'))
+              elements.append(PageBreak())
         
           elements.append(Paragraph('Remark', styles['Heading2']))
-          elements.append(Paragraph(str(final_str), styles['Normal']))
+          if len(final_str) > 3:
+            elements.append(Paragraph(str(final_str), styles['Normal']))
           
           elements.append(Paragraph("<br/>", styles['Normal'])); 
           count = count +1;
@@ -664,16 +666,16 @@ class fcMaker(object):
           visit_count = visit_count + 1;
       
       x1, y1 = fcMaker.coordinates(2.45,10.65, doc.height, inch)
-      frame1 = Frame(x1,y1, doc.width - 3.05*inch, doc.height - 4.20*inch, showBoundary=0)
+      frame1 = Frame(x1,y1, doc.width - 3.05*inch, doc.height - 4.20*inch, showBoundary=1)
       
       x1, y1 = fcMaker.coordinates(0.45,10.65, doc.height, inch)
-      frame2 = Frame(x1,y1, doc.width - 1.05*inch, doc.height - 4.20*inch, showBoundary=0)
+      frame2 = Frame(x1,y1, doc.width - 1.05*inch, doc.height - 4.20*inch, showBoundary=1)
   
       x1, y1 = fcMaker.coordinates(1.25 ,10.65, doc.height, inch)
-      vital_frame = Frame(x1,y1, doc.width - 7.35*inch, doc.height - 4.25*inch, showBoundary=0)
+      vital_frame = Frame(x1,y1, doc.width - 7.25*inch, doc.height - 4.25*inch, showBoundary=1)
 
       x1, y1 = fcMaker.coordinates(0.45 ,10.65, doc.height, inch)
-      test_frame = Frame(x1,y1, doc.width - 6.57*inch, doc.height - 8.00*inch, showBoundary=0)
+      test_frame = Frame(x1,y1, doc.width - 6.57*inch, doc.height - 8.00*inch, showBoundary=1)
   
       
       doc.addPageTemplates([PageTemplate(id='OneCol',frames=[vital_frame, test_frame,frame1], onPage=self._header_footer),

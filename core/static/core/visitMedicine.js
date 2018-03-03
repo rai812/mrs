@@ -156,7 +156,7 @@ $(document).ready(function() {
 	          response.results.push({
 	          	id: item.id,
 	            title       : item.medicine,
-	            description : item.dosage + " " + item.frequency + " for " + item.duration ,
+	            description : item.dosage + " " + item.frequency + " for " + item.duration + " days" ,
 	            type: item.type,
 	            dosage: item.dosage,
 	            frequency: item.frequency,

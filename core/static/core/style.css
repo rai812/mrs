@@ -1072,4 +1072,11 @@ legend.scheduler-border {
   margin-bottom: 2px;
 }
 
+/*
+custom css for dropdown menu of frequency 
+*/
+
+.ui.selection.dropdown .menu>.item {
+    background-color:red;
+ }
 

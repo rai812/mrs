@@ -8,7 +8,6 @@
 		  <thead>
 		    <tr>
 		    <th>Name</th>
-		    <th>Last Visit Date</th>
 		    <th>Encounter Date</th>
 		    <th>Complaints</th>
 		    <th>Medicines</th>
@@ -20,7 +19,6 @@
 			{% for visit_container in visit_containers %}
 		      <tr>
 		        <td rowspan="{% get_visits_count visit_container %}" >{{ visit_container.patient_detail.full_name }}</td>
-		        <td rowspan="{% get_visits_count visit_container %}" >{{ visit_container.visit_date }}</td>
 		        
 		        {% get_visits visit_container as visits %}
 		        
@@ -54,7 +52,13 @@
 		        	
 		        	{% if forloop.first %}
     		        	<td rowspan="{% get_visits_count visit_container %}" >
-				        <input class="ui button" data-id="{{ visit_container.id }}" type="button" name="add" value="Add visit" onclick="goto_add_visit(this)"/>			        	
+    		        	<div>
+				        	<input class="ui button" data-id="{{ visit_container.id }}" type="button" name="add" value="Add visit" onclick="goto_add_visit(this)"/>
+				        </div>
+				        <div>
+				        <input id="id_btn_report" class="ui button mT-16" type="button" name="download" value="Download Report"  onclick="window.open('/visit/report/{{ visit_container.id }}','popUpWindow','height=400,width=600,left=10,top=10,,scrollbars=yes,menubar=no'); return false;"/>	
+				        </div>	
+				         			        	
 		        		</td>
 		        	{% endif %}
 		        	

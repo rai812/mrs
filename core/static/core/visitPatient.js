@@ -93,7 +93,7 @@ var patientExitAction = function(id, full_name, age, sex, mobile) {
 	
 	show_success("Added Successfully!!!", " " + full_name + " selected as patient." );
 	
-	$('.ui.menu').find('.item').tab('change tab', 'history');
+	$('.ui.menu').find('.item').tab('change tab', 'complaints');
 	
 }
 

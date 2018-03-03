@@ -18,12 +18,13 @@
                   <li class="item active " data-tab="patient">
                     Patient Detail
                   </li>
-                  <li class="item" data-tab="history">
-                    History
-                  </li>
                   <li class="item" data-tab="complaints">
                     Complaints
                   </li>
+				<li class="item" data-tab="history">
+                    History
+                  </li>
+
                   <li class="item" data-tab="vitals">
                     Vitals
                   </li>
@@ -531,10 +532,10 @@
 		            
 		                <tbody id="added_medicine" class="col-sm-12 fS14">
 		                	{% for medicine in medicines %}
-								<tr class="medicine-display" data-id="{{medicine.medicine_id}}">
+								<tr class="medicine-display" data-id="{{medicine.medication_id}}">
 								<td> {{medicine.medicine}} : {{medicine.dosage}}</td>
 								<td>{{medicine.frequency}}</td>
-								<td> for {{ medicine.duration }}</td>
+								<td> for {{ medicine.duration }} days</td>
 								<td> {{ medicine.remarks }}</td>
 								<td> <i class="fa fa-times-circle del-medicine" aria-hidden="true"></i> </td>
 								</tr>

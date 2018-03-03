@@ -165,7 +165,7 @@ $(document).ready(function() {
 				$(document).on("keydown" , function(e) {
 					  if (e.ctrlKey) {
 					  if(e.keyCode == 39) { // right  
-						  $('.ui.menu').find('.item').tab('change tab', 'history');
+						  $('.ui.menu').find('.item').tab('change tab', 'complaints');
 				        	e.stopImmediatePropagation();
 				        }
 					  }
@@ -182,12 +182,12 @@ $(document).ready(function() {
 				  $(document).on("keydown" , function(e) {
 					  if (e.ctrlKey) {
 					        if (e.keyCode == 37) { // left      
-					        	$('.ui.menu').find('.item').tab('change tab', 'patient');
+					        	$('.ui.menu').find('.item').tab('change tab', 'complaints');
 					        	e.stopImmediatePropagation();
 					        }
 					        else if(e.keyCode == 39) { // right
 					        
-					        	$('.ui.menu').find('.item').tab('change tab', 'complaints');
+					        	$('.ui.menu').find('.item').tab('change tab', 'vitals');
 					        	e.stopImmediatePropagation();
 					        }					  
 					  }
@@ -204,12 +204,12 @@ $(document).ready(function() {
 				  $(document).on("keydown" , function(e) {
 					  if (e.ctrlKey) {
 				        if (e.keyCode == 37) { // left      
-				        	$('.ui.menu').find('.item').tab('change tab', 'history');
+				        	$('.ui.menu').find('.item').tab('change tab', 'patient');
 				        	e.stopImmediatePropagation();
 				        }
 				        else if(e.keyCode == 39) { // right
 				        
-				        	$('.ui.menu').find('.item').tab('change tab', 'vitals');
+				        	$('.ui.menu').find('.item').tab('change tab', 'history');
 				        	e.stopImmediatePropagation();
 				        }
 					  }
@@ -226,7 +226,7 @@ $(document).ready(function() {
 				  $(document).on("keydown" , function(e) {
 					  if (e.ctrlKey) {
 				        if (e.keyCode == 37) { // left      
-				        	$('.ui.menu').find('.item').tab('change tab', 'complaints');
+				        	$('.ui.menu').find('.item').tab('change tab', 'history');
 				        	e.stopImmediatePropagation();
 				        }
 				        else if(e.keyCode == 39) { // right
