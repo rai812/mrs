@@ -1,8 +1,8 @@
 
-var medicineDispalyString = function(id,type,medicine,frequency,dosage,duration,remarks) {
+var medicineDispalyString = function(id,type,medicine,frequency,dosage,duration,remarks,category) {
 	var str = '\
 		<tr class="medicine-display" data-id="' + id + '"> \
-		<td>' + medicine + ' : ' + dosage + '</td> \
+		<td>' + medicine + ' : '  + dosage + '</td> \
 		<td>' + frequency + '</td> \
 		<td>' + ' for ' +  duration + '</td> \
 		<td>' +  remarks + '</td> \
@@ -20,6 +20,7 @@ var add_medicine = function () {
 	var dosage = $('#id_input_dosage').val();
 	var duration = $('#id_input_duration').val();
 	var remarks = $('#id_medicine_remarks').val();
+	var category = $('#id_input_m_category').val();
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -36,7 +37,7 @@ var add_medicine = function () {
         dataType : "json",
         contentType: "application/json;",
         data : JSON.stringify({'medicine':medicine, 'duration':duration, 'dosage':dosage, 'frequency':frequency, 'type':type,
-        	'remarks':remarks}),
+        	'remarks':remarks,'category':category}),
         context : this,
         success : function (data) {
         	
@@ -49,7 +50,7 @@ var add_medicine = function () {
         		return;
         	}
         	
-		    var str = medicineDispalyString(data.id,data.type,data.medicine,data.frequency,data.dosage,data.duration,data.remarks);
+		    var str = medicineDispalyString(data.id,data.type,data.medicine,data.frequency,data.dosage,data.duration,data.remarks,data.category);
 	    	$('#added_medicine').append(str);
 	    	
 	    	$(document).off("click",".del-medicine");
@@ -69,6 +70,7 @@ var add_medicine = function () {
 	    	$('#id_input_dosage').val("")
 	    	$('#id_input_duration').val("")
 	    	$('#id_medicine_remarks').val("")
+			$('#id_input_m_category').val("")
 	    	$('.ui.normal.dropdown.frequency')
   				.dropdown('clear');
 	    	$('#id_input_medicine').focus();
@@ -155,7 +157,7 @@ $(document).ready(function() {
 	          // add result to category
 	          response.results.push({
 	          	id: item.id,
-	            title       : item.medicine,
+	            title       : item.medicine + ' ( ' + item.category + ')',
 	            description : item.dosage + " " + item.frequency + " for " + item.duration + " days" ,
 	            type: item.type,
 	            dosage: item.dosage,
@@ -173,7 +175,7 @@ $(document).ready(function() {
 	      	console.log(response);
 	      	
 		    var str = medicineDispalyString(result.id,result.type,result.title,result.frequency,result.dosage,result.duration,
-		    	result.remarks);
+		    	result.remarks,result.category);
 	    	$('#added_medicine').append(str);
 	    	
 	    	$(document).off("click",".del-medicine");
@@ -243,6 +245,30 @@ $(document).ready(function() {
 	})
 	;
 	
+	$('.ui.search.m_category')
+	.search({
+	  // change search endpoint to a custom endpoint by manipulating apiSettings
+	  apiSettings: {
+	    url: '/medicines/api/get_category_values/?q={query}',
+	    onResponse: function(githubResponse) {
+	        var
+	          response = {
+	      		  results : Array()
+	          }
+	        ;
+	        // translate GitHub API response to work with search
+	        $.each(githubResponse, function(index, item) {
+	          // add result to category
+	          response.results.push({
+	            title       : item.value,
+	          });
+	        });
+	        return response;
+	      },
+	  },
+	      minCharacters : 1,
+	})
+	;
 	
 	
 });

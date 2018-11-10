@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_protect
 
 FREQUENCY_LIST = ['Take Once Daily / दिन में एक बार (OD)',
                   'Take Two Times Daily / दिन में दो बार (BD)',
-                  'Take Two Times Daily / दिन में तीन बार (TDS)',
+                  'Take Three Times Daily / दिन में तीन बार (TDS)',
                   'Take At Night Daily / केवल रात में (HS)',
                   'Four Times Daily / दिन में चार बार (QID)',
                   'SOS (if need) / जरुरत पड़ने पर ',
@@ -42,9 +42,9 @@ def get_medicine(request):
     # Search query
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
-        entry_query = get_query(query_string, ['medicine'])
+        entry_query = get_query(query_string, ['medicine','category'])
         print(entry_query)
-        obj_list = MedicationList.objects.filter(entry_query).order_by('medicine')[:5]
+        obj_list = MedicationList.objects.filter(entry_query).order_by('medicine')
     else:
         obj_list = []
             
@@ -57,6 +57,7 @@ def get_medicine(request):
         data['dosage'] = obj.dosage
         data['frequency'] = obj.frequency
         data['duration'] = obj.duration or ""
+        data['category'] = obj.category or ""
         data['remarks'] = obj.remarks or ""
         result.append(data)
         
@@ -133,6 +134,28 @@ def get_medicine_dosage(request):
                   
     return HttpResponse(r, content_type="application/json")
 
+@login_required
+def get_medicine_category(request):
+    '''
+    For ajax search of `category` select field
+    '''
+    # Search query
+    if ('q' in request.GET) and request.GET['q'].strip():
+        query_string = request.GET['q']
+        entry_query = get_query(query_string, ['category'])
+        obj_list = MedicationList.objects.filter(entry_query).order_by('category')[:5]
+    else:
+        obj_list = []
+            
+    result = []
+    for obj in obj_list:
+        data = {}
+        data['value'] = obj.category
+        result.append(data)
+        
+    r = json.dumps(result)
+                  
+    return HttpResponse(r, content_type="application/json")
 
 
 
@@ -177,6 +200,7 @@ def add_medicine(request):
             medicine.frequency = ", ".join(frequency)
             medicine.duration = recv_data.get('duration', None)
             medicine.type = recv_data.get('type', "Tab")
+            medicine.category = recv_data.get('category', "")
             medicine.remarks = remarks
             medicine.save()
             data = {}
@@ -189,6 +213,7 @@ def add_medicine(request):
             data['duration'] = medicine.duration
             data['type'] = medicine.type
             data['remarks'] = medicine.remarks
+            data['category'] = medicine.category
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
     raise Http404

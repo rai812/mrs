@@ -58,6 +58,7 @@ def get_complaints(request):
         data['id'] = obj.complain_id
         data['name'] = obj.description
         data['remarks'] = obj.remarks or ""
+        data['duration'] = obj.duration or ""
         result.append(data)
     print("size of results ", len(result));
     r = json.dumps(result)
@@ -126,6 +127,7 @@ def add_complaints(request):
             recv_data = json.loads(request.body)
             
             complaint_name = recv_data.get('complaint_name', None)
+            complaint_duration = recv_data.get('complaint_duration', "")
             if complaint_name is  None:
                 data = {}
                 data['ret'] = 'False'
@@ -133,23 +135,25 @@ def add_complaints(request):
                 r = json.dumps(data)
                 return HttpResponse(r, content_type="application/json")
             
-            complaint = Complaints.objects.filter(description=complaint_name)
-            if len(complaint) > 0:
-                data = {}
-                data['ret'] = 'False'
-                data['result'] = 'Failure: Already exist'
-                r = json.dumps(data)
-                return HttpResponse(r, content_type="application/json")
+            #complaint = Complaints.objects.filter(description=complaint_name)
+            #if len(complaint) > 0:
+            #    data = {}
+            #    data['ret'] = 'False'
+            #    data['result'] = 'Failure: Already exist'
+            #    r = json.dumps(data)
+            #    return HttpResponse(r, content_type="application/json")
             
             print("Adding complaints ", complaint_name)
             complaint = Complaints()
             complaint.description = complaint_name
+            complaint.duration = complaint_duration
             complaint.save()
             data = {}
             data['result'] = 'Successfully added'
             data['ret'] = 'True'
             data['id'] = complaint.complain_id
             data['description'] = complaint.description
+            data['duration'] = complaint.duration
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
     raise Http404

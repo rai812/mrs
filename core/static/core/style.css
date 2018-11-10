@@ -1079,4 +1079,8 @@ custom css for dropdown menu of frequency
 .ui.selection.dropdown .menu>.item {
     background-color:red;
  }
-
+ 
+ .search .results {
+overflow-y: auto;
+max-height: 300px;
+}

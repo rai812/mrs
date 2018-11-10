@@ -32,7 +32,8 @@ class MedicationList(models.Model):
     remarks = models.TextField(max_length=200,
                                blank=True,null=True,
                                help_text="limit to 200 words"
-                               )    
+                               )
+    category = models.CharField(max_length=100, help_text="Catagory of the Drug", blank=True, null=True)							   
 
 
 

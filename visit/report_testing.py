@@ -536,7 +536,7 @@ class fcMaker(object):
           elements.append(DateLine(text=visit.visit_date.strftime('%d-%m-%y')));
           
           ## first print the vitals then break frame
-          weight      = visit.vitals.weight or "NAD"
+          weight      = visit.vitals.weight or ""
           p_ce_cn_iol = visit.vitals.p_ce_cn_iol or "NAD"
           temp        = visit.vitals.temp or "NAD"
           pulse       = visit.vitals.pulse or "NAD"
@@ -560,7 +560,7 @@ class fcMaker(object):
           ## now the complaints of visit
           
           complaints = visit.complaints.all();
-          final_str = ", ".join([x.description for x in complaints])
+          final_str = ", ".join([x.description + ' for ' + x.duration for x in complaints])
           if(next_page):
               count = count +  count_rows(str(final_str), 81)
           else:
@@ -666,16 +666,16 @@ class fcMaker(object):
           visit_count = visit_count + 1;
       
       x1, y1 = fcMaker.coordinates(2.45,10.65, doc.height, inch)
-      frame1 = Frame(x1,y1, doc.width - 3.05*inch, doc.height - 4.20*inch, showBoundary=1)
+      frame1 = Frame(x1,y1, doc.width - 3.05*inch, doc.height - 4.20*inch, showBoundary=0)
       
       x1, y1 = fcMaker.coordinates(0.45,10.65, doc.height, inch)
-      frame2 = Frame(x1,y1, doc.width - 1.05*inch, doc.height - 4.20*inch, showBoundary=1)
+      frame2 = Frame(x1,y1, doc.width - 1.05*inch, doc.height - 4.20*inch, showBoundary=0)
   
       x1, y1 = fcMaker.coordinates(1.25 ,10.65, doc.height, inch)
-      vital_frame = Frame(x1,y1, doc.width - 7.25*inch, doc.height - 4.25*inch, showBoundary=1)
+      vital_frame = Frame(x1,y1, doc.width - 7.25*inch, doc.height - 4.25*inch, showBoundary=0)
 
       x1, y1 = fcMaker.coordinates(0.45 ,10.65, doc.height, inch)
-      test_frame = Frame(x1,y1, doc.width - 6.57*inch, doc.height - 8.00*inch, showBoundary=1)
+      test_frame = Frame(x1,y1, doc.width - 6.57*inch, doc.height - 8.00*inch, showBoundary=0)
   
       
       doc.addPageTemplates([PageTemplate(id='OneCol',frames=[vital_frame, test_frame,frame1], onPage=self._header_footer),

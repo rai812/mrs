@@ -140,6 +140,12 @@
 				  </div>
 				  <div class="results"></div>
 				</div>
+				<div class="pLR-8 ">
+						 <div id="div_id_c_duration" class="ui right labeled input mT-16">
+								<input id="id_input_c_duration" name="c_duration" type="text" placeholder="Duration of complaint..." 
+								 spellcheck="false" autocomplete="off" maxlength="300" value="" />
+						</div>
+				</div>
 
 
                <div class="pull-left pT-8">
@@ -160,10 +166,22 @@
 							    <input class="prompt" placeholder="Medicine name..." type="text" id="id_input_medicine" name="medicine" required>
 							    <i class="search icon"></i>
 							  </div>
-							  <div class="results"></div>
+								<div class="results" ></div>
 							</div>                        
                         </td>
                     </tr>
+                    <tr>
+                        <td class="pLR-8">
+							<div class="ui search category">
+							  <div class="ui icon input">
+							
+							    <input class="prompt" placeholder="Medicine category..." type="text" id="id_input_m_category" name="category" required>
+							    <i class="search icon"></i>
+							  </div>
+							  <div class="results"></div>
+							</div>                        
+                        </td>
+                    </tr>					
                     <tr>
                         <td class="pLR-8">
                         
@@ -181,7 +199,7 @@
 							  <option value="">Frequency</option>
 							<option value="Take Once Daily / दिन में एक बार (OD)">Take Once Daily / दिन में एक बार (OD)</option>
 							<option value="Take Two Times Daily / दिन में दो बार (BD)">Take Two Times Daily / दिन में दो बार (BD)</option>
-							<option value="Take Three Times Daily / दिन में तीन बार (TDS)">Take Two Times Daily / दिन में तीन बार (TDS)</option>
+							<option value="Take Three Times Daily / दिन में तीन बार (TDS)">Take Three Times Daily / दिन में तीन बार (TDS)</option>
 							<option value="Take At Night Daily / केवल रात में (HS)">Take At Night Daily / केवल रात में (HS)</option>
 							<option value="Four Times Daily / दिन में चार बार (QID)">Four Times Daily / दिन में चार बार (QID)</option>
 							<option value="SOS (if need) / जरुरत पड़ने पर ">SOS (if need) / जरुरत पड़ने पर </option>
@@ -189,6 +207,12 @@
 							<option value="Take After Food / खाने के बाद (PC)">Take After Food / खाने के बाद (PC)</option>
 							<option value="Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)">Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)</option>
 							<option value="Before Breakfast / खाली पेट (BBF)">Before Breakfast / खाली पेट (BBF)</option>
+							<option value="After Breakfast / नाश्ते के बाद (ABF)">After Breakfast / नाश्ते के बाद (ABF)</option>
+							<option value="Take at morning / सुबह  में ">Take at morning / सुबह में </option>
+							<option value="Take at evening / शाम   में ">Take at evening / शाम  में </option>
+							<option value="During fever / बुखार आने पर  ">During fever / बुखार आने पर  </option>
+							<option value="During pain / दर्द होने पर   ">During pain / दर्द होने पर   </option>
+							<option value="Take 2 Hrs after food / खाने के दो घंटे बाद  ">Take 2 Hrs after food / खाने के दो घंटे बाद    </option>
 							</select>                       
                         </td>
                     </tr>
@@ -451,14 +475,14 @@
 	                </div>
 	               
 	               <div class="pull-left">
-	                  <input class="ui button" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_visit(this)"/>
+					  <button type="button" id="id_btn_report_view" class="ui button" onclick="show_report(this)" >View Report</button>
+	                  <input class="ui button" type="button" name="GenerateReport" value="Generate Report" id="id-vitals-add" onclick="add_visit(this)"/>
 	                </div>
 				</div>			
 			</div>
 
-
++
             <div id="div_id_report" class="ui tab row col-sm-12 centered" data-tab="report">
-			<button type="button" id="id_btn_report_view" class="ui button" onclick="show_report(this)" >View Report</button>
 			
 			<a id="id_btn_report" class="ui disabled button" href=""  onclick="window.open(this.href,'popUpWindow','height=400,width=600,left=10,top=10,,scrollbars=yes,menubar=no'); return false;"> Download Report </a>
 						

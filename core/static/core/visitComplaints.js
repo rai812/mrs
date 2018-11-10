@@ -1,9 +1,9 @@
 
-var complaintDispalyString = function(id,value) {
+var complaintDispalyString = function(id,value,duration) {
 	var str = '\
 		<tr> <td> \
 		<span class="tag label label-info c-31 complaint-display" data-id="' + id + '"> \
-		<span>' + value + '</span> \
+		<span>' + value + ' for ' + duration + '</span> \
 		<i class="fa fa-times-circle del-complaint" aria-hidden="true"></i> \
 		</span> </tr> </td>';
 	return str;
@@ -13,8 +13,9 @@ var complaintDispalyString = function(id,value) {
 var add_complaints = function () {
 	
 	var complaint_name = $('#id_complaints').val();
-	
+	var complaint_duration = $('#id_input_c_duration').val();
 	console.log(complaint_name);
+	console.log(complaint_duration);
 
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
@@ -32,7 +33,7 @@ var add_complaints = function () {
         type: "POST",
         dataType : "json",
         contentType: "application/json;",
-        data : JSON.stringify({'complaint_name':complaint_name}),
+        data : JSON.stringify({'complaint_name':complaint_name,'complaint_duration':complaint_duration}),
         context : this,
         success : function (data) {
         	
@@ -45,7 +46,7 @@ var add_complaints = function () {
         		return;
         	}
         	
-        	complaintExitAction(data.id,data.description);	
+        	complaintExitAction(data.id,data.description,data.duration);	
         },
         error : function (xhRequest, ErrorText, thrownError) {
             //alert("Failed to process annotation correctly, please try again");
@@ -56,9 +57,9 @@ var add_complaints = function () {
     });	
 }
 
-var complaintExitAction = function(id, description) {
+var complaintExitAction = function(id, description,duration) {
 
-	var str = complaintDispalyString(id,description);
+	var str = complaintDispalyString(id,description,duration);
 	$('#added_complaint').append(str);
 	
 	$(document).off("click",".del-complaint");
@@ -68,6 +69,7 @@ var complaintExitAction = function(id, description) {
 	});
 	
 	$('#id_complaints').val("")
+	$('#id_input_c_duration').val("")
 	$('#id_complaints').focus();
 	show_success("Complaint Added!!!", " press F2 to view the report." );
 }
@@ -105,11 +107,12 @@ $(document).ready(function() {
 	        },
 	    },
 	        minCharacters : 3,
-	        onSelect: function(result, response){
+	      /*  onSelect: function(result, response){
 	        	console.log(result);
 	        	console.log(response);
 	        	complaintExitAction(result.id,result.title);
-	        },
+	        },*/
+			
 
 	  })
 	;

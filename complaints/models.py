@@ -10,6 +10,8 @@ class Complaints(models.Model):
     
     complain_id = models.AutoField(primary_key=True)
     description = models.CharField(max_length=100)
+    duration = models.CharField(max_length=100,null=True,
+                              blank=True)
     remarks = models.TextField("Detail about the problem",
                               max_length=500,
                               null=True,
