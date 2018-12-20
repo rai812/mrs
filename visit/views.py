@@ -7,7 +7,8 @@ import sys
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.http.response import Http404, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+#from django.core.urlresolvers import reverse
+from django.urls import reverse
 import json
 
 from visit.models import Visit, VisitContainer

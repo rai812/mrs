@@ -5,7 +5,8 @@ from django.db import models
 import pytz
 from django.utils import timezone
 from django import forms
-from django.core.urlresolvers import reverse
+#from django.core.urlresolvers import reverse
+from django.urls import reverse
 import datetime
 
 # Create your models here.

@@ -13,7 +13,7 @@ from complaints.models import Disease
 
 class MedicalHistory(models.Model):
     medicine_id = models.AutoField(primary_key=True)
-    disease = models.ForeignKey(Disease,null=True,blank=True)
+    disease = models.ForeignKey(Disease,null=True,blank=True, on_delete=models.PROTECT)
     status = models.TextField("Status",
                               max_length=500,
                               null=True,
@@ -26,7 +26,7 @@ class MedicalHistory(models.Model):
     active = models.BooleanField("Active?",default=None)
     infectious_disease = models.BooleanField(default=None)
     allergic_disease = models.BooleanField(default = None)
-    patient_detail = models.ForeignKey(Patient)
+    patient_detail = models.ForeignKey(Patient,on_delete=models.PROTECT)
     
 
 def user_directory_path(instance, filename):
@@ -40,7 +40,7 @@ class MedicalFiles(models.Model):
     description = models.CharField(max_length=255, blank=True)
     document = models.FileField(upload_to=user_directory_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    patient_detail = models.ForeignKey(Patient)
+    patient_detail = models.ForeignKey(Patient,on_delete=models.PROTECT)
     
     
 class DocumentForm(forms.ModelForm):

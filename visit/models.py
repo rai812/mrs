@@ -31,7 +31,7 @@ class Visit(models.Model):
                    help_text="Number of day or months", blank=True, null=True
                 )
     
-    vitals = models.ForeignKey(Vitals, null=True, blank=True)
+    vitals = models.ForeignKey(Vitals, null=True, blank=True,on_delete=models.PROTECT)
     
     remarks = models.TextField(max_length=200,
                                default="NAD",
@@ -47,7 +47,7 @@ class Visit(models.Model):
     
 class VisitContainer(models.Model):
     
-    patient_detail = models.ForeignKey(Patient)
+    patient_detail = models.ForeignKey(Patient, on_delete=models.PROTECT)
 
     visit_date = models.DateTimeField(auto_now=True)
 

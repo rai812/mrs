@@ -12,7 +12,7 @@ from core.models import Patient
 from complaints.models import Disease 
 from django.http import HttpResponse
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from django.views.decorators.csrf import csrf_protect

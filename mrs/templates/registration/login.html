@@ -22,7 +22,7 @@
         <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
             <div class="login">
       <h1>Login to Medical Record System</h1>
-      <form method="post" action="{% url 'login' %}">
+      <form method="post" action="{% url 'core:login' %}">
       {% csrf_token %}
         <p><input type="text" name="{{ form.username.name }}" value="" placeholder="Username or Email"></p>
         <p><input type="password" name="{{ form.password.name }}" value="" placeholder="Password"></p>

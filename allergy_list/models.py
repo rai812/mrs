@@ -26,7 +26,7 @@ class Allergy(models.Model):
                                          choices= REACTION_OBSERVED,
                                          default = "Rash"
                                          )
-    patient_detail = models.ForeignKey(Patient)
+    patient_detail = models.ForeignKey(Patient, on_delete=models.PROTECT)
     
     def __unicode__(self):
         return "%s" % (self.allergic_to)

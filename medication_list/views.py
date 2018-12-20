@@ -7,7 +7,7 @@ import sys
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.http.response import Http404, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 import json
 
 from .models import MedicationForm, MedicationList, MedicationSearchForm
@@ -184,11 +184,13 @@ def add_medicine(request):
             
             medicine = MedicationList.objects.filter(medicine=medicine_name)
             if len(medicine) > 0:
-                data = {}
-                data['ret'] = 'False'
-                data['result'] = 'Failure: Already exist'
-                r = json.dumps(data)
-                return HttpResponse(r, content_type="application/json")
+                dosage = recv_data.get('dosage', None)
+                if (dosage == medicine.dosage):
+                    data = {}
+                    data['ret'] = 'False'
+                    data['result'] = 'Failure: Already exist'
+                    r = json.dumps(data)
+                    return HttpResponse(r, content_type="application/json")
             
             remarks = recv_data.get('remarks', "")
             frequency = recv_data.get('frequency', None)
