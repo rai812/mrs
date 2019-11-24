@@ -45,7 +45,7 @@ class MedicationList(models.Model):
     
     def getDisplayValue(self):
       if self.remarks:
-        remark = self.remarks.encode('utf-8')
+        remark = self.remarks
       else:
         remark = ""
       if(len(remark) < 3):

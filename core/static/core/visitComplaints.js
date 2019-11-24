@@ -29,7 +29,7 @@ var add_complaints = function () {
     
     $.ajax({
         cache: false,
-        url : window.location.origin+"/complaints/api/add_complaints",
+        url : window.location.origin+"/complaints/api/add_complaints/",
         type: "POST",
         dataType : "json",
         contentType: "application/json;",

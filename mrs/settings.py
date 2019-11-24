@@ -122,6 +122,8 @@ USE_TZ = True
 
 LOGIN_REDIRECT_URL = '/'
 
+#APPEND_SLASH=False
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 

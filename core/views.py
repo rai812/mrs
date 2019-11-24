@@ -12,7 +12,7 @@ import json
 
 from django.views.decorators.csrf import csrf_protect
 
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from core.models import PatientForm, Patient, PatientSearchForm, Vitals
 from core.search import get_query, normalize_query, get_query_for_nterms, strip_stopwords
