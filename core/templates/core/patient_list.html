@@ -20,7 +20,8 @@
 		          		<input type="checkbox" name="record_select"> <label></label>
 		        	</div>
 		      	</td>
-		        <td>{{ patient.full_name }}</td>
+				  {% url 'core:get_patient_detail' patient.patient_id as url %}
+		        <td><a href="{{ url }}">{{ patient.full_name }}</a> </td>
 		        <td>{{ patient.mobile }}</td>
 		        <td>{{ patient.age }} Years</td>
 		        <td>{{ patient.sex }}</td>

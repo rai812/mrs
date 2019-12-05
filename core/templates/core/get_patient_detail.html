@@ -11,11 +11,59 @@
 <section class="pT-8 pB-16 wFull">
     <div class="row centered">
         <div class="col-lg-12 row centered">
-        <p> {{ obj.first_name }}</p>
-        <p> {{ obj.middle_name }}</p>
-        <p> {{ obj.last_name }}</p>
-        <p> {{ obj.sex }}</p>
-        <p> {{ obj.get_age }}</p>
+
+            <fieldset class="scheduler-border col-sm-12 centered">
+                <legend class="scheduler-border">Dossier </legend>
+                <table class="ui stripped fixed definition table">
+                  <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <td>{{ obj.full_name }}</td>
+                        <td>{{ obj.mobile }}</td>
+                        <td>{{ obj.age }} Years</td>
+                        <td>{{ obj.sex }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <fieldset class="scheduler-border col-sm-12 centered">
+                    <legend class="scheduler-border">Medical History </legend>
+                    <table>
+                        {% for history in medical_history %}
+                            <tr>
+                                <td>
+                                    {{ history.status }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </fieldset>
+
+                <fieldset class="scheduler-border col-sm-12 centered">
+                    <legend class="scheduler-border">Medical Files </legend>
+                    <table>
+                        {% for file in medical_files %}
+                            <tr>
+                                <td>
+                                    {{ file.description }}
+                                </td>
+                                <td>
+                                    <a class="input_label" href="{{ file.document.url }}" target="_blank"> {{ file.filename }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </fieldset>
+
+
+            </fieldset>
         </div>
     </div>
 </section>

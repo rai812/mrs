@@ -104,31 +104,53 @@
 			        
 			        {% comment %}  Start if first form {% endcomment %}
 			        <form id="id-form-medical-history" method="post" enctype="multipart/form-data" class="a-mdl-form ">
-			        
-			        <fieldset class="scheduler-border">
-			            <legend class="scheduler-border">History</legend>
-			            {% url 'complaints:api_get_disease' as url %}
-			             <input id="id_disease-id" class="translit form-input " name="disease_id" type="hidden" maxlength="300" />
-			            <table>
-			            <tr>
-			                <td class="form-element pLR-8">
-			                    <label for="id_status">
-			                        <strong>Remark</strong>
-			                        <textarea class="translit form-input" name="status" id="id_status"
-			                        rows="5" cols="50" > </textarea>
-			                    </label>
-			                </td>
-	                       <td>
-	                           <div class="pull-left">
-	                              <input class="ui button" type="button" name="addHistory" value="Add" id="id-history-add" onclick="add_history(this)"/>
-	                            </div>
-	                       </td>
-			                
-			            </tr>
-			            </table>
-			        </tr>    
-			    </fieldset>
-			    </form>
+						<fieldset class="scheduler-border">
+							<legend class="scheduler-border">History</legend>
+							{% url 'complaints:api_get_disease' as url %}
+							 <input id="id_disease-id" class="translit form-input " name="disease_id" type="hidden" maxlength="300" />
+							<table>
+							<tr>
+								<td class="form-element pLR-8">
+									<label for="id_status">
+										<strong>Remark</strong>
+										<textarea class="translit form-input" name="status" id="id_status"
+										rows="5" cols="50" > </textarea>
+									</label>
+								</td>
+							   <td>
+								   <div class="pull-left">
+									  <input class="ui button" type="button" name="addHistory" value="Add" id="id-history-add" onclick="add_history(this)"/>
+									</div>
+							   </td>
+
+							</tr>
+							</table>
+						</fieldset>
+			    	</form>
+					<fieldset class="scheduler-border">
+			            <legend class="scheduler-border">History Files</legend>
+						 <form method="post" enctype="multipart/form-data" id="id_history_file_form">
+								 <div id="div_id_file_discription" class="ui right labeled input mT-16">
+				                        <input id="id_file_discription" name="description" type="text" placeholder="Description of File"
+				                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+				                </div>
+							<input id="id_file_name"type="file" name="document">
+							 <div class="pT-16">
+								<input class="ui button" type="button" name="addHistoryFiles" value="Add" id="id-history-upload" onclick="add_history_files(this)"/>
+							</div>
+						 </form>
+
+						<div class="form-element pLR-8">
+							<fieldset class="scheduler-border">
+			            		<legend class="scheduler-border">Added Files</legend>
+								<table id="id_tbl_medical_file_list" class=" pLR-8">
+
+								</table>
+							</fieldset>
+						</div>
+
+					</fieldset>
+				</fieldset>
             </div>
 
             <div id="div_id_complaints" class="ui tab row col-sm-12 centered" data-tab="complaints">
@@ -427,14 +449,230 @@
                             {% endcomment %}
                         </td> 
                      </tr>
-                     <tr>
+						{% comment %}
+					 <tr>
                        <td>
                            <div class="pull-left pT-16">
                               <input class="ui button" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_vitals(this)"/>
                             </div>
                        </td>
                      </tr>
+						{% endcomment %}
                     </table>
+					<fieldset class="scheduler-border col-sm-12 centered ">
+                    	<legend class="scheduler-border  mT-16">CNS</legend>
+						<table>
+							<tr>
+								<td class="pLR-8 pT-16" >GCS</td>
+								<td class="pLR-8 pT-16">
+									 <div id="div_id_gcs" class="ui input">
+										<input id="id_input_gcs" name="gcs" type="text" class="w120px" placeholder="GCS"
+										 spellcheck="false" autocomplete="off" maxlength="300" value=""  />
+									 </div>
+								</td>
+								<td class="pLR-8 pT-16" >HMF</td>
+								<td class="pLR-8 pT-16">
+									 <div id="div_id_hmf" class="ui right labeled input">
+										<input id="id_input_hmf" name="hmf" type="text" class="w120px" placeholder="HMF"
+										 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+									 </div>
+								</td>
+							 </tr>
+						</table>
+
+						<fieldset class="scheduler-border col-sm-12 centered pT-16">
+							<legend class="scheduler-border  mT-16">MOTOR SYSTEM</legend>
+							<table class="pT-16" border="1">
+								<tr>
+									<td class="pLR-8 pT-16"> TONE </td>
+									<td class="pLR-8 pT-16"> RT </td>
+									<td class="pLR-8 pT-16"> LT </td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> UL </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_tone_ul_r" class="ui right labeled input">
+											<input id="id_input_ms_tone_ul_r" name="ms_tone_ul_r" type="text" class="w120px" placeholder="NORMAL"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_tone_ul_l" class="ui right labeled input">
+											<input id="id_input_ms_tone_ul_l" name="ms_tone_ul_l" type="text" class="w120px" placeholder="NORMAL"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> LL </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_tone_ll_r" class="ui right labeled input">
+											<input id="id_input_ms_tone_ll_r" name="ms_tone_ll_r" type="text" class="w120px" placeholder="NORMAL"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_tone_ll_l" class="ui right labeled input">
+											<input id="id_input_ms_tone_ll_l" name="ms_tone_ll_l" type="text" class="w120px" placeholder="NORMAL"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+							</table>
+
+							<table class="mT-16" border="1">
+								<tr>
+									<td class="pLR-8 pT-16" > DTR &nbsp; &nbsp; </td>
+									<td class="pLR-8 pT-16"> RT </td>
+									<td class="pLR-8 pT-16"> LT </td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> B </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_b_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_b_r" name="ms_dtr_b_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_b_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_b_l" name="ms_dtr_b_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> T </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_t_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_t_r" name="ms_dtr_t_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_t_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_t_l" name="ms_dtr_t_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> S </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_s_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_s_r" name="ms_dtr_s_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_s_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_s_l" name="ms_dtr_s_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> K </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_k_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_k_r" name="ms_dtr_k_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_k_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_k_l" name="ms_dtr_k_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> A </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_a_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_a_r" name="ms_dtr_a_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_a_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_a_l" name="ms_dtr_a_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> PLORTER </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_plorter_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_plorter_r" name="ms_dtr_plorter_r" type="text" class="w120px" placeholder="↓"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_plorter_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_plorter_l" name="ms_dtr_plorter_l" type="text" class="w120px" placeholder="↓"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+							</table>
+
+						</fieldset>
+
+						</table>
+
+						<fieldset class="scheduler-border col-sm-12 centered pT-16">
+							<legend class="scheduler-border  mT-16">SENSORY</legend>
+							<table>
+								<tr>
+									<td class="pLR-8 pT-16" >TOUCH</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ss_touch" class="ui input">
+											<input id="id_input_ss_touch" name="ss_touch" type="text" class="w120px" placeholder="B/L N S."
+											 spellcheck="false" autocomplete="off" maxlength="300" value=""  />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16" >PAIN</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ss_pain" class="ui right labeled input">
+											<input id="id_input_ss_pain" name="ss_pain" type="text" class="w120px" placeholder="B/L N S."
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								 </tr>
+								<tr>
+									<td class="pLR-8 pT-16" >TEMP</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ss_temp" class="ui right labeled input">
+											<input id="id_input_ss_temp" name="ss_temp" type="text" class="w120px" placeholder="B/L N S."
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								 </tr>
+								<tr>
+									<td class="pLR-8 pT-16" >GPS</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ss_gps" class="ui right labeled input">
+											<input id="id_input_ss_gps" name="ss_gps" type="text" class="w120px" placeholder="B/L N S."
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								 </tr>
+							</table>
+						</fieldset>
+					</fieldset>
+					<table>
+						<tr>
+							<td>
+							   <div class="pull-left pT-16">
+                              		<input class="ui button" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_vitals(this)"/>
+                            	</div>
+							</td>
+						</tr>
+					</table>
                 </fieldset>
             </div>
 

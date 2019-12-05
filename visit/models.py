@@ -6,7 +6,7 @@ from django.db import models
 
 from django.utils import timezone
 
-from core.models import Patient, Vitals
+from core.models import Patient, Vitals, VitalCNS
 from medication_list.models import MedicationList
 from complaints.models import Complaints, Disease
 
@@ -37,6 +37,7 @@ class Visit(models.Model):
                                default="NAD",
                                help_text="limit to 200 words"
                                )
+    cns = models.ForeignKey(VitalCNS, null=True, blank=True,on_delete=models.PROTECT)
 
     def __unicode__(self):
         return "%s" % (self.visit_date.strftime('%Y-%m-%d'))

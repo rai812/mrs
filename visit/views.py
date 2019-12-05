@@ -138,7 +138,7 @@ def add_visit_api(request):
             
             
             visit = Visit()
-            visit.remarks = recv_data.get('remark', None)
+            visit.remarks = remark
             if tests:
                 if vitals:
                     visit.vitals = Vitals.objects.get(vital_id = vitals)

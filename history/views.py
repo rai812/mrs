@@ -10,7 +10,7 @@ from history.models import MedicalHistory,MedicalFiles, MedicalHistoryForm, Docu
 from core.models import Patient
 
 from complaints.models import Disease 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -133,4 +133,48 @@ def get_history_api(request):
             r = json.dumps(data)
             return HttpResponse(r, content_type="application/json")
             
+    raise Http404
+
+
+@login_required
+def get_medical_files(request):
+    if request.is_ajax():
+        if request.method == 'GET':
+            id = request.GET.get("patient_id", None)
+            patient_detail = Patient.objects.get(patient_id=id)
+            medical_files = MedicalFiles.objects.all().filter(patient_detail = patient_detail)
+            result = []
+            for obj in medical_files:
+                data = {"name": obj.description, "url": obj.document.url}
+                result.append(data)
+
+            r = json.dumps(result)
+            return HttpResponse(r, content_type="application/json")
+
+        if request.method == 'POST':
+            data = {'ret': 'False', 'result': 'Failure: Invalid request method!!!'}
+            r = json.dumps(data)
+            return HttpResponse(r, content_type="application/json")
+
+    raise Http404
+
+
+@csrf_protect
+@login_required
+def history_doc_upload_api(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            form = DocumentForm(request.POST, request.FILES)
+            if form.is_valid():
+                obj = form.save()
+                r = json.dumps({"ret": True, 'name': obj.description, 'url': obj.document.url, })
+                return HttpResponse(r, content_type="application/json")
+            else:
+                print("Form is not valid")
+                print(form.errors)
+                r = json.dumps({"ret": False, })
+                return HttpResponse(r, content_type="application/json")
+        else:
+            raise Http404
+
     raise Http404
