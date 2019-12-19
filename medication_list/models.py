@@ -50,7 +50,9 @@ class MedicationList(models.Model):
         remark = ""
       if(len(remark) < 3):
         remark = ""
-      return "%s : %s, %s %s for %s days" % ( self.medicine,self.dosage, self.frequency, remark , self.duration)
+      str_1 =  "%s : %s, %s %s for %s days" % ( self.medicine,self.dosage, self.frequency, remark , self.duration)
+      print(str_1)
+      return str_1
 
     def get_absolute_url(self):
         return reverse("get_patient_detail",kwargs={"pk":self.id})

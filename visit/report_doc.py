@@ -93,7 +93,7 @@ class ReportGenerator(object):
         row_cells[2].text = cns.ms_power_ll_r
 
     def write_sensory(self,cns):
-        self.document.add_heading('SENSORY', level=3)
+        self.document.add_heading('SENSORY SYSTEM', level=3)
         table = self.document.add_table(rows=1, cols=2)
         table.style = 'Table Grid'
         row_cells = table.rows[0].cells
@@ -139,8 +139,22 @@ class ReportGenerator(object):
         now = datetime.now()
         paragraph.add_run('  : ' + now.strftime("%m/%d/%Y, %H:%M:%S"))
 
-        self.document.add_heading('Medical History', level=1)
+        # Add diagnosis first
+        visit = self.data['visits'][0]
+        diagnose = visit.diagnose.all();
+        self.document.add_heading('Diagnosis', level=2)
+        for d in diagnose:
+            final_str = d.name
+            self.document.add_paragraph(final_str, style='List Bullet')
 
+        # complaints
+        self.document.add_heading('CHIEF Complaints', level=2)
+        complaints = visit.complaints.all();
+        for c in complaints:
+            final_str = c.description + ' for ' + c.duration
+            self.document.add_paragraph(final_str, style='List Bullet')
+
+        self.document.add_heading('Medical History', level=1)
         history = MedicalHistory.objects.filter(
             patient_detail=self.data['visit_container'].patient_detail.patient_id)
         for h in history:
@@ -152,69 +166,74 @@ class ReportGenerator(object):
         for visit in visits:
             self.document.add_page_break()
             self.document.add_heading('Visit On ' + visit.visit_date.strftime("%m/%d/%Y, %H:%M:%S"), level=1)
+            self.document.add_heading('Examination at the time of admission', level=2);
             # Add diagnosis first
-            diagnose = visit.diagnose.all();
-            final_str = ", ".join([x.name for x in diagnose])
-            self.document.add_heading('Diagnosis', level=2)
-            self.document.add_paragraph(final_str)
-            weight      = visit.vitals.weight or ""
-            p_ce_cn_iol = visit.vitals.p_ce_cn_iol or "NAD"
-            temp        = visit.vitals.temp or "NAD"
-            pulse       = visit.vitals.pulse or "NAD"
-            bp          = visit.vitals.bp or "NAD"
-            rr          = visit.vitals.rr or "NAD"
-            # cns         = visit.vitals.cns or "NAD"
-            chest       = visit.vitals.chest or "NAD"
-            cvs         = visit.vitals.cvs or "NAD"
-            pa          = visit.vitals.pa or "NAD"
+            # diagnose = visit.diagnose.all();
+            # final_str = ", ".join([x.name for x in diagnose])
+            # self.document.add_heading('Diagnosis', level=2)
+            # self.document.add_paragraph(final_str)
+            # weight      = visit.vitals.weight or ""
+            # p_ce_cn_iol = visit.vitals.p_ce_cn_iol or "NAD"
+            # temp        = visit.vitals.temp or "NAD"
+            # pulse       = visit.vitals.pulse or "NAD"
+            # bp          = visit.vitals.bp or "NAD"
+            # rr          = visit.vitals.rr or "NAD"
+            # # cns         = visit.vitals.cns or "NAD"
+            # chest       = visit.vitals.chest or "NAD"
+            # cvs         = visit.vitals.cvs or "NAD"
+            # pa          = visit.vitals.pa or "NAD"
             # tests       = visit.vitals.tests or "NAD"
 
             self.document.add_heading('Vitals', level=2)
             table = self.document.add_table(rows=1, cols=2)
             row_cells = table.rows[0].cells
             row_cells[0].text = "Weight"
-            row_cells[1].text = weight
+            row_cells[1].text = ""
             row_cells = table.add_row().cells
             row_cells[0].text = "P/CE/CN/IOL"
-            row_cells[1].text = p_ce_cn_iol
+            row_cells[1].text = ""
             row_cells = table.add_row().cells
-            row_cells[0].text = "Temp"
-            row_cells[1].text = temp
+            row_cells[0].text = ""
+            row_cells[1].text = ""
             row_cells = table.add_row().cells
             row_cells[0].text = "Pulse"
-            row_cells[1].text = pulse
+            row_cells[1].text = ""
             row_cells = table.add_row().cells
-            row_cells[0].text = "BP"
-            row_cells[1].text = bp
+            row_cells[0].text = "BP - mmhg"
+            row_cells[1].text = ""
             row_cells = table.add_row().cells
-            row_cells[0].text = "RR"
-            row_cells[1].text = rr
+            row_cells[0].text = "RR /min"
+            row_cells[1].text = ""
             row_cells = table.add_row().cells
-            row_cells[0].text = "Chest"
-            row_cells[1].text = chest
+            row_cells[0].text = "Chest b/l nvbs"
+            row_cells[1].text = ""
             row_cells = table.add_row().cells
-            row_cells[0].text = "CVS"
-            row_cells[1].text = cvs
+            row_cells[0].text = "CVS- s1 s2 N"
+            row_cells[1].text = ""
             row_cells = table.add_row().cells
-            row_cells[0].text = "PA"
-            row_cells[1].text = pa
+            row_cells[0].text = "PA- SOFT , NO ORGANOMEGALY"
+            row_cells[1].text = ""
 
             self.document.add_heading('CNS', level=2)
             cns = visit.cns;
             if cns:
-                self.document.add_paragraph('GCS : ' + cns.gcs)
-                self.document.add_paragraph('HMF : ' + cns.hmf)
+                self.document.add_paragraph('GCS : ' + (cns.gcs or ""))
+                self.document.add_paragraph('HMF : ' + (cns.hmf or ""))
+                self.document.add_paragraph('MOTOR SYSTEM')
+                self.document.add_paragraph('MUSCLE BULK -  ' + (cns.muscle_bulk or "") )
+                self.document.add_paragraph('NUTRITION -  ' + ( cns.nutrition or ""))
                 self.write_motor_tone(cns)
                 self.write_motor_dtr(cns)
                 self.write_motor_power(cns)
                 self.write_sensory(cns)
 
-            self.document.add_heading('Complaints', level=2)
-            complaints = visit.complaints.all();
-            for c in complaints:
-                final_str = c.description + ' for ' + c.duration
-                self.document.add_paragraph(final_str, style='List Bullet')
+            # self.document.add_heading('Complaints', level=2)
+            # complaints = visit.complaints.all();
+            # for c in complaints:
+            #     final_str = c.description + ' for ' + c.duration
+            #     self.document.add_paragraph(final_str, style='List Bullet')
 
+            self.document.add_heading('COURSE IN HOSPITAL STAY', level=2)
             self.document.add_heading('Medicine', level=2)
             medicines = visit.medicines.all();
             for m in medicines:

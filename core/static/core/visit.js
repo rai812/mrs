@@ -23,6 +23,7 @@ var add_visit = function() {
     });
 
 	var vitalId = $(".vitals-display").data("id")
+	var vitalcnsId = $(".vitals-display").attr("vitalcns-id")
 	var Remark = $("#id_input_remarks").val();
 	var Tests = $("#id_input_tests").val();
 	var patient_id = $('.patient-display').attr('data-id');
@@ -30,6 +31,7 @@ var add_visit = function() {
 	console.log(medicineIds);
 	console.log(diseaseIds);
 	console.log(vitalId);
+	console.log(vitalcnsId);
 	console.log(Remark);
 	
     $.ajaxSetup({
@@ -47,7 +49,8 @@ var add_visit = function() {
         type: "POST",
         dataType : "json",
         contentType: "application/json;",
-        data : JSON.stringify({'complaints':complaintIds, 'medicines':medicineIds, 'diseases':diseaseIds, 'vitals':vitalId, 'remark':Remark, 'patient_id':patient_id,
+        data : JSON.stringify({'complaints':complaintIds, 'medicines':medicineIds, 'diseases':diseaseIds, 'vitals':vitalId, 'vitalscns': vitalcnsId,
+         'remark':Remark, 'patient_id':patient_id,
         	'tests': Tests, 'visit_container_id': $("#id_visit_container_id").val()}),
         context : this,
         success : function (data) {

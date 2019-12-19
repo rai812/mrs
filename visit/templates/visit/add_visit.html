@@ -275,6 +275,7 @@
             <div id="div_id_vitals" class="ui tab row" data-tab="vitals">
                 <fieldset class="scheduler-border col-sm-12 centered">
                     <legend class="scheduler-border">Vitals</legend>
+                    {% comment %} 
                     <table >
                     <tr >
                         <td class="pLR-8 ">
@@ -285,13 +286,6 @@
 			    						KG
 			  						</div>
 				                 </div>							
-							{% comment %}  
-                            <label for="id_input_weight">
-                            <strong>Weight</strong>
-                            <input id="id_input_weight" class="translit form-input " name="weight" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
                         </td> 
                         <td class="pLR-8 ">
 
@@ -300,14 +294,7 @@
 		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
 			                 </div>							
 
-							{% comment %}  
-                            <label for="id_input_pce">
-                            <strong>P/CL/CN/I/O/L</strong>
-                            <input id="id_input_pce" class="translit form-input " name="pce" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
-                        </td> 
+                       </td> 
 
                         <td class="pLR-8 ">
 
@@ -318,13 +305,6 @@
 			    						&#8457;
 			  						</div>
 				                 </div>							
-							{% comment %}  
-                            <label for="id_input_temp">
-                            <strong>Temp</strong>
-                            <input id="id_input_temp" class="translit form-input " name="temp" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
                         </td> 
 
                      </tr>
@@ -339,13 +319,6 @@
 									bpm
 		  						</div>
 			                 </div>							
-							{% comment %}  
-                            <label for="id_input_pulse">
-                            <strong>Pulse</strong>
-                            <input id="id_input_pulse" class="translit form-input " name="pulse" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
                         </td> 
 
                         <td class="pLR-8 pT-16">
@@ -356,13 +329,6 @@
 									mmHg
 		  						</div>
 			                 </div>							
-							{% comment %}  
-                            <label for="id_input_bp">
-                            <strong>BP</strong>
-                            <input id="id_input_bp" class="translit form-input " name="bp" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
                         </td> 
 
                         <td class="pLR-8 pT-16">
@@ -373,13 +339,6 @@
 									bpm
 		  						</div>
 			                 </div>							
-							{% comment %}  
-                            <label for="id_input_rr">
-                            <strong>RR</strong>
-                            <input id="id_input_rr" class="translit form-input " name="rr" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
                         </td> 
                      </tr>
 
@@ -389,14 +348,7 @@
 		                        <input id="id_input_cns" name="cns" type="text" class="w120px" placeholder="CNS" 
 		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
 			                 </div>							
-							{% comment %}  
-                            <label for="id_input_cns">
-                            <strong>CNS</strong>
-                            <input id="id_input_cns" class="translit form-input " name="cns" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
-                        </td> 
+	                        </td> 
 
                         <td class="pLR-8 pT-16">
 			                 <div id="div_id_chest" class="ui right labeled input">
@@ -406,13 +358,6 @@
 									cm
 		  						</div>
 			                 </div>							
-							{% comment %}  
-                            <label for="id_input_chest">
-                            <strong>Chest</strong>
-                            <input id="id_input_chest" class="translit form-input " name="chest" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
                         </td> 
 
                         <td class="pLR-8 pT-16">
@@ -423,13 +368,6 @@
 									cm
 		  						</div>
 			                 </div>							
-							{% comment %}  
-                            <label for="id_input_cvs">
-                            <strong>CVS</strong>
-                            <input id="id_input_cvs" class="translit form-input " name="cvs" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
                         </td> 
 
                         <td class=" pLR-8 pT-16">
@@ -440,25 +378,10 @@
 									cm
 		  						</div>
 			                 </div>							
-							{% comment %}  
-                            <label for="id_input_pa">
-                            <strong>PA</strong>
-                            <input id="id_input_pa" class="translit form-input " name="pa" type="text"
-                             spellcheck="false" autocomplete="off" maxlength="300" />
-                            </label>
-                            {% endcomment %}
                         </td> 
                      </tr>
-						{% comment %}
-					 <tr>
-                       <td>
-                           <div class="pull-left pT-16">
-                              <input class="ui button" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_vitals(this)"/>
-                            </div>
-                       </td>
-                     </tr>
-						{% endcomment %}
                     </table>
+                    {% endcomment %}
 					<fieldset class="scheduler-border col-sm-12 centered ">
                     	<legend class="scheduler-border  mT-16">CNS</legend>
 						<table>
@@ -478,6 +401,23 @@
 									 </div>
 								</td>
 							 </tr>
+							 <tr>
+								<td class="pLR-8 pT-16" >Muscle Bulk</td>
+								<td class="pLR-8 pT-16">
+									 <div id="div_id_muscle_bulk" class="ui input">
+										<input id="id_input_muscle_bulk" name="muscle_bulk" type="text" class="w120px" placeholder="N"
+										 spellcheck="false" autocomplete="off" maxlength="300" value=""  />
+									 </div>
+								</td>
+								<td class="pLR-8 pT-16" >Nutrition</td>
+								<td class="pLR-8 pT-16">
+									 <div id="div_id_nutrition" class="ui right labeled input">
+										<input id="id_input_nutrition" name="nutrition" type="text" class="w120px" placeholder="N"
+										 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+									 </div>
+								</td>
+							 </tr>
+							 
 						</table>
 
 						<fieldset class="scheduler-border col-sm-12 centered pT-16">

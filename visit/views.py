@@ -15,7 +15,7 @@ from visit.models import Visit, VisitContainer
 from medication_list.models import MedicationList
 from complaints.models import Complaints, Disease
 
-from core.models import PatientForm, Patient, PatientSearchForm, Vitals
+from core.models import PatientForm, Patient, PatientSearchForm, Vitals, VitalCNS
 from core.search import get_query, normalize_query, get_query_for_nterms, strip_stopwords
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_protect
@@ -131,6 +131,7 @@ def add_visit_api(request):
             complaints = recv_data.get('complaints', [])
             medicines = recv_data.get('medicines', [])
             vitals = recv_data.get('vitals', None)
+            vitalscns = recv_data.get('vitalscns', None)
             diseases = recv_data.get('diseases', [])
             remark = recv_data.get('remark', None)
             tests = recv_data.get('tests', None)
@@ -139,14 +140,19 @@ def add_visit_api(request):
             
             visit = Visit()
             visit.remarks = remark
-            if tests:
-                if vitals:
-                    visit.vitals = Vitals.objects.get(vital_id = vitals)
-                else:
-                    temp_vital = Vitals()
-                    temp_vital.tests = tests;
-                    temp_vital.save();
-                    visit.vitals = temp_vital
+            # if tests:
+            #     if vitals:
+            #         visit.vitals = Vitals.objects.get(vital_id = vitals)
+            #     else:
+            #         temp_vital = Vitals()
+            #         temp_vital.tests = tests;
+            #         temp_vital.save();
+            #         visit.vitals = temp_vital
+            if vitalscns:
+                visit.vitalscns = VitalCNS.objects.get(vitalcns_id = vitalscns)
+            else:
+                temp_vitalcns = VitalCNS.objects.get_or_create(is_default=True);
+                visit.cns = temp_vitalcns
             visit.save();
             
             visit_container.visits.add(visit);

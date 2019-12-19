@@ -13,7 +13,7 @@ var vitalsDispalyString = function(data) {
 		<td> PA: ' + data.pa + '</td> \
 		</tr>';
 
-		var str1 = '<tr class="vitals-display" data-id="' + data.id + '">';
+		var str1 = '<tr class="vitals-display" data-id="' + data.id + ' vitalcns-id="' + data.cns_id +'" >';
 		for(var key in data) {
         var value = data[key];
 
@@ -28,7 +28,7 @@ var vitalsDispalyString = function(data) {
         console.log(str1);
 
 
-	return str;
+	return str1;
 
 }
 
@@ -44,6 +44,8 @@ var add_vitals = function () {
     'id_input_pa',
     'id_input_gcs',
     'id_input_hmf',
+    'id_input_muscle_bulk',
+    'id_input_nutrition',
     'id_input_ms_tone_ul_r',
     'id_input_ms_tone_ul_l',
     'id_input_ms_tone_ll_r',

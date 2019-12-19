@@ -236,6 +236,10 @@ class VitalCNS(models.Model):
     cerebelleim = models.CharField("Cerebellum", max_length=50, blank=True, null=True, default="B/L N")
     gait = models.CharField("GAIT", max_length=50, blank=True, null=True, default="N")
 
+    muscle_bulk = models.CharField("MUSCLE BULK", max_length=50, blank=True, null=True, default="N")
+    nutrition = models.CharField("NUTRITION", max_length=50, blank=True, null=True, default="N")
+    is_default = models.BooleanField(default=False)
+
     def __unicode__(self):
         return "vitals CNS "
 
