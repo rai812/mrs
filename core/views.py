@@ -225,7 +225,7 @@ def add_vitals(request):
             for field, val in cns:
                 cns_data[field] = val
 
-            data = {'result': 'Successfully added', 'ret': 'True', 'id': vitals.vital_id, 'weight': vitals.weight,
+            data = {'result': 'Successfully added', 'ret': 'True', 'id': vitals.vital_id,'cns_id': cns.vitalcns_id , 'weight': vitals.weight,
                     'height': vitals.height, 'pce': vitals.p_ce_cn_iol, 'oe': vitals.oe, 'temp': vitals.temp,
                     'pulse': vitals.pulse, 'bp': vitals.bp, 'rr': vitals.rr, 'cns': vitals.cns, 'chest': vitals.chest,
                     'cvs': vitals.cvs, 'pa': vitals.pa, 'tests': vitals.tests}

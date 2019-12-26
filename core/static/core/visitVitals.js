@@ -13,7 +13,7 @@ var vitalsDispalyString = function(data) {
 		<td> PA: ' + data.pa + '</td> \
 		</tr>';
 
-		var str1 = '<tr class="vitals-display" data-id="' + data.id + ' vitalcns-id="' + data.cns_id +'" >';
+		var str1 = '<tr class="vitals-display" data-id="' + data.id + '" vitalcns-id="' + data.cns_id +'" >';
 		for(var key in data) {
         var value = data[key];
 

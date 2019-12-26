@@ -190,6 +190,28 @@ $(document).ready(function() {
 					        }
 					        else if(e.keyCode == 39) { // right
 					        
+					        	$('.ui.menu').find('.item').tab('change tab', 'cdhs');
+					        	e.stopImmediatePropagation();
+					        }					  
+					  }
+					  else if(e.keyCode == 113){
+							// F2 key press show the modal
+							  show_report();
+						  }
+
+					});
+				
+			}else if("cdhs" == name){
+				  $('#id_input_remarks').focus();
+				  $(document).off("keydown");	  
+				  $(document).on("keydown" , function(e) {
+					  if (e.ctrlKey) {
+					        if (e.keyCode == 37) { // left      
+					        	$('.ui.menu').find('.item').tab('change tab', 'history');
+					        	e.stopImmediatePropagation();
+					        }
+					        else if(e.keyCode == 39) { // right
+					        
 					        	$('.ui.menu').find('.item').tab('change tab', 'vitals');
 					        	e.stopImmediatePropagation();
 					        }					  
@@ -201,7 +223,7 @@ $(document).ready(function() {
 
 					});
 				
-			}else if("complaints" == name){
+			} else if("complaints" == name){
 				  $('#id_complaints').focus();
 				  $(document).off("keydown");	  
 				  $(document).on("keydown" , function(e) {
@@ -229,7 +251,7 @@ $(document).ready(function() {
 				  $(document).on("keydown" , function(e) {
 					  if (e.ctrlKey) {
 				        if (e.keyCode == 37) { // left      
-				        	$('.ui.menu').find('.item').tab('change tab', 'history');
+				        	$('.ui.menu').find('.item').tab('change tab', 'cdhs');
 				        	e.stopImmediatePropagation();
 				        }
 				        else if(e.keyCode == 39) { // right

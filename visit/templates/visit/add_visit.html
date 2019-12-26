@@ -25,11 +25,15 @@
                     History
                   </li>
 
+				<li class="item" data-tab="cdhs">
+                    Hospital Stay
+                  </li>
+
                   <li class="item" data-tab="vitals">
-                    Vitals
+                    Examinations
                   </li>
                   <li class="item" data-tab="medicine">
-                    Medicine
+                    Advice
                   </li>
                   <li class="item" data-tab="diagnosis">
                     Diagnosis
@@ -175,9 +179,21 @@
                 </div>
             </div>
 
+            <div id="div_id_cdhs" class="ui tab row col-sm-12 centered" data-tab="cdhs">
+				<div class="pLR-8">
+	                <div class="form-element pLR-8">
+	                    <label for="id_cdhs">
+	                        <strong>Course During Hospital Stay</strong>
+	                        <textarea class="translit form-input" name="remarks" id="id_input_remarks"
+	                        rows="5" cols="50" > </textarea>
+	                    </label>
+	                </div>
+				</div>			
+			</div>
+
             <div id="div_id_medicine" class="ui tab row" data-tab="medicine">
                 <fieldset class="scheduler-border col-sm-12 centered">
-                    <legend class="scheduler-border">Medicine</legend>
+                    <legend class="scheduler-border">Advice</legend>
                     {% url 'medicines:api_get_medicine' as url %}
                     <table >
                     <tr>
@@ -272,9 +288,10 @@
                 </fieldset>
             </div>
 
+
             <div id="div_id_vitals" class="ui tab row" data-tab="vitals">
                 <fieldset class="scheduler-border col-sm-12 centered">
-                    <legend class="scheduler-border">Vitals</legend>
+                    <legend class="scheduler-border">Examinations</legend>
                     {% comment %} 
                     <table >
                     <tr >
@@ -637,6 +654,7 @@
 
 			<div id="div_id_remark" class="ui tab row col-sm-12 centered" data-tab="remark">
 				<div class="pLR-8">
+					{% comment %}
 	                <div class="form-element pLR-8">
 	                    <label for="id_remarks">
 	                        <strong>Remarks</strong>
@@ -644,6 +662,7 @@
 	                        rows="5" cols="50" > </textarea>
 	                    </label>
 	                </div>
+	                {% endcomment %}
 	                <div class="form-element pLR-8">
 	                    <label for="id_tests">
 		                        <strong>Tests</strong>

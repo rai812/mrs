@@ -131,7 +131,7 @@ def add_visit_api(request):
             complaints = recv_data.get('complaints', [])
             medicines = recv_data.get('medicines', [])
             vitals = recv_data.get('vitals', None)
-            vitalscns = recv_data.get('vitalscns', None)
+            vitalscns = recv_data.get('vitalscns-id', None)
             diseases = recv_data.get('diseases', [])
             remark = recv_data.get('remark', None)
             tests = recv_data.get('tests', None)
@@ -149,9 +149,14 @@ def add_visit_api(request):
             #         temp_vital.save();
             #         visit.vitals = temp_vital
             if vitalscns:
-                visit.vitalscns = VitalCNS.objects.get(vitalcns_id = vitalscns)
+                temp_vitalcns = VitalCNS.objects.get(vitalcns_id = vitalscns)
+                if temp_viatlcns:
+                    visit.vitalscns = temp_vitalcns
+                else:
+                    temp_vitalcns, created = VitalCNS.objects.get_or_create(is_default=True);
+                    visit.vitalscns = temp_vitalcns
             else:
-                temp_vitalcns = VitalCNS.objects.get_or_create(is_default=True);
+                temp_vitalcns, created = VitalCNS.objects.get_or_create(is_default=True);
                 visit.cns = temp_vitalcns
             visit.save();
             
