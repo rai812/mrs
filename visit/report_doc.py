@@ -26,7 +26,7 @@ class ReportGenerator(object):
         }
 
     def write_motor_tone(self, cns):
-        self.document.add_heading('MOTOR TONE', level=3)
+        self.document.add_heading('TONE', level=3)
         table = self.document.add_table(rows=1, cols=3)
         table.style = 'Table Grid'
         hdr_cells = table.rows[0].cells
@@ -43,7 +43,7 @@ class ReportGenerator(object):
         row_cells[2].text = cns.ms_tone_ll_r
 
     def write_motor_dtr(self,cns):
-        self.document.add_heading('MOTOR DTR', level=3)
+        self.document.add_heading('DTR', level=3)
         table = self.document.add_table(rows=1, cols=3)
         table.style = 'Table Grid'
         hdr_cells = table.rows[0].cells
@@ -76,7 +76,7 @@ class ReportGenerator(object):
         row_cells[2].text = cns.ms_dtr_plorter_l
 
     def write_motor_power(self,cns):
-        self.document.add_heading('MOTOR POWER', level=3)
+        self.document.add_heading('POWER', level=3)
         table = self.document.add_table(rows=1, cols=3)
         table.style = 'Table Grid'
         hdr_cells = table.rows[0].cells
@@ -109,10 +109,8 @@ class ReportGenerator(object):
         row_cells[0].text = "GPS"
         row_cells[1].text = cns.ss_gps
 
-        self.document.add_paragraph('Cerebelleim: ' + cns.cerebelleim)
+        self.document.add_paragraph('Cerebellar signs: ' + cns.cerebelleim)
         self.document.add_paragraph('Gait: ' + cns.gait)
-
-
 
 
     def create_document(self):
@@ -184,7 +182,7 @@ class ReportGenerator(object):
             # pa          = visit.vitals.pa or "NAD"
             # tests       = visit.vitals.tests or "NAD"
 
-            self.document.add_heading('Vitals', level=2)
+            # self.document.add_heading('Vitals', level=2)
             table = self.document.add_table(rows=1, cols=2)
             row_cells = table.rows[0].cells
             row_cells[0].text = "Weight"
@@ -233,15 +231,17 @@ class ReportGenerator(object):
             #     final_str = c.description + ' for ' + c.duration
             #     self.document.add_paragraph(final_str, style='List Bullet')
 
-            self.document.add_heading('COURSE IN HOSPITAL STAY', level=2)
-            self.document.add_heading('Medicine', level=2)
+            self.document.add_heading('COURSE DURING HOSPITAL STAY', level=2)
+            final_str = visit.remarks
+            self.document.add_paragraph(final_str)
+            self.document.add_heading('Advice', level=2)
             medicines = visit.medicines.all();
             for m in medicines:
                 self.document.add_paragraph(m.getDisplayValue(), style='List Bullet')
 
-            self.document.add_heading('Remark', level=2)
-            final_str = visit.remarks
-            self.document.add_paragraph(final_str)
+            # self.document.add_heading('Remark', level=2)
+            # final_str = visit.remarks
+            # self.document.add_paragraph(final_str)
 
         self.document.save(self.buffer)
 
