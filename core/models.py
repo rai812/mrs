@@ -233,7 +233,7 @@ class VitalCNS(models.Model):
     ss_pain = models.CharField("TEMPERATURE ", max_length=50, blank=True, null=True, default="B/L N")
     ss_gps = models.CharField("GPS", max_length=50, blank=True, null=True, default="B/L N")
 
-    cerebelleim = models.CharField("Cerebellum", max_length=50, blank=True, null=True, default="B/L N")
+    cerebelleim = models.CharField("Cerebellum", max_length=50, blank=True, null=True, default="ABSENT")
     gait = models.CharField("GAIT", max_length=50, blank=True, null=True, default="N")
 
     muscle_bulk = models.CharField("MUSCLE BULK", max_length=50, blank=True, null=True, default="N")
