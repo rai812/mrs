@@ -20,15 +20,30 @@
 	};
 
 	var show_success = function(head,message) {
-		$.uiAlert({
-			textHead: head, // header
-			text: message,
-			bgcolor: '#19c3aa', // background-color
-			textcolor: '#fff', // color
-			position: 'bottom-center',// position . top And bottom ||  left / center / right
-			icon: 'checkmark box', // icon in semantic-UI
-			time: 4, // time
-			  })
+
+		const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+
+	const alert = (message, type) => {
+  		const wrapper = document.createElement('div')
+  		wrapper.innerHTML = [
+			`<div class="alert alert-${type} alert-dismissible" role="alert">`,
+			`   <div>${message}</div>`,
+			'   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+			'</div>'
+		].join('')
+
+  		alertPlaceholder.append(wrapper)
+	};
+    alert(message, 'primary');
+		// $.uiAlert({
+		// 	textHead: head, // header
+		// 	text: message,
+		// 	bgcolor: '#19c3aa', // background-color
+		// 	textcolor: '#fff', // color
+		// 	position: 'bottom-center',// position . top And bottom ||  left / center / right
+		// 	icon: 'checkmark box', // icon in semantic-UI
+		// 	time: 4, // time
+		// 	  })
 	}
 	
 	var show_info = function(head,message) {
@@ -53,4 +68,14 @@
 			icon: 'remove circle', // icon in semantic-UI
 			time: 4, // time
 			  })
+	}
+
+	var show_tab = function(tabName) {
+		$('.nav-tabs button[data-bs-target="#'+ tabName+'"]').tab('show');
+	}
+
+	var show_modal = function(){
+		var myModalEl = document.querySelector('#modalDialogScrollable')
+		var modal = bootstrap.Modal.getOrCreateInstance(myModalEl) // Returns a Bootstrap modal instance
+		modal.show()
 	}

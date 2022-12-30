@@ -37,6 +37,9 @@ def index(request):
 
     return render(request, "core/index.html", {'patients': patients})
 
+@login_required
+def profile(request):
+    return render(request, 'core/profile.html')
 
 @login_required
 def get_patients(request):

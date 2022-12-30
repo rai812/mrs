@@ -19,23 +19,24 @@ from core.models import PatientForm, Patient, PatientSearchForm, Vitals, VitalCN
 from core.search import get_query, normalize_query, get_query_for_nterms, strip_stopwords
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_protect
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
 
 @login_required
 def index(request):
     visit_list = VisitContainer.objects.all()
-#     paginator = Paginator(patient_list, 10)
-#     page = request.GET.get('page', 1)
-#     ## TODO check the criteriea and change the patient_list
-#     try:
-#         patients = paginator.page(page)
-#     except PageNotAnInteger:
-#         patients = paginator.page(1)
-#     except EmptyPage:
-#         patients = paginator.page(paginator.num_pages)
+    paginator = Paginator(visit_list, 10)
+    page = request.GET.get('page', 1)
+    ## TODO check the criteriea and change the visit_list
+    try:
+        visits = paginator.page(page)
+    except PageNotAnInteger:
+        visits = paginator.page(1)
+    except EmptyPage:
+        visits = paginator.page(paginator.num_pages)
 
-    return render(request, "visit/index.html", {'visit_containers': visit_list})
+    return render(request, "visit/index.html", {'visit_containers': visits})
 
 
 @login_required

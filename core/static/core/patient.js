@@ -10,7 +10,19 @@ var get_patients = function () {
     });
 	
     field = $("#id_search_field").val();
-	query = $("#id_patient_search").val();
+	nameQuery = $("#id_patient_search").val();
+    mobQuery = $("#id_patient_search_mob").val();
+    query = ""
+    if(nameQuery)
+    {
+        field = "name"
+        query = nameQuery;
+    }
+    else if(mobQuery)
+    {
+        field = "mobile_number"
+        query= mobQuery
+    }
     $.ajax({
         cache: false,
         url : window.location.origin+"/core/get_patient_list/?field="+field+"&q="+query,

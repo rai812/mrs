@@ -12,102 +12,142 @@
 
 
 {% block content %}
-    <div class="row">
-        <div class="row col-sm-12 centered mL-32">
-	        <ul class="ui tabular menu">
-                  <li class="item active " data-tab="patient">
-                    Patient Detail
-                  </li>
-                  <li class="item" data-tab="complaints">
-                    Complaints
-                  </li>
-				<li class="item" data-tab="history">
-                    History
-                  </li>
 
-				<li class="item" data-tab="cdhs">
-                    Hospital Stay
-                  </li>
+<div class="row">
+	<div class="col-xl-12">
 
-                  <li class="item" data-tab="vitals">
-                    Examinations
-                  </li>
-                  <li class="item" data-tab="medicine">
-                    Advice
-                  </li>
-                  <li class="item" data-tab="diagnosis">
-                    Diagnosis
-                  </li>
-                <li class="item" data-tab="remark">
-                    Remarks and Tests
-                  </li>
-                  
-                  <li class="item" data-tab="report">
-                    Report
-                  </li>
-			    </ul>
-        </div>
+		<div class="card">
+		  <div class="card-body pt-3">
+			<ul class="nav nav-tabs nav-tabs-bordered">
 
-        <div class="row col-sm-12 centered mL-32 mT-32 tab-content">
- 
-            <div id="div_id_patient" class="ui tab active row col-sm-12 centered" data-tab="patient">
+				<li class="nav-item">
+				  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#patient">Patient Detail</button>
+				</li>
 
-			       <table>
-			            <tr>
-			                <td class= "pLR-8">
-                				<div class="ui search patient">
-								  <div class="ui {% if visit_container %} disabled {% endif %} icon input">
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#history">History</button>
+				</li>
+				
+				<li class="nav-item">
+				  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#complaints">Complaints</button>
+				</li>
+	  
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#cdhs">Hospital Stay</button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#vitals">Examinations</button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#medicine">Advice</button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#diagnosis">Diagnosis</button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#remark">Remark and Tests</button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#report">report</button>
+				</li>
+			</ul>
+			<div class="tab-content pt-2">
+
+				<div class="tab-pane fade show active profile-overview" id="patient">
+				  <h5 class="card-title">Patient's Detail</h5>
+					<div class="row g-3">
+						<div class="col-md-3">
+							<div class="auto-search-wrapper">
+								<input class="form-control" placeholder="Patient name..." type="text" id="id_full_name" name="full_name" required {% if visit_container %} value="{{ visit_container.patient_detail.full_name }}" disabled {% endif %}>
+							</div>
+						</div> <!--search patient name end-->
+						<div class="col-md-3">
+							<input class="form-control "id="id_age" name="age" type="text" placeholder="Age in Years..." 
+										spellcheck="false" autocomplete="off" maxlength="300"  required {% if visit_container %} value="{{ visit_container.patient_detail.age }}" disabled {% endif %}/>
+						</div> <!--age end-->
+						<div class="col-md-3">
+							<input class="form-control"id="id_mobile" name="mobile" type="text" placeholder="Mobile Number" 
+										spellcheck="false" autocomplete="off" maxlength="300" {% if visit_container %} value="{{ visit_container.patient_detail.mobile }}" disabled {% endif %}/>
+						</div> <!--mobile end-->
+						<div class="col-md-3">
+							<select id="id_sex" name="sex" class="form-select " {% if visit_container %} disabled {% endif %}>
+								{% if visit_container %}
+									<option value="Male" {%if visit_container.patient_detail.sex == "Male"%} selected {% endif %}>Male</option>
+									<option value="Female" {%if visit_container.patient_detail.sex == "Female"%} selected {% endif %}>Female</option>
+									<option value="Others" {%if visit_container.patient_detail.sex == "Others"%} selected {% endif %}>Others</option>
+								{% else %}
+									<option value="Male" selected>Male</option>
+									<option value="Female">Female</option>
+									<option value="Others">Others</option>
+								{% endif %}
 								
-								    <input class="prompt" placeholder="Patient name..." type="text" id="id_full_name" name="full_name" required>
-								    <i class="search icon"></i>
-								  </div>
-								  <div class="results"></div>
-								</div>			                
-							</td>
-							<td class= "pLR-8">
-				                 <div id="div_id_age" class="ui {% if visit_container %} disabled {% endif %} right labeled input">
-				                        <input id="id_age" name="age" type="text" placeholder="Age in Years..." 
-				                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-				                        <div class="ui basic label">
-				    						Yrs
-				  						</div>
-				                </div>							
-							</td>
-							<td class= "pLR-8">
-				                 <div id="div_id_mob" class="ui {% if visit_container %} disabled {% endif %} input">
-				                        <input id="id_mobile" name="mobile" type="text" placeholder="Mobile Number..." 
-				                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-				                </div>							
-							</td>
-							<td class="pLR-8">
-						        <div id="div_id_sex">
-						            <label for="id_sex">
-						            </label>        
-						            <select id="id_sex" name="sex" class="ui {% if visit_container %} disabled {% endif %} dropdown">
-						                <option value="Male" selected=selected>Male</option>
-						                <option value="Female">Female</option>
-						                <option value="Others">Others</option>
-						            </select>
-						        </div>
-							</td>
-						</tr>
-						
-						<tr>
-							<td class="pLR-8 pT-8">
-				               <div class="pull-left">
-                				  <input class="ui {% if visit_container %} disabled {% endif %} button" type="button" name="add" value="Add" id="id-patient-add" onclick="add_patient(this)" tabindex="0"/>
-                			   </div>
-							</td>
-						</tr>
-					</table>                
-            </div>
+							</select>
+						</div> <!--gender select end-->
+						<div class="col-6">
+							<input class="btn btn-outline-primary" type="button" name="add" value="Add" id="id-patient-add" onclick="add_patient(this)" tabindex="0" {% if visit_container %} disabled {% endif %}/>
+						</div>
+						<div class="col-6">
+							<input class="btn btn-outline-warning" type="button" name="reset" value="Reset" id="id-patient-reset" tabindex="0" {% if visit_container %} disabled {% endif %}/>
+						</div>
+					</div> <!--row end-->
+				</div> <!--tab pan patient end-->
 
-            <div id="div_id_history" class="ui tab row col-sm-12 centered" data-tab="history">
-			    <fieldset class="scheduler-border">
-			        <legend class="scheduler-border">Patient Medical History</legend>
-			        
-			        {% comment %}  Start if first form {% endcomment %}
-			        <form id="id-form-medical-history" method="post" enctype="multipart/form-data" class="a-mdl-form ">
+				<div class="tab-pane fade" id="history">
+					<h5 class="card-title">Patient's Medical History</h5>
+					<div class="row g-3">
+						<div class="col-md-6">
+							<div class="card-title">
+								Add History Remark
+							</div>
+							{% url 'complaints:api_get_disease' as url %}
+							<input id="id_disease-id" class="translit form-input " name="disease_id" type="hidden" maxlength="300" />
+
+						   <div class="row mb-3">
+								<div class="col-12">
+									<div class="input-group">
+										<span class="input-group-text">Remark</span>
+										<textarea class="form-control" name="status" id="id_status"
+												rows="5" cols="50" > </textarea>
+									</div>
+								</div>
+						   </div>
+							<div class="row mb-3">
+								<div class="col-md-12">
+									<input class="btn btn-outline-primary" type="button" name="addHistory" value="Add" id="id-history-add" onclick="add_history(this)"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="card-title">
+								Add Medical Files
+							</div>
+							<form class="form" method="post" enctype="multipart/form-data" id="id_history_file_form">
+								<div class="row mb-3">
+									<div id="div_id_file_discription" class="col-12">
+										<input class="form-control" id="id_file_discription" name="description" type="text" placeholder="Description of File"
+											spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+									</div>
+								</div>
+								<div class="row mb-3">
+									<div class="col-12">
+										<input id="id_file_name"type="file" class="form-control" name="document">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<div class="col-12">
+										<input class="btn btn-outline-primary" type="button" name="addHistoryFiles" value="Add" id="id-history-upload" onclick="add_history_files(this)"/>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div> <!--row end-->
+					
+					<div class="row g-3">
+						<table class="table table-bordered"id="id_tbl_medical_file_list">
+
+						</table>
+					</div> <!--row end for file list-->
+					{% comment %} <form id="id-form-medical-history" method="post" enctype="multipart/form-data" class="a-mdl-form ">
 						<fieldset class="scheduler-border">
 							<legend class="scheduler-border">History</legend>
 							{% url 'complaints:api_get_disease' as url %}
@@ -130,7 +170,7 @@
 							</tr>
 							</table>
 						</fieldset>
-			    	</form>
+			    	</form> 
 					<fieldset class="scheduler-border">
 			            <legend class="scheduler-border">History Files</legend>
 						 <form method="post" enctype="multipart/form-data" id="id_history_file_form">
@@ -153,253 +193,333 @@
 							</fieldset>
 						</div>
 
-					</fieldset>
-				</fieldset>
-            </div>
+					</fieldset> {% endcomment %}
+				</div> <!--tab pan history end-->
 
-            <div id="div_id_complaints" class="ui tab row col-sm-12 centered" data-tab="complaints">
-			{% csrf_token %}
-				<div class="ui search complaint">
-				  <div class="ui icon input">	
-				    <input class="prompt" placeholder="Complaints..." type="text" id="id_complaints" name="complaints" required>
-				    <i class="search icon"></i>
-				  </div>
-				  <div class="results"></div>
-				</div>
-				<div class="pLR-8 ">
-						 <div id="div_id_c_duration" class="ui right labeled input mT-16">
-								<input id="id_input_c_duration" name="c_duration" type="text" placeholder="Duration of complaint..." 
-								 spellcheck="false" autocomplete="off" maxlength="300" value="" />
+				<div class="tab-pane fade" id="complaints">
+					<h5 class="card-title">Complaints</h5>
+					{% csrf_token %}
+					<div class="row g-3">
+						<div class="col-4">	
+							<div class="auto-search-wrapper">
+								<input class="form-control" placeholder="Complaints..." type="text" id="id_complaints" name="complaints" required>
+							</div>
 						</div>
-				</div>
+						<div id="div_id_c_duration" class="col-4">
+								<input class="form-control" id="id_input_c_duration" name="c_duration" type="text" placeholder="Duration of complaint..." 
+								spellcheck="false" autocomplete="off" maxlength="300" value="" />
+						</div>
+						<div class="col-4">
+							<input class="btn btn-outline-primary" type="button" name="add" value="Add" id="id-complaints-add" onclick="add_complaints(this)" data-url="{% url "complaints:api_get_complaints" %}"/>
+						</div>
+					</div>
+				</div> <!--tab pan complaint end-->
+				
+				<div class="tab-pane fade" id="cdhs">
+					<h5 class="card-title">Course During Hospital Stay</h5>
+					<textarea class="form-control" name="remarks" id="id_input_remarks"
+					rows="5" cols="50" > </textarea>
+				</div> <!--tab pan cdhs end-->
 
-
-               <div class="pull-left pT-8">
-                      <input class="ui button" type="button" name="add" value="Add" id="id-complaints-add" onclick="add_complaints(this)" data-url="{% url "complaints:api_get_complaints" %}"/>
-                </div>
-            </div>
-
-            <div id="div_id_cdhs" class="ui tab row col-sm-12 centered" data-tab="cdhs">
-				<div class="pLR-8">
-	                <div class="form-element pLR-8">
-	                    <label for="id_cdhs">
-	                        <strong>Course During Hospital Stay</strong>
-	                        <textarea class="translit form-input" name="remarks" id="id_input_remarks"
-	                        rows="5" cols="50" > </textarea>
-	                    </label>
-	                </div>
-				</div>			
-			</div>
-
-            <div id="div_id_medicine" class="ui tab row" data-tab="medicine">
-                <fieldset class="scheduler-border col-sm-12 centered">
-                    <legend class="scheduler-border">Advice</legend>
-                    {% url 'medicines:api_get_medicine' as url %}
-                    <table >
-                    <tr>
-                        <td class="pLR-8">
-							<div class="ui search medicine">
-							  <div class="ui icon input">
-							
-							    <input class="prompt" placeholder="Medicine name..." type="text" id="id_input_medicine" name="medicine" required>
-							    <i class="search icon"></i>
-							  </div>
-								<div class="results" ></div>
-							</div>                        
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="pLR-8">
-							<div class="ui search m_category">
-							  <div class="ui icon input">
-							
-							    <input class="prompt" placeholder="Medicine category..." type="text" id="id_input_m_category" name="category" required>
-							    <i class="search icon"></i>
-							  </div>
-							  <div class="results"></div>
-							</div>                        
-                        </td>
-                    </tr>					
-                    <tr>
-                        <td class="pLR-8">
-                        
-							<div class="ui search dosage mT-16">
-							  <div class="ui input">
-							    <input class="prompt" placeholder="Dosage" type="text" id="id_input_dosage" name="dosage" required>
-							  </div>
-							  <div class="results"></div>
-							</div>                        
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="pLR-8">
-							<select id="id_input_frequency"  multiple="" name="frequency" class="ui fluid normal dropdown frequency mT-16">
-							  <option value="">Frequency</option>
-							<option value="Take Once Daily / दिन में एक बार (OD)">Take Once Daily / दिन में एक बार (OD)</option>
-							<option value="Take Two Times Daily / दिन में दो बार (BD)">Take Two Times Daily / दिन में दो बार (BD)</option>
-							<option value="Take Three Times Daily / दिन में तीन बार (TDS)">Take Three Times Daily / दिन में तीन बार (TDS)</option>
-							<option value="Take At Night Daily / केवल रात में (HS)">Take At Night Daily / केवल रात में (HS)</option>
-							<option value="Four Times Daily / दिन में चार बार (QID)">Four Times Daily / दिन में चार बार (QID)</option>
-							<option value="SOS (if need) / जरुरत पड़ने पर ">SOS (if need) / जरुरत पड़ने पर </option>
-							<option value="Take Before Food / खाने से पहले (AC)">Take Before Food / खाने से पहले (AC)</option>
-							<option value="Take After Food / खाने के बाद (PC)">Take After Food / खाने के बाद (PC)</option>
-							<option value="Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)">Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)</option>
-							<option value="Before Breakfast / खाली पेट (BBF)">Before Breakfast / खाली पेट (BBF)</option>
-							<option value="After Breakfast / नाश्ते के बाद (ABF)">After Breakfast / नाश्ते के बाद (ABF)</option>
-							<option value="Take at morning / सुबह  में ">Take at morning / सुबह में </option>
-							<option value="Take at evening / शाम   में ">Take at evening / शाम  में </option>
-							<option value="During fever / बुखार आने पर  ">During fever / बुखार आने पर  </option>
-							<option value="During pain / दर्द होने पर   ">During pain / दर्द होने पर   </option>
-							<option value="Take 2 Hrs after food / खाने के दो घंटे बाद  ">Take 2 Hrs after food / खाने के दो घंटे बाद    </option>
-							</select>                       
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="pLR-8 ">
-
-				                 <div id="div_id_duration" class="ui right labeled input mT-16">
-				                        <input id="id_input_duration" name="duration" type="text" placeholder="Duration in Days..." 
-				                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-				                        <div class="ui basic label">
-				    						Days
-				  						</div>
-				                </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="pLR-8">
-			                <div class="form-element mT-16">
-			                    <label for="id_medicine_remarks">
-			                        <strong>Remarks</strong>
-			                        <textarea class="hindi-text form-input" name="medicine_remarks" id="id_medicine_remarks"
+				<div class="tab-pane fade" id="remark">
+					<h5 class="card-title">Remarks</h5>
+					<textarea class="hindi-text form-control" name="medicine_remarks" id="id_medicine_remarks"
 			                        rows="3" cols="50" > </textarea>
-			                    </label>
-			                </div>
-                        </td>
-                     </tr>
-                     <tr>
-                       <td>
-                           <div class="pull-left mT-16">
-                              <input class="ui button" type="button" name="add" value="Add" id="id-medicine-add" onclick="add_medicine(this)"/>
-                            </div>
-                       </td>
-                     </tr>
-                    </table>
-                </fieldset>
-            </div>
+				</div> <!--tab pan remark end-->
 
+				<div class="tab-pane fade" id="medicine">
+					<h5 class="card-title">Advice</h5>
+					{% url 'medicines:api_get_medicine' as url %}
+					<div class="row">
+						<div class="col-12">
+							<div class="row g-3">
+								<div class="col-4">
+									<div class="auto-search-wrapper">
+										<input class="form-control" placeholder="Medicine name..." type="text" id="id_input_medicine" name="medicine" required>
+									</div>
+								</div>
+								<div class="col-4">
+									<div class="auto-search-wrapper">
+										<input class="form-control" placeholder="Medicine category..." type="text" id="id_input_m_category" name="category" required>
+									</div>
+								</div>
+								<div class="col-4">
+									<div class="auto-search-wrapper">
+										<input class="form-control" placeholder="Dosage" type="text" id="id_input_dosage" name="dosage" required>
+									</div>
+								</div>
+							</div>
+							<div class="row g-3 mt-3">
+								<div class="col-4">
+									<select id="id_input_frequency"  multiple name="frequency" class="form-select">
+										<option value="">Frequency</option>
+									  <option value="Take Once Daily / दिन में एक बार (OD)">Take Once Daily / दिन में एक बार (OD)</option>
+									  <option value="Take Two Times Daily / दिन में दो बार (BD)">Take Two Times Daily / दिन में दो बार (BD)</option>
+									  <option value="Take Three Times Daily / दिन में तीन बार (TDS)">Take Three Times Daily / दिन में तीन बार (TDS)</option>
+									  <option value="Take At Night Daily / केवल रात में (HS)">Take At Night Daily / केवल रात में (HS)</option>
+									  <option value="Four Times Daily / दिन में चार बार (QID)">Four Times Daily / दिन में चार बार (QID)</option>
+									  <option value="SOS (if need) / जरुरत पड़ने पर ">SOS (if need) / जरुरत पड़ने पर </option>
+									  <option value="Take Before Food / खाने से पहले (AC)">Take Before Food / खाने से पहले (AC)</option>
+									  <option value="Take After Food / खाने के बाद (PC)">Take After Food / खाने के बाद (PC)</option>
+									  <option value="Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)">Not To Be Taken Orally / खाने पीने वाला नहीं है (AC)</option>
+									  <option value="Before Breakfast / खाली पेट (BBF)">Before Breakfast / खाली पेट (BBF)</option>
+									  <option value="After Breakfast / नाश्ते के बाद (ABF)">After Breakfast / नाश्ते के बाद (ABF)</option>
+									  <option value="Take at morning / सुबह  में ">Take at morning / सुबह में </option>
+									  <option value="Take at evening / शाम   में ">Take at evening / शाम  में </option>
+									  <option value="During fever / बुखार आने पर  ">During fever / बुखार आने पर  </option>
+									  <option value="During pain / दर्द होने पर   ">During pain / दर्द होने पर   </option>
+									  <option value="Take 2 Hrs after food / खाने के दो घंटे बाद  ">Take 2 Hrs after food / खाने के दो घंटे बाद    </option>
+									  </select>
+								</div>
+								<div class="col-4">
+									<input class="form-control" id="id_input_duration" name="duration" type="text" placeholder="Duration in Days..." 
+												 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+								</div>
+								<div class="col-4">
+									<textarea class="hindi-text form-control" name="medicine_remarks" id="id_medicine_remarks"
+											rows="3" cols="50" > </textarea>
+								</div>
+							</div>
+							<div class="row g-3 mt-3">
+								<div class="col">
+									<input class="btn btn-outline-primary" type="button" name="add" value="Add" id="id-medicine-add" onclick="add_medicine(this)"/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!--tab pan medicine end-->
 
-            <div id="div_id_vitals" class="ui tab row" data-tab="vitals">
-                <fieldset class="scheduler-border col-sm-12 centered">
-                    <legend class="scheduler-border">Examinations</legend>
-                    {% comment %} 
-                    <table >
-                    <tr >
-                        <td class="pLR-8 ">
-				                 <div id="div_id_weight" class="ui right labeled input">
-			                        <input id="id_input_weight" name="weight" type="text" class="w80px" placeholder="Weight" 
-			                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-			                        <div class="ui basic label">
-			    						KG
-			  						</div>
-				                 </div>							
-                        </td> 
-                        <td class="pLR-8 ">
+				<div class="tab-pane fade" id="vitals">
+					<h5 class="card-title">Examinations</h5>
+					<div class="row g-3">
+						<h5 class="card-title">CNS</h5>
+						<div class="col-md-6">
+							<div class="row">
+								<label for="inputText" class="col-sm-2 col-form-label">GCS</label>
+								<div class="col-sm-10">
+									<input id="id_input_gcs" name="gcs" type="text" class="form-control" placeholder="GCS"
+									spellcheck="false" autocomplete="off" maxlength="300" value=""  />
+								</div>
+							</div> <!--GCS end-->
+							<div class="row mt-3">
+								<label for="inputText" class="col-sm-2 col-form-label">Muscle Bulk</label>
+								<div class="col-sm-10">
+									<input id="id_input_muscle_bulk" name="muscle_bulk" type="text" class="form-control" placeholder="N"
+									spellcheck="false" autocomplete="off" maxlength="300" value=""  />
+								</div>
+							</div> <!--Muscle Bulk end-->
+						</div> <!--first column end-->
+						<div class="col-md-6">
 
-			                 <div id="div_id_pce" class="ui input">
-		                        <input id="id_input_pce" name="pce" type="text" class="w120px" placeholder="P/CL/CN/I/O/L" 
-		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-			                 </div>							
+							<div class="row">
+								<label for="inputText" class="col-sm-2 col-form-label">HMF</label>
+								<div class="col-sm-10">
+									<input id="id_input_hmf" name="hmf" type="text" class="form-control" placeholder="HMF"
+									spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+								</div>
+							</div> <!--HMF end-->
+							<div class="row mt-3">
+								<label for="inputText" class="col-sm-2 col-form-label">Nutrition</label>
+								<div class="col-sm-10">
+									<input id="id_input_nutrition" name="nutrition" type="text" class="form-control" placeholder="N"
+										spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+								</div>
+							</div> <!--Nutrition end-->
+						</div> <!--Second column end-->
+					</div> <!--CNS end-->
+					
+					<div class="row g-3">
+						<h5 class="card-title">MOTOR SYSTEM</h5>
+						<div class="col-12">
+							<table class="table">
+								<tr>
+									<td class="pLR-8 pT-16"> TONE </td>
+									<td class="pLR-8 pT-16"> RT </td>
+									<td class="pLR-8 pT-16"> LT </td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> UL </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_tone_ul_r" class="ui right labeled input">
+											<input id="id_input_ms_tone_ul_r" name="ms_tone_ul_r" type="text" class="w120px" placeholder="NORMAL"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_tone_ul_l" class="ui right labeled input">
+											<input id="id_input_ms_tone_ul_l" name="ms_tone_ul_l" type="text" class="w120px" placeholder="NORMAL"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> LL </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_tone_ll_r" class="ui right labeled input">
+											<input id="id_input_ms_tone_ll_r" name="ms_tone_ll_r" type="text" class="w120px" placeholder="NORMAL"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_tone_ll_l" class="ui right labeled input">
+											<input id="id_input_ms_tone_ll_l" name="ms_tone_ll_l" type="text" class="w120px" placeholder="NORMAL"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-12">
+							<table class="table" >
+								<tr>
+									<td class="pLR-8 pT-16" > DTR &nbsp; &nbsp; </td>
+									<td class="pLR-8 pT-16"> RT </td>
+									<td class="pLR-8 pT-16"> LT </td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> B </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_b_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_b_r" name="ms_dtr_b_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_b_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_b_l" name="ms_dtr_b_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> T </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_t_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_t_r" name="ms_dtr_t_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_t_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_t_l" name="ms_dtr_t_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> S </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_s_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_s_r" name="ms_dtr_s_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_s_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_s_l" name="ms_dtr_s_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> K </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_k_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_k_r" name="ms_dtr_k_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_k_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_k_l" name="ms_dtr_k_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> A </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_a_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_a_r" name="ms_dtr_a_r" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_a_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_a_l" name="ms_dtr_a_l" type="text" class="w120px" placeholder="+2"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16"> PLORTER </td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_plorter_r" class="ui right labeled input">
+											<input id="id_input_ms_dtr_plorter_r" name="ms_dtr_plorter_r" type="text" class="w120px" placeholder="↓"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ms_dtr_plorter_l" class="ui right labeled input">
+											<input id="id_input_ms_dtr_plorter_l" name="ms_dtr_plorter_l" type="text" class="w120px" placeholder="↓"
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div> <!--MOTOR SYSTEM end-->
 
-                       </td> 
+					<div class="row g-3">
+						<h5 class="card-title"> SENSORY</h5>
+						<div class="col-12">
+							<table class="table">
+								<tr>
+									<td class="pLR-8 pT-16" >TOUCH</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ss_touch" class="ui input">
+											<input id="id_input_ss_touch" name="ss_touch" type="text" class="w120px" placeholder="B/L N S."
+											 spellcheck="false" autocomplete="off" maxlength="300" value=""  />
+										 </div>
+									</td>
+								</tr>
+								<tr>
+									<td class="pLR-8 pT-16" >PAIN</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ss_pain" class="ui right labeled input">
+											<input id="id_input_ss_pain" name="ss_pain" type="text" class="w120px" placeholder="B/L N S."
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								 </tr>
+								<tr>
+									<td class="pLR-8 pT-16" >TEMP</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ss_temp" class="ui right labeled input">
+											<input id="id_input_ss_temp" name="ss_temp" type="text" class="w120px" placeholder="B/L N S."
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								 </tr>
+								<tr>
+									<td class="pLR-8 pT-16" >GPS</td>
+									<td class="pLR-8 pT-16">
+										 <div id="div_id_ss_gps" class="ui right labeled input">
+											<input id="id_input_ss_gps" name="ss_gps" type="text" class="w120px" placeholder="B/L N S."
+											 spellcheck="false" autocomplete="off" maxlength="300" value="" required />
+										 </div>
+									</td>
+								 </tr>
+							</table>
+						</div>
+					</div> <!--SENSORY end-->
 
-                        <td class="pLR-8 ">
-
-				                 <div id="div_id_temp" class="ui right labeled input">
-			                        <input id="id_input_temp" name="temp" type="text" class="w80px" placeholder="Temperature" 
-			                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-			                        <div class="ui basic label">
-			    						&#8457;
-			  						</div>
-				                 </div>							
-                        </td> 
-
-                     </tr>
-
-                    <tr >
-
-                        <td class="pLR-8 pT-16">
-			                 <div id="div_id_pulse" class="ui right labeled input">
-		                        <input id="id_input_pulse" name="pulse" type="text" class="w80px" placeholder="Pulse " 
-		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-		                        <div class="ui basic label">
-									bpm
-		  						</div>
-			                 </div>							
-                        </td> 
-
-                        <td class="pLR-8 pT-16">
-			                 <div id="div_id_bp" class="ui right labeled input">
-		                        <input id="id_input_bp" name="bp" type="text" class="w80px" placeholder="Blood Pressure.. " 
-		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-		                        <div class="ui basic label">
-									mmHg
-		  						</div>
-			                 </div>							
-                        </td> 
-
-                        <td class="pLR-8 pT-16">
-			                 <div id="div_id_rr" class="ui right labeled input">
-		                        <input id="id_input_rr" name="rr" type="text" class="w80px" placeholder="Respiratory rate" 
-		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-		                        <div class="ui basic label">
-									bpm
-		  						</div>
-			                 </div>							
-                        </td> 
-                     </tr>
-
-                    <tr>
-                        <td class="pLR-8 pT-16">
-			                 <div id="div_id_cns" class="ui input">
-		                        <input id="id_input_cns" name="cns" type="text" class="w120px" placeholder="CNS" 
-		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-			                 </div>							
-	                        </td> 
-
-                        <td class="pLR-8 pT-16">
-			                 <div id="div_id_chest" class="ui right labeled input">
-		                        <input id="id_input_chest" name="chest" type="text" class="w80px" placeholder="Chest..." 
-		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-		                        <div class="ui basic label">
-									cm
-		  						</div>
-			                 </div>							
-                        </td> 
-
-                        <td class="pLR-8 pT-16">
-			                 <div id="div_id_cvs" class="ui right labeled input">
-		                        <input id="id_input_cvs" name="cvs" type="text" class="w80px" placeholder="CVS" 
-		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-		                        <div class="ui basic label">
-									cm
-		  						</div>
-			                 </div>							
-                        </td> 
-
-                        <td class=" pLR-8 pT-16">
-			                 <div id="div_id_pa" class="ui right labeled input">
-		                        <input id="id_input_pa" name="pa" type="text" class="w80px" placeholder="PA" 
-		                         spellcheck="false" autocomplete="off" maxlength="300" value="" required />
-		                        <div class="ui basic label">
-									cm
-		  						</div>
-			                 </div>							
-                        </td> 
-                     </tr>
-                    </table>
-                    {% endcomment %}
-					<fieldset class="scheduler-border col-sm-12 centered ">
+					<div class="row g-3">
+						<div class="col-12">
+							<input class="btn btn-outline-primary" type="button" name="add" value="Add" id="id-vitals-add" onclick="add_vitals(this)"/>
+						</div>
+					</div>
+					{% comment %} <fieldset class="scheduler-border col-sm-12 centered ">
                     	<legend class="scheduler-border  mT-16">CNS</legend>
 						<table>
 							<tr>
@@ -629,106 +749,76 @@
                             	</div>
 							</td>
 						</tr>
-					</table>
-                </fieldset>
-            </div>
+					</table> {% endcomment %}
+				</div> <!--tab pan vitals end-->
 
+				<div class="tab-pane fade" id="diagnosis">
+					<h5 class="card-title">Diagnosis</h5>
+					{% csrf_token %}
+					<div class="row g-3">
+						<div class="col-4">
+							<div class="auto-search-wrapper">
+						  		<input class="form-control" placeholder="Disease" type="text" id="id_disease" name="disease" required>
+							</div>
+						</div>
+						<div class="col-4">
+							<input class="btn btn-outline-primary" type="button" name="add" value="Add" id="id-disease-add" onclick="addDisease(this)"/>
+						</div>
+					</div>  
+				</div> <!--tab pan diagnose end-->
 
-            <div id="div_id_disease" class="ui tab row col-sm-12 centered" data-tab="diagnosis">
-                <div class="pLR-8">
-                {% csrf_token %}
-                
-                <strong class="input_label">Diagnosis</strong>
-						<div class="ui search disease">
-						  <div class="ui icon input">
-						    <input class="prompt" placeholder="Disease" type="text" id="id_disease" name="disease" required>
-						    <i class="search icon"></i>
-						  </div>
-						  <div class="results"></div>
-						</div>                        
-                </div>
-               <div class="pull-left pT-16">
-                  <input class="ui button" type="button" name="add" value="Add" id="id-disease-add" onclick="addDisease(this)"/>
-                </div>
-            </div>
-
-			<div id="div_id_remark" class="ui tab row col-sm-12 centered" data-tab="remark">
-				<div class="pLR-8">
-					{% comment %}
-	                <div class="form-element pLR-8">
-	                    <label for="id_remarks">
-	                        <strong>Remarks</strong>
-	                        <textarea class="translit form-input" name="remarks" id="id_input_remarks"
-	                        rows="5" cols="50" > </textarea>
-	                    </label>
-	                </div>
-	                {% endcomment %}
-	                <div class="form-element pLR-8">
-	                    <label for="id_tests">
-		                        <strong>Tests</strong>
-		                        <textarea class="translit form-input" name="tests" id="id_input_tests"
-		                        rows="5" cols="50" > </textarea>
-	                    </label>                
-	                </div>
-	               
-	               <div class="pull-left">
-					  <button type="button" id="id_btn_report_view" class="ui button" onclick="show_report(this)" >View Report</button>
-	                  <input class="ui button" type="button" name="GenerateReport" value="Generate Report" id="id-vitals-add" onclick="add_visit(this)"/>
-	                </div>
-				</div>			
-			</div>
-
-+
-            <div id="div_id_report" class="ui tab row col-sm-12 centered" data-tab="report">
-			
-			<a id="id_btn_report" class="ui disabled button" href=""  onclick="window.open(this.href,'popUpWindow','height=400,width=600,left=10,top=10,,scrollbars=yes,menubar=no'); return false;"> Download Report </a>
+				<div class="tab-pane fade" id="report">
+					<h5 class="card-title">Report</h5>
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
+						View Report
+					  </button>
+					<a id="id_btn_report" class="btn disabled btn-outline-primary" href=""  onclick="window.open(this.href,'popUpWindow','height=400,width=600,left=10,top=10,,scrollbars=yes,menubar=no'); return false;"> Download Report </a>
 						
-			{% if visit_container_id %}
-				<input id="id_visit_container_id" value="{{ visit_container_id}}" type="hidden">  </input>
-			{% endif %}
-            </div>
+					{% if visit_container_id %}
+						<input id="id_visit_container_id" value="{{ visit_container_id}}" type="hidden">
+					{% endif %}
+				</div> <!--tab pan report end-->
+		  </div>
+		</div>
+	</div>
+</div>
 
-
-
-        </div>
-        
-        {% comment %}  Here View would start{% endcomment %}
-        <div class="ui modal">
-  			<div class="header">REPORT</div>
-  			<div class="scrolling content">
-		       <div class="row col-sm-12 centered mL-32 mT-32" >
-		        <table class="table" id="div_id_patient_details">
-		            <span class="fS24"> Personal Dossier</span>
-		            <tr id="added_patient">
-		            {% if visit_container %}
-            		<tr class="patient-display" data-id="{{ visit_container.patient_detail.patient_id }}">
+<div class="modal fade" id="modalDialogScrollable">
+	<div class="modal-dialog modal-dialog-scrollable modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Report</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			  </div>
+			<div class="modal-body">
+				<div class="row centered ml-3 mt-3" >
+					<div class="card-title"> <h5 class="fS24"> Personal Dossier</h5></div>
+				<table class="table col-sm-12" id="added_patient">
+					{% if visit_container %}
+					<tr class="patient-display" data-id="{{ visit_container.patient_detail.patient_id }}">
 					<td> <span class="fS16 c-31 "> Name: </span>
 						<span id="span_id_name" class="fS24 mL-32">{{ visit_container.patient_detail.full_name }} </span> 
 					</td>
+					<td> <span class="fS16 c-31 "> Mobile: </span>
+						<span id="span_id_age" class="fS24 mL-32">{{ visit_container.patient_detail.mobile }}</span> </td> 
 					<td> <span class="fS16 c-31 "> Age: </span>
 						<span id="span_id_age" class="fS24 mL-32">{{ visit_container.patient_detail.age }}</span> 
 					</td>	
 					<td> <span class="fS16 c-31 "> Sex: </span>
 						<span id="span_id_sex" class="fS24 mL-32">{{ visit_container.patient_detail.sex }}</span> 
 					</td>
+					<td> <i class="bi bi-x-square del-patient"></i></td>
 					</tr>
-		            {% endif %}
-		            </tr>
-		        </table>
-		        </div>
-		
-		        <div class="row col-sm-12 centered mL-32 mT-32">
-			        <table class="table ">
-			        <span class="fS24"> Complaints</span>
-		               <thead >
-		                <tr>
-		                  <th >Complaints</th>
-		                </tr>
-		              </thead>
-		            
-		                <tbody id="added_complaint" class="col-sm-12 fS14">
-		                	{% for complaint in complaints %}
-		                	<tr> <td>
+					{% endif %}
+				</table>
+				</div>
+
+				<div class="row col-sm-12 centered mL-32 mT-32">
+					<div class="card-title"> <h5 class="fS24"> Complaints</h5></div>
+					<table class="table ">
+						<tbody id="added_complaint" class="col-sm-12 fS14">
+							{% for complaint in complaints %}
+							<tr> <td>
 								<span class="tag label label-info c-31 complaint-display" data-id="{{complaint.complain_id}}">
 								<span>{{complaint.description}}</span>
 								<i class="fa fa-times-circle del-complaint" aria-hidden="true"></i>
@@ -736,23 +826,23 @@
 								</td>
 							</tr>
 							{% endfor %}
-		                </tbody>
-		            </table>
-		        </div>
-		
-		        <div class="row col-sm-12 centered mL-32 mT-32" >
-		            <table class="table">
-		            <span class="fS24"> Medication</span>
-		               <thead >
-		                <tr>
-		                  <th >Medicine</th>
-		                  <th >Frequency</th>
-		                  <th >Duration</th>
-		                </tr>
-		              </thead>
-		            
-		                <tbody id="added_medicine" class="col-sm-12 fS14">
-		                	{% for medicine in medicines %}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="row col-sm-12 centered mL-32 mT-32" >
+					<div class="card-title"> <h5 class="fS24"> Medication</h5></div>
+					<table class="table">
+						<thead >
+						<tr>
+						<th >Medicine</th>
+						<th >Frequency</th>
+						<th >Duration</th>
+						</tr>
+					</thead>
+					
+						<tbody id="added_medicine" class="col-sm-12 fS14">
+							{% for medicine in medicines %}
 								<tr class="medicine-display" data-id="{{medicine.medication_id}}">
 								<td> {{medicine.medicine}} : {{medicine.dosage}}</td>
 								<td>{{medicine.frequency}}</td>
@@ -760,24 +850,18 @@
 								<td> {{ medicine.remarks }}</td>
 								<td> <i class="fa fa-times-circle del-medicine" aria-hidden="true"></i> </td>
 								</tr>
-			        		{% endfor %}
-		                </tbody>
-		            </table>
-		        </div>
-		
-		        <div class="row col-sm-12 centered mL-32 mT-32">
-			        <table class="table ">
-			        <span class="fS24"> Diagnosis</span>
-		               <thead >
-		                <tr>
-		                  <th >Disease</th>
-		                </tr>
-		              </thead>
-		            
-		                <tbody id="added_disease" class="col-sm-12 fS14">
-		                	{% for disease in diagnose %}
-		                	<tr>
-		                	<td>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="row col-sm-12 centered mL-32 mT-32">
+					<div class="card-title"> <h5 class="fS24"> Diagnosis</h5></div>
+					<table class="table ">
+						<tbody id="added_disease" class="col-sm-12 fS14">
+							{% for disease in diagnose %}
+							<tr>
+							<td>
 							<span class="tag label label-info c-31 disease-display " data-id="{{ disease.disease_id }}">
 								<span>{{ disease.name }}</span>
 								<i class="fa fa-times-circle del-disease" aria-hidden="true"></i>
@@ -785,52 +869,52 @@
 							</td>
 							</tr>
 							{% endfor %}
-		                </tbody>
-		            </table>        
-		        </div>
+						</tbody>
+					</table>        
+				</div>
 
-		
-		        <div class="row col-sm-12 centered mL-32 mT-32" id="added_history">
-		            <table class="table mB-32" id="div_id_medical_histroy">
-		            <span class="fS24"> Medical History</span>
-		              <thead >
-		                <tr>
-		                  <th >Remark</th>
-		                </tr>
-		              </thead>
-		              <tbody id="added_medicalHistory">
-		              {% comment %}  This is where we put medical history{% endcomment %}
-		              </tbody>
-		            </table>        
-		        </div>
-		
-		        <div class="row col-sm-12 centered mL-32 mT-32" >
-		            <table class="table">
-			            <span class="fS24"> O/E</span>
-			            <thead >
-			                <tr>
-			                  <th >Weight</th>
-			                  <th >P/CN/CL/I/O/L</th>
-			                  <th >Temp</th>
-			                  <th >Pulse</th>
-			                  <th >BP</th>
-			                  <th >RR</th>
-			                  <th >CNS</th>
-			                  <th >Chest</th>
-			                  <th >CVS</th>
-			                  <th >PA</th>
-			                  <th >Tests</th>
-			                </tr>
-			            </thead>
-			            <tbody id="added_vitals" class="col-sm-12 fS14">
-			            </tbody>
-		            </table>
-		        </div>		        
-  			</div>
+
+				<div class="row col-sm-12 centered mL-32 mT-32" id="added_history">
+					<div class="card-title"> <h5 class="fS24"> Medical History</h5></div>
+					<table class="table mB-32" id="div_id_medical_histroy">
+					<tbody id="added_medicalHistory">
+					{% comment %}  This is where we put medical history{% endcomment %}
+					</tbody>
+					</table>        
+				</div>
+
+				<div class="row col-sm-12 centered mL-32 mT-32" >
+					<table class="table">
+						<span class="fS24"> O/E</span>
+						<thead >
+							<tr>
+							<th >Weight</th>
+							<th >P/CN/CL/I/O/L</th>
+							<th >Temp</th>
+							<th >Pulse</th>
+							<th >BP</th>
+							<th >RR</th>
+							<th >CNS</th>
+							<th >Chest</th>
+							<th >CVS</th>
+							<th >PA</th>
+							<th >Tests</th>
+							</tr>
+						</thead>
+						<tbody id="added_vitals" class="col-sm-12 fS14">
+						</tbody>
+					</table>
+				</div>		        
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
 		</div>
+	</div>
+</div>
 
-    </div>
-</section>
+<div id="liveAlertPlaceholder"></div>
 
 {% endblock %}
 

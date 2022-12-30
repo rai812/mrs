@@ -6,43 +6,56 @@ Patient's Records
 {% endblock %}
 
 {% block content %}
+<div class="row">
+	<div class="col-lg-12">
+		<div class="card">
+            <div class="card-body">
+				<h5 class="card-title">Search for Patients</h5>
 
-<section class="pT-8 pB-16 wFull">
-    <div class="row centered">
-        <div class="col-sm-12 row centered">
-            <div class="col-sm-12  row centered">
-            <table>
-            	<tr>
-              		<td>
-					  <div class="ui icon input">	
-					    <input class="prompt" placeholder="Search" type="text" id="id_patient_search" required>
-					    <i class="search icon"></i>
-					  </div>
-					  <div class="results"></div>            		
-            		</td>
-            		<td>
-						<div class="ui selection dropdown">
-						  <input name="field" id="id_search_field" type="hidden">
-						  <i class="dropdown icon"></i>
-						  <div class="default text">Field</div>
-						  <div class="menu">
-						    <div class="item" data-value="name">Name</div>
-						    <div class="item" data-value="mobile_number">Mobile Number</div>
-						  </div>
+				<form class="row g-3">
+					
+					<div class="col-md-4">
+						<input class="prompt" placeholder="Patient's Name" type="text" id="id_patient_search">
+					</div>
+					<div class="col-md-4">
+						<input class="prompt" placeholder="Mobile Number" type="text" id="id_patient_search_mob">
+					</div>
+					<div class="col-md-4">
+						<input class="btn btn-outline-primary" type="button" name="Search" onclick="get_patients(this)" value="Search" tabindex="0"/>
+					</div>
+					
+				</form><!-- End Multi Columns Form -->
+
+				{% comment %} <table class = "table">
+					<tr>
+						<td>
+						<div class="ui icon input">	
+							<input class="prompt" placeholder="Search" type="text" id="id_patient_search" required>
+							<i class="search icon"></i>
 						</div>
-            		</td>
-            		
-            		<td>
-            			<input class="ui button" type="button" name="Search" onclick="get_patients(this)" value="Search" tabindex="0"/>
-            		</td>
-            	</tr>
-            </table>
-            
-            </div>
-        </div>
-    </div>
-</section>
-
+						<div class="results"></div>
+						</td>
+						<td>
+							<div class="ui selection dropdown">
+							<input name="field" id="id_search_field" type="hidden">
+							<i class="dropdown icon"></i>
+							<div class="default text">Field</div>
+							<div class="menu">
+								<div class="item" data-value="name">Name</div>
+								<div class="item" data-value="mobile_number">Mobile Number</div>
+							</div>
+							</div>
+						</td>
+						
+						<td>
+							<input class="ui button" type="button" name="Search" onclick="get_patients(this)" value="Search" tabindex="0"/>
+						</td>
+					</tr>
+				</table> {% endcomment %}
+			</div>
+		</div>		
+	</div>
+</div>
 <div class="row centered" id="id_patient_list">
 {% include "core/patient_list.html" %}
 </div>

@@ -10,7 +10,7 @@ var patientDispalyString = function(id, full_name, age, sex, mobile) {
 		<span id="span_id_age" class="fS24 mL-32">' + age + ' </span> </td> \
 		<td> <span class="fS16 c-31 "> Sex: </span> \
 		<span id="span_id_sex" class="fS24 mL-32">' + sex + ' </span> </td> \
-		<td> <i class="fa fa-times-circle del-patient" aria-hidden="true"></i> </td>\
+		<td> <i class="bi bi-x-square del-patient"></i></td>\
 		</tr>';
 	return str;
 }
@@ -69,7 +69,7 @@ var add_patient = function () {
 
 var patientExitAction = function(id, full_name, age, sex, mobile) {
 
-	$('.del-patient').parent().parent().remove();
+	// $('.del-patient').parent().parent().remove();
 
 	
     var str = patientDispalyString(id,full_name,age,sex, mobile);
@@ -83,7 +83,8 @@ var patientExitAction = function(id, full_name, age, sex, mobile) {
 		 */
 		$(this).parent().parent().remove();
 		$(".medicalHistory-display").remove();
-		$('.ui.menu').find('.item').tab('change tab', 'patient');
+		// $('.ui.menu').find('.item').tab('change tab', 'patient');
+		show_tab('patient')
 	});
 	get_history(id);	
 	$('#id_full_name').val(full_name)
@@ -93,50 +94,94 @@ var patientExitAction = function(id, full_name, age, sex, mobile) {
 	
 	show_success("Added Successfully!!!", " " + full_name + " selected as patient." );
 	
-	$('.ui.menu').find('.item').tab('change tab', 'complaints');
-	
+	// $('.ui.menu').find('.item').tab('change tab', 'complaints');
+	show_tab('history');
 }
 
 $(document).ready(function() {
-	$('#id_sex').dropdown();
+	// $('#id_sex').dropdown();
+	$(document).on("click", "#id-patient-reset" , function( event ) {
+		/*
+		 * Assuming this in td and we want to remove the row
+		 */
+		console.log("resetting the patient information");
+		$('#id_full_name').val("")
+		$('#id_age').val("")
+		$('#id_sex').val("Male");
+		$('#id_mobile').val("");
+	});
 	/*
 	 * Test function for UI search
 	 */
-	$('.ui.search.patient')
-	  .search({
-	    // change search endpoint to a custom endpoint by manipulating apiSettings
-	    apiSettings: {
-	      url: '/core/api/get_patients/?q={query}',
-	      onResponse: function(githubResponse) {
-	          var
-	            response = {
-	        		  results : Array()
-	            }
-	          ;
-	          // translate GitHub API response to work with search
-	          console.log("printing result from server");
-	          console.log(githubResponse.results);
-	          $.each(githubResponse.results, function(index, item) {
-	            // add result to category
-	            response.results.push({
-	            	id: item.id,
-	              title       : item.full_name,
-	              description : item.age + " " + item.sex ,
-	              sex: item.sex,
-	              age: item.age,
-                  mobile: item.mobile
-	            });
-	          });
-	          return response;
-	        },
-	    },
-	        minCharacters : 3,
-	        onSelect: function(result, response){
-	        	console.log(result);
-	        	console.log(response);
-	        	patientExitAction(result.id,result.title,result.age,result.sex,result.mobile);
-	        },
+	const baseUrl = window.location.origin 
+	? window.location.origin + '/'
+	: window.location.protocol + '/' + window.location.host + '/';
+	new Autocomplete('id_full_name', {
+		// search delay
+		delay: 1000,
 
-	  })
-	;
+		// add button 'x' to clear the text from
+		// the input filed
+		clearButton: false,
+	  
+		// default selects the first item in
+		// the list of results
+		selectFirst: true,
+	  
+		// add text to the input field as you move through
+		// the results with the up/down cursors
+		insertToInput: true,
+	  
+		// the number of characters entered
+		// should start searching
+		howManyCharacters: 3,
+		onSearch: ({currentValue}) => {
+			const api = `${baseUrl}/core/api/get_patients/?q=${encodeURI(
+				currentValue
+			  )}`;
+			// const api = `https://jsonplaceholder.typicode.com/posts`;
+			  return $.ajax({
+				url: api,
+				method: 'GET',
+				})
+				.done(function (data) {
+					return data;
+				})
+				.fail(function (xhr) {
+					console.error(xhr);
+			});
+		},
+		onResults: ({ matches }) => {
+			console.log("Onresult called " + JSON.stringify(matches));
+			
+			return matches.results.map((el) => {
+				console.log("individual entry " + el.full_name);
+				return `<li class="search-list-item" data-id=${el.id} data-fullName=${el.full_name} data-sex=${el.sex} data-mob=${el.mobile} data-age=${el.age}>${el.full_name}</li>`;
+			}).join("")
+		} ,
+		// the onSubmit function is executed when the user
+		// submits their result by either selecting a result
+		// from the list, or pressing enter or mouse button
+		onSubmit: ({ index, element, object, results }) => {
+			console.log("complex: ", index, element, object, results);
+			let node= results.childNodes[index];
+			console.log(node.getAttribute("data-fullName"))
+			patientExitAction(node.getAttribute("data-id"),node.getAttribute("data-fullName"),node.getAttribute("data-age"),node.getAttribute("data-sex"),node.getAttribute("data-mob"));
+			// window.open(`https://www.imdb.com/find?q=${encodeURI(input)}`)
+		},
+
+		// get index and data from li element after
+		// hovering over li with the mouse or using
+		// arrow keys ↓ | ↑
+		onSelectedItem: ({ index, element, object }) => {
+			console.log("onSelectedItem:", index, element.value, object);
+		},
+
+		// the callback presents no results
+		noResults: ({ element, template }) => {
+			template(`<li>No results found: "${element.value}"</li>`);
+		}
+		
+	});
+
 });

@@ -2,70 +2,79 @@
 {% load staticfiles %}
 
 {% block title %}
-{{ obj.full_name }}
+Patient's Profile
 {% endblock %}
 
 
 {% block content %}
+<section class="section profile">
+<div class="row">
 
-<section class="pT-8 pB-16 wFull">
-    <div class="row centered">
-        <div class="col-lg-12 row centered">
+<div class="col-xl-4">
+    <div class="card">
+      <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-            <fieldset class="scheduler-border col-sm-12 centered">
-                <legend class="scheduler-border">Dossier </legend>
-                <table class="ui stripped fixed definition table">
-                  <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>Age</th>
-                        <th>Gender</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                        <td>{{ obj.full_name }}</td>
-                        <td>{{ obj.mobile }}</td>
-                        <td>{{ obj.age }} Years</td>
-                        <td>{{ obj.sex }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <fieldset class="scheduler-border col-sm-12 centered">
-                    <legend class="scheduler-border">Medical History </legend>
-                    <table>
-                        {% for history in medical_history %}
-                            <tr>
-                                <td>
-                                    {{ history.status }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </fieldset>
-
-                <fieldset class="scheduler-border col-sm-12 centered">
-                    <legend class="scheduler-border">Medical Files </legend>
-                    <table>
-                        {% for file in medical_files %}
-                            <tr>
-                                <td>
-                                    {{ file.description }}
-                                </td>
-                                <td>
-                                    <a class="input_label" href="{{ file.document.url }}" target="_blank"> {{ file.filename }}</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </fieldset>
-
-
-            </fieldset>
-        </div>
+        <img src="{% static "core/img/avator-patient-64.png" %}" alt="Profile" class="rounded-circle">
+        <h2>{{ obj.full_name }}</h2>
+        <h3>{{ obj.sex }} &nbsp {{ obj.age }}</h3>
+        <h3>{{ obj.mobile }}</h3>
+      </div>
     </div>
-</section>
+</div>
 
+<div class="col-xl-8">
+
+    <div class="card">
+      <div class="card-body pt-3">
+        <!-- Bordered Tabs -->
+        <ul class="nav nav-tabs nav-tabs-bordered">
+
+          <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#medical-history">Medical History</button>
+          </li>
+
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#medical-files">Files</button>
+          </li>
+
+        </ul>
+        <div class="tab-content pt-2">
+
+          <div class="tab-pane fade show active profile-overview" id="medical-history">
+            <h5 class="card-title">Medical History</h5>
+            <table class="table">
+                {% for history in medical_history %}
+                    <tr>
+                        <td>
+                            {{ history.status }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+          </div>
+
+          <div class="tab-pane fade profile-edit pt-3" id="medical-files">
+
+            <table class="table">
+                {% for file in medical_files %}
+                    <tr>
+                        <td>
+                            {{ file.description }}
+                        </td>
+                        <td>
+                            <a class="input_label" href="{{ file.document.url }}" target="_blank"> {{ file.filename }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+          </div>
+
+        </div><!-- End Bordered Tabs -->
+
+      </div>
+    </div>
+</div>
+</section>
 {% endblock %}

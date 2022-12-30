@@ -1,8 +1,121 @@
 {% load visit_tags %}
 
-<div class="row centered">
+<div class="row">
+	<div class="col-lg-12">
+		<div class="card">
+            <div class="card-body">
+				<h5 class="card-title">List of visits ({{visit_containers.paginator.count}})</h5>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+						<th>Name</th>
+						<th>Encounter Date</th>
+						<th>Complaints</th>
+						<th>Medicines</th>
+						<th>Dignosis</th>
+						<th></th>
+						<th></th>
+					  </tr></thead>
+					  <tbody>
+						{% for visit_container in visit_containers %}
+						  <tr>
+							<td rowspan="{% get_visits_count visit_container %}" >{{ visit_container.patient_detail.full_name }}</td>
+							
+							{% get_visits visit_container as visits %}
+							
+							{% for visit in visits %}
+								{% if forloop.counter is not 1 %}
+									<tr>
+								{% endif %}
+								<td> {{ visit.visit_date }} </td>
+								<td> {% get_complaints visit as complaints %}  
+								{% for complaint in complaints %}
+									 {{ complaint.description }}
+								{% endfor %}
+								</td>
+								<td>
+								{% get_medicines visit as medicines %}  
+								{% for medicine in medicines %}
+									 {{ medicine.getDisplayValue }}
+								{% endfor %}
+								</td>
+								<td>
+								{% get_diagnose visit as diagnosis %}  
+								{% for diagnose in diagnosis %}
+									 {{ diagnose.name }}
+								{% endfor %}
+								
+								</td>
+								<td>
+									<input class="btn btn-outline-primary" data-id="{{ visit.visit_id }}" type="button" name="add" value="Use as Template" onclick="add_new_visit(this)"/>
+			
+								</td>
+								
+								{% if forloop.first %}
+									<td rowspan="{% get_visits_count visit_container %}" >
+									<div>
+										<input class="btn btn-outline-primary" data-id="{{ visit_container.id }}" type="button" name="add" value="Add visit" onclick="goto_add_visit(this)"/>
+									</div>
+									<div>
+									<input id="id_btn_report" class="btn btn-outline-primary mT-16" type="button" name="download" value="Download Report"  onclick="window.open('/visit/report/{{ visit_container.id }}','popUpWindow','height=400,width=600,left=10,top=10,,scrollbars=yes,menubar=no'); return false;"/>	
+									</div>	
+															 
+									</td>
+								{% endif %}
+								
+								</tr>
+							{% endfor %}
+						{% endfor %}
+						{% if visit_containers.has_other_pages %}		  
+					<tfoot>
+					  <tr><th colspan="3">
+						<ul class="pagination">
+							{% if visit_containers.has_previous %}
+							  <li class="page-item">
+								<a class="page-link" href="?page={{ visit_containers.previous_page_number }}" aria-label="Previous">
+									Previous
+								</a>
+							  </li>
+						   {% else %}		      
+						   <li class="page-item disabled">
+							<a class="page-link" href="#" aria-disabled="true">Previous
+							</a>
+						  </li>
+						  {% endif %}
+						  {% for i in visit_containers.paginator.page_range %}
+							{% if visit_containers.number == i %}
+							<li class="page-item active"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+							{% else %}
+							<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+							{% endif %}
+						  {% endfor %}
+						  {% if visit_containers.has_next %}
+							  <li class="page-item">
+								<a class="page-link" href="?page={{ visit_containers.next_page_number }}" aria-label="Next">
+									Next
+								</a>
+							  </li>
+						  {% else %}
+						  <li class="page-item disabled">
+							<a class="page-link" href="#" aria-label="disabled">
+								Next
+							</a>
+						  </li>
+						  {% endif %}
+						</div>
+					  </th>
+					</tr>
+				  </tfoot>
+		  {% endif %}		  
+					  </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% comment %} <div class="row centered">
     <div class="col-sm-12">
-		{% comment %}  Now here make table in pagination form{% endcomment %}
 		
 		<table class="ui celled fixed table">
 		  <thead>
@@ -66,45 +179,7 @@
 		        {% endfor %}
     		{% endfor %}
 		  </tbody>
-
-		  
-{% comment %}  
-{% if patients.has_other_pages %}		  
-		  <tfoot>
-		    <tr><th colspan="3">
-		      <div class="ui right floated pagination menu">
-		          {% if users.has_previous %}
-			        <a class="icon item disabled" href="?page={{ users.previous_page_number }}">
-			          <i class="left chevron icon"></i>
-			        </a>
-    			 {% else %}		      
-			        <a class="icon item disabled">
-			          <i class="left chevron icon"></i>
-			        </a>
-		        {% endif %}
-		        {% for i in patients.paginator.page_range %}
-			      {% if patients.number == i %}
-			        <a class="item active">{{ i }} </a>
-			      {% else %}
-			        <a class="item" href="?page={{ i }}">{{ i }} </a>
-			      {% endif %}
-			    {% endfor %}
-			    {% if users.has_next %}
-      		        <a class="icon item" href="?page={{ users.next_page_number }}">
-		          		<i class="right chevron icon"></i>
-			        </a>
-			    {% else %}
-      		        <a class="icon item disabled" >
-		          		<i class="right chevron icon"></i>
-			        </a>
-			    {% endif %}
-		      </div>
-		    </th>
-		  </tr>
-		</tfoot>
-{% endif %}		  
-{% endcomment %}
 		</table>
 		    
     </div>
-</div>
+</div> {% endcomment %}

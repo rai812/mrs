@@ -7,7 +7,37 @@ Visit's Records
 
 {% block content %}
 
-<section class="pT-8 pB-16 wFull">
+<div class="row">
+	<div class="col-lg-12">
+		<div class="card">
+            <div class="card-body">
+				<h5 class="card-title">Search for reports</h5>
+
+				<form class="row g-3">
+					
+					<div class="col-md-4">
+						<input class="prompt" placeholder="Search" type="text" id="id_visit_search" required>
+					</div>
+					<div class="col-md-4">
+						<input name="field" id="id_search_field" type="hidden"/>
+						<select class="form-select" id="id_visit_search_type">
+							<option value="name" selected>By Name</option>
+							<option value="mobile_number">By Mobile Number</option>
+							<option value="disease">By Disease</option>
+						</select>
+					</div>
+					<div class="col-md-4">
+						<input class="btn btn-outline-primary" type="button" name="Search" onclick="get_visits(this)" value="Search" tabindex="0"/>
+						<input class="btn btn-outline-primary" type="button" name="add" value="New visit" onclick="goto_new_visit(this)"/>
+					</div>
+					
+				</form><!-- End Multi Columns Form -->
+			</div>
+		</div>		
+	</div>
+</div>
+
+{% comment %} <section class="pT-8 pB-16 wFull">
     <div class="row centered">
         <div class="col-sm-12 row centered">
             <div class="col-sm-12  row centered">
@@ -45,7 +75,7 @@ Visit's Records
             </div>
         </div>
     </div>
-</section>
+</section> {% endcomment %}
 
 <div class="row centered" id="id_patient_list">
 {% include "visit/visit_list.html" %}

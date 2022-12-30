@@ -15,7 +15,7 @@ var diseaseDispalyString = function(id,value) {
 		<tr> <td> \
 		<span class="tag label label-info c-31 disease-display " data-id="' + id + '"> \
 		<span>' + value + '</span> \
-		<i class="fa fa-times-circle del-disease" aria-hidden="true"></i> \
+		<td> <i class="bi bi-x-square del-disease" aria-hidden="true"></i></td>\
 		</span> </td> </tr>';
 	
 	return str;
@@ -107,50 +107,133 @@ $(document).ready(function() {
 		$(this).parent().parent().parent().remove();
 	});
 
-	$('.ui.search.disease')
-	.search({
-	  // change search endpoint to a custom endpoint by manipulating apiSettings
-	  apiSettings: {
-	    url: '/complaints/api/get_disease/?q={query}',
-	    onResponse: function(githubResponse) {
-	        var
-	          response = {
-	      		  results : Array()
-	          }
-	        ;
-	        // translate GitHub API response to work with search
-	        $.each(githubResponse, function(index, item) {
-	          // add result to category
-	          response.results.push({
-	        	id: item.id,
-	            title       : item.name,
-	          });
-	        });
-	        return response;
-	      },
-	  },
-	      minCharacters : 3,
-	      onSelect: function(result, response){
-		      	console.log(result);
-		      	console.log(response);
+	// $('.ui.search.disease')
+	// .search({
+	//   // change search endpoint to a custom endpoint by manipulating apiSettings
+	//   apiSettings: {
+	//     url: '/complaints/api/get_disease/?q={query}',
+	//     onResponse: function(githubResponse) {
+	//         var
+	//           response = {
+	//       		  results : Array()
+	//           }
+	//         ;
+	//         // translate GitHub API response to work with search
+	//         $.each(githubResponse, function(index, item) {
+	//           // add result to category
+	//           response.results.push({
+	//         	id: item.id,
+	//             title       : item.name,
+	//           });
+	//         });
+	//         return response;
+	//       },
+	//   },
+	//       minCharacters : 3,
+	//       onSelect: function(result, response){
+	// 	      	console.log(result);
+	// 	      	console.log(response);
 		      	
-			    var str = diseaseDispalyString(result.id,result.title);
-		    	$('#added_disease').append(str);
+	// 		    var str = diseaseDispalyString(result.id,result.title);
+	// 	    	$('#added_disease').append(str);
 		    	
 		    	
-		    	$(document).off("click",".del-disease");
+	// 	    	$(document).off("click",".del-disease");
 		    	
-		    	$(document).on("click", ".del-disease" , function(event) {
+	// 	    	$(document).on("click", ".del-disease" , function(event) {
+	// 	    		event.stopImmediatePropagation();
+	// 	    		$(this).parent().parent().parent().remove();
+	// 	    	});
+		    	
+	// 	    	$('#id_disease').val("")
+	// 	    	$('#id_disease').focus();
+	// 	    	show_success("Diagnosis Added!!!", " press F2 to view the report." );
+	// 	      },
+
+	// })
+	// ;
+
+	const baseUrl = window.location.origin 
+	? window.location.origin + '/'
+	: window.location.protocol + '/' + window.location.host + '/';
+	new Autocomplete('id_disease', {
+		// search delay
+		delay: 1000,
+
+		// add button 'x' to clear the text from
+		// the input filed
+		clearButton: false,
+	  
+		// default selects the first item in
+		// the list of results
+		selectFirst: true,
+	  
+		// add text to the input field as you move through
+		// the results with the up/down cursors
+		insertToInput: true,
+	  
+		// the number of characters entered
+		// should start searching
+		howManyCharacters: 3,
+		onSearch: ({currentValue}) => {
+			const api = `${baseUrl}/complaints/api/get_disease/?q=${encodeURI(
+				currentValue
+			  )}`;
+			  return $.ajax({
+				url: api,
+				method: 'GET',
+				})
+				.done(function (data) {
+					return data;
+				})
+				.fail(function (xhr) {
+					console.error(xhr);
+			});
+		},
+		onResults: ({ matches }) => {
+			console.log("Onresult called " + JSON.stringify(matches));
+			
+			return matches.map((el) => {
+				return `<li class="search-list-item" data-id="${el.id}" data-name="${el.name}">${el.name}</li>`;
+			}).join("")
+		} ,
+		// the onSubmit function is executed when the user
+		// submits their result by either selecting a result
+		// from the list, or pressing enter or mouse button
+		onSubmit: ({ index, element, object, results }) => {
+			console.log("complex: ", index, element, object, results);
+			let node= results.childNodes[index];
+			console.log(node.getAttribute("data-name"))
+			var str = diseaseDispalyString(node.getAttribute("data-id"),node.getAttribute("data-name"));
+		    $('#added_disease').append(str);
+		    	
+		    	
+		    $(document).off("click",".del-disease");
+		    	
+		    $(document).on("click", ".del-disease" , function(event) {
 		    		event.stopImmediatePropagation();
 		    		$(this).parent().parent().parent().remove();
-		    	});
+		    });
 		    	
-		    	$('#id_disease').val("")
-		    	$('#id_disease').focus();
-		    	show_success("Diagnosis Added!!!", " press F2 to view the report." );
-		      },
+			$('#id_disease').val("")
+			$('#id_disease').focus();
+			show_success("Diagnosis Added!!!", " press F2 to view the report." );
 
-	})
-	;
+			// window.open(`https://www.imdb.com/find?q=${encodeURI(input)}`)
+		},
+
+		// get index and data from li element after
+		// hovering over li with the mouse or using
+		// arrow keys ↓ | ↑
+		onSelectedItem: ({ index, element, object }) => {
+			console.log("onSelectedItem:", index, element.value, object);
+		},
+
+		// the callback presents no results
+		noResults: ({ element, template }) => {
+			template(`<li>No results found: "${element.value}"</li>`);
+		}
+		
+	});
 
 });

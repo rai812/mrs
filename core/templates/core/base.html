@@ -5,18 +5,39 @@
 <html lang="en">
   <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>MRS</title>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>MRS</title>
+  
+      <!-- Favicons -->
+    <link href="{% static "core/img/favicon.png" %}" rel="icon">
+    <link href="{% static "core/img/apple-touch-icon.png" %}" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <!-- Vendor CSS Files -->
+    <link href="{% static "core/vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "core/vendor/bootstrap-icons/bootstrap-icons.css" %}" rel="stylesheet">
+    <link href="{% static "core/vendor/boxicons/css/boxicons.min.css" %}" rel="stylesheet">
+    <link href="{% static "core/vendor/quill/quill.snow.css" %}" rel="stylesheet">
+    <link href="{% static "core/vendor/quill/quill.bubble.css" %}" rel="stylesheet">
+    <link href="{% static "core/vendor/remixicon/remixicon.css" %}" rel="stylesheet">
+    <link href="{% static "core/vendor/simple-datatables/style.css" %}" rel="stylesheet">
+  
+    <!-- Template Main CSS File -->
+    <link href="{% static "core/css/style.css" %}" rel="stylesheet">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}"></link>
-    <link rel="stylesheet" href="{% static "core/style.css" %}"></link>
-    <link rel="stylesheet" href="{% static "font-awesome/css/font-awesome.min.css" %}">
-    <link rel="stylesheet" href="{% static "semantic/semantic.min.css" %}"></link>
-    <link rel="stylesheet" href="{% static "semantic/Semantic-UI-Alert.css" %}"></link>
-    
+    <!--autocomplete plugin-->
+    <!-- css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/autocomplete@1.8.6/dist/css/autocomplete.min.css"/>
+
+    <!-- js -->
+    <script src="https://cdn.jsdelivr.net/gh/tomik23/autocomplete@1.8.6/dist/js/autocomplete.min.js"></script>
+          
     {% block extra_style %}
     
     {% endblock %}
@@ -29,8 +50,142 @@
     </script>
 
   </head>
-  <body class="bc-blue">
-    <header>
+  <body>
+      <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="{% static "core/img/logo-1-128.png" %}" alt="">
+        <span class="d-none d-lg-block">NeuroHealth</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    {% comment %} TODO add the patient search capability here {% endcomment %}
+    
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        {% comment %} <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle " href="#">
+            <i class="bi bi-search"></i>
+          </a>
+        </li><!-- End Search Icon--> {% endcomment %}
+
+        <li class="nav-item">
+          <a class=" btn btn-primary " href="/visit/add-visit/"> New Visit
+          </a>
+        </li><!-- End add visit button-->
+         
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="{% static "core/img/avator-64.png" %}" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ request.user.username }}</span>
+          </a><!-- End Profile Iamge Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{ request.user.username }}</h6>
+              <span>Neurologist</span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            {% comment %} <li>
+              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li> {% endcomment %}
+            {% comment %} <li>
+              <hr class="dropdown-divider">
+            </li> {% endcomment %}
+
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{% url "core:logout" %}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      {% comment %} <li class="nav-item">
+        <a class="nav-link collapsed" href="index.html">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav --> {% endcomment %}
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/">
+          <i class="bi bi-person"></i>
+          <span>Patients</span>
+        </a>
+      </li>
+      </li><!-- End Tables Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/visit/">
+          <i class="bi bi-person"></i>
+          <span>Prescriptions</span>
+        </a>
+      </li>
+
+      {% comment %} <li class="nav-item">
+        <a class="nav-link collapsed" href="users-profile.html">
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+      </li><!-- End Profile Page Nav --> {% endcomment %}
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url "core:logout" %}">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>Logout</span>
+        </a>
+      </li><!-- End Login Page Nav -->
+    </ul>
+
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>
+        {% block title %}
+        {% endblock %}
+        </h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      {% block content %}
+      {% endblock %}
+    </section>
+
+  </main><!-- End #main -->
+
+
+    {% comment %} <header>
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="/visit/">MRS</a>
         <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,9 +213,10 @@
           </form>
         </div>
       </nav>
-    </header>
+    </header> {% endcomment %}
 
 
+    <!--
   <div class="container-fluid">  
       <div class="row">      
       
@@ -93,7 +249,7 @@
           </ul>
         </nav>
        {% endif %}
-        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+        {% comment %} <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
         <h1 class="fS24">
         {% block title %}
         {% endblock %}
@@ -102,20 +258,27 @@
         {% block content %}
         {% endblock %}
         </div>
-        </main>
+        </main> {% endcomment %}
 
 
 	           
 	            
 
-  </div>
+  </div> -->
   </div>
 
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="{% static "tether.min.js" %}"></script>
-    <script src="{% static "bootstrap/js/bootstrap.min.js" %}" ></script>
-    <script src="{% static "semantic/semantic.min.js" %}"></script>
-	<script src="{% static "semantic/Semantic-UI-Alert.js" %}"></script>
+     <!-- Vendor JS Files -->
+  <script src="{% static "core/vendor/apexcharts/apexcharts.min.js" %}"></script>
+  <script src="{% static "core/vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+  <script src="{% static "core/vendor/chart.js/chart.umd.js" %}"></script>
+  <script src="{% static "core/vendor/echarts/echarts.min.js" %}"></script>
+  <script src="{% static "core/vendor/quill/quill.min.js" %}"></script>
+  <script src="{% static "core/vendor/simple-datatables/simple-datatables.js" %}"></script>
+  <script src="{% static "core/vendor/tinymce/tinymce.min.js" %}"></script>
+  <script src="{% static "core/vendor/php-email-form/validate.js" %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static "core/js/main.js" %}"></script>
     <script src="{% static "core/utils.js" %}"></script>
     {% block extra_script %}
     

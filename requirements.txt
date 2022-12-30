@@ -1,0 +1,8 @@
+asgiref==3.6.0
+Django==3.2
+lxml==4.9.2
+Pillow==9.3.0
+python-docx==0.8.11
+pytz==2022.7
+reportlab==3.6.12
+sqlparse==0.4.3
